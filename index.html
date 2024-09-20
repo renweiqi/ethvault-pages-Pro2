@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>USDTGrowth - Smart Finance Platform</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Include Web3.js library -->
+    <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js@1.7.0/dist/web3.min.js"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f6f8;
+            color: #333;
+        }
+        header {
+            background-color: #2c3e50;
+            color: #fff;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        header .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        header nav a {
+            color: #ecf0f1;
+            margin-left: 20px;
+            text-decoration: none;
+            font-size: 16px;
+        }
+        header nav a:hover {
+            text-decoration: underline;
+        }
+        .container {
+            padding: 40px;
+            max-width: 1200px;
+            margin: auto;
+        }
+        .hero {
+            text-align: center;
+            padding: 60px 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+        }
+        .hero h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+        .hero p {
+            font-size: 18px;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+        }
+        .hero button {
+            background-color: #27ae60;
+            color: #fff;
+            border: none;
+            padding: 15px 30px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .hero button:hover {
+            background-color: #219150;
+        }
+        .features {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+        .feature {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 30px;
+            width: 30%;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .feature h3 {
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        .feature p {
+            color: #7f8c8d;
+        }
+        .operations {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+        }
+        .operations h2 {
+            margin-bottom: 20px;
+            color: #2c3e50;
+            text-align: center;
+        }
+        .operations .operation {
+            margin-bottom: 20px;
+        }
+        .operations .operation button {
+            background-color: #2980b9;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 14px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .operations .operation button:hover {
+            background-color: #2573a6;
+        }
+        .instructions {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+        }
+        .instructions h2 {
+            margin-bottom: 20px;
+            color: #2c3e50;
+            text-align: center;
+        }
+        .instructions ol {
+            margin-left: 20px;
+        }
+        footer {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px 40px;
+            text-align: center;
+        }
+        footer a {
+            color: #ecf0f1;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        footer a:hover {
+            text-decoration: underline;
+        }
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .features {
+                flex-direction: column;
+                align-items: center;
+            }
+            .feature {
+                width: 80%;
+            }
+        }
+        @media (max-width: 600px) {
+            header {
+                flex-direction: column;
+                text-align: center;
+            }
+            header nav {
+                margin-top: 10px;
+            }
+            .feature {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">USDTGrowth</div>
+        <nav>
+            <a href="#features">Features</a>
+            <a href="#operations">Operations</a>
+            <a href="#instructions">How to Use</a>
+            <a href="#support">Support</a>
+            <a href="#" id="connectButton">Connect Wallet</a>
+        </nav>
+    </header>
+    
+    <div class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <h1>USDTGrowth</h1>
+            <p>Earn daily 1% interest on your USDT deposits through our secure and transparent smart contract platform.</p>
+            <button onclick="connectWallet()">Get Started</button>
+        </section>
+        
+        <!-- Features Section -->
+        <section class="features" id="features">
+            <div class="feature">
+                <h3>High Returns</h3>
+                <p>Enjoy a fixed daily interest rate of 1%, ensuring steady growth of your investment.</p>
+            </div>
+            <div class="feature">
+                <h3>Secure & Transparent</h3>
+                <p>Built on smart contracts, all operations are public and secure, safeguarding your funds.</p>
+            </div>
+            <div class="feature">
+                <h3>Multi-Chain Support</h3>
+                <p>Supports TRX, ERC-20, and BNB chains, providing flexibility and ease of asset management.</p>
+            </div>
+        </section>
+        
+        <!-- Operations Section -->
+        <section class="operations" id="operations">
+            <h2>Basic Operations</h2>
+            <div class="operation">
+                <h3>Deposit USDT</h3>
+                <button onclick="deposit()">Deposit</button>
+            </div>
+            <div class="operation">
+                <h3>Withdraw Interest</h3>
+                <button onclick="withdrawInterest()">Withdraw Interest</button>
+            </div>
+            <div class="operation">
+                <h3>Withdraw Principal</h3>
+                <button onclick="withdrawPrincipal()">Withdraw Principal</button>
+            </div>
+            <div class="operation">
+                <h3>Withdraw All</h3>
+                <button onclick="withdrawAll()">Withdraw All</button>
+            </div>
+        </section>
+        
+        <!-- Instructions Section -->
+        <section class="instructions" id="instructions">
+            <h2>How to Use USDTGrowth</h2>
+            <ol>
+                <li>
+                    <strong>Set Up Your Wallet:</strong>
+                    <ul>
+                        <li>Install [MetaMask](https://metamask.io/) or any compatible Ethereum wallet.</li>
+                        <li>Create a new wallet and securely store your seed phrase.</li>
+                        <li>Ensure your wallet has sufficient USDT and a small amount of ETH/BNB/TRX for gas fees.</li>
+                    </ul>
+                </li>
+                <li>
+                    <strong>Connect Your Wallet:</strong>
+                    <ul>
+                        <li>Click the "Connect Wallet" button in the top navigation.</li>
+                        <li>Select your wallet provider (e.g., MetaMask) and authorize the connection.</li>
+                    </ul>
+                </li>
+                <li>
+                    <strong>Deposit USDT:</strong>
+                    <ul>
+                        <li>Navigate to the "Deposit USDT" section and click the "Deposit" button.</li>
+                        <li>Enter the amount of USDT you wish to deposit.</li>
+                        <li>Approve the transaction in your wallet to allow the contract to transfer your USDT.</li>
+                        <li>Confirm the transaction and wait for it to be mined.</li>
+                    </ul>
+                </li>
+                <li>
+                    <strong>Withdraw Interest:</strong>
+                    <ul>
+                        <li>Go to the "Withdraw Interest" section and click the "Withdraw Interest" button.</li>
+                        <li>Confirm the transaction in your wallet.</li>
+                        <li>Your accumulated interest will be transferred to your wallet.</li>
+                    </ul>
+                </li>
+                <li>
+                    <strong>Withdraw Principal:</strong>
+                    <ul>
+                        <li>Navigate to the "Withdraw Principal" section and click the "Withdraw Principal" button.</li>
+                        <li>Enter the amount of principal you wish to withdraw.</li>
+                        <li>Confirm the transaction in your wallet.</li>
+                        <li>The specified amount will be transferred back to your wallet.</li>
+                    </ul>
+                </li>
+                <li>
+                    <strong>Withdraw All Funds:</strong>
+                    <ul>
+                        <li>Go to the "Withdraw All" section and click the "Withdraw All" button.</li>
+                        <li>Confirm the transaction in your wallet.</li>
+                        <li>All your principal and accumulated interest will be transferred to your wallet.</li>
+                    </ul>
+                </li>
+            </ol>
+        </section>
+        
+        <!-- Support Section -->
+        <section class="instructions" id="support">
+            <h2>Support & Contact</h2>
+            <p>If you encounter any issues or have questions, feel free to reach out to our support team:</p>
+            <ul>
+                <li><strong>Email:</strong> <a href="mailto:support@usdtgrowth.com">support@usdtgrowth.com</a></li>
+                <li><strong>Website:</strong> <a href="http://www.usdtgrowth.com" target="_blank">www.usdtgrowth.com</a></li>
+                <li><strong>Social Media:</strong>
+                    <ul>
+                        <li><a href="https://twitter.com/usdtgrowth" target="_blank">Twitter</a></li>
+                        <li><a href="https://t.me/usdtgrowth" target="_blank">Telegram</a></li>
+                        <li><a href="https://discord.gg/usdtgrowth" target="_blank">Discord</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </section>
+    </div>
+    
+    <footer>
+        <p>&copy; 2024 USDTGrowth. All rights reserved.</p>
+        <p><a href="#legal">Legal & Compliance</a> | <a href="#support">Support</a> | <a href="#instructions">How to Use</a></p>
+    </footer>
+    
+    <script>
+        // Check if MetaMask is installed
+        if (typeof window.ethereum !== 'undefined') {
+            console.log('MetaMask is installed!');
+        } else {
+            alert('Please install MetaMask to use this DApp.');
+        }
+
+        let web3;
+        let account;
+
+        // Connect Wallet Function
+        async function connectWallet() {
+            if (window.ethereum) {
+                try {
+                    // Request account access
+                    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                    account = accounts[0];
+                    web3 = new Web3(window.ethereum);
+                    document.getElementById('connectButton').innerText = 'Connected';
+                    document.getElementById('connectButton').style.backgroundColor = '#27ae60';
+                } catch (error) {
+                    console.error("User rejected the connection", error);
+                }
+            } else {
+                alert('Please install MetaMask to use this DApp.');
+            }
+        }
+
+        // Deposit USDT Function
+        async function deposit() {
+            if (!account) {
+                alert('Please connect your wallet first.');
+                return;
+            }
+            const amount = prompt("Enter the amount of USDT you wish to deposit:");
+            if (amount > 0) {
+                try {
+                    const contractAddress = 'YOUR_CONTRACT_ADDRESS'; // Replace with your contract address
+                    const abi = [/* YOUR_CONTRACT_ABI */]; // Replace with your contract ABI
+                    const contract = new web3.eth.Contract(abi, contractAddress);
+                    // Convert amount to appropriate decimals (assuming USDT has 6 decimals)
+                    const amountInWei = web3.utils.toWei(amount, 'mwei');
+                    await contract.methods.deposit(amountInWei).send({ from: account });
+                    alert('Deposit successful!');
+                } catch (error) {
+                    console.error(error);
+                    alert('Deposit failed. Please check the console for more details.');
+                }
+            } else {
+                alert('Please enter a valid amount.');
+            }
+        }
+
+        // Withdraw Interest Function
+        async function withdrawInterest() {
+            if (!account) {
+                alert('Please connect your wallet first.');
+                return;
+            }
+            try {
+                const contractAddress = 'YOUR_CONTRACT_ADDRESS'; // Replace with your contract address
+                const abi = [/* YOUR_CONTRACT_ABI */]; // Replace with your contract ABI
+                const contract = new web3.eth.Contract(abi, contractAddress);
+                await contract.methods.withdrawInterest().send({ from: account });
+                alert('Interest withdrawn successfully!');
+            } catch (error) {
+                console.error(error);
+                alert('Withdrawal failed. Please check the console for more details.');
+            }
+        }
+
+        // Withdraw Principal Function
+        async function withdrawPrincipal() {
+            if (!account) {
+                alert('Please connect your wallet first.');
+                return;
+            }
+            const amount = prompt("Enter the amount of principal you wish to withdraw:");
+            if (amount > 0) {
+                try {
+                    const contractAddress = 'YOUR_CONTRACT_ADDRESS'; // Replace with your contract address
+                    const abi = [/* YOUR_CONTRACT_ABI */]; // Replace with your contract ABI
+                    const contract = new web3.eth.Contract(abi, contractAddress);
+                    // Convert amount to appropriate decimals (assuming USDT has 6 decimals)
+                    const amountInWei = web3.utils.toWei(amount, 'mwei');
+                    await contract.methods.withdrawPrincipal(amountInWei).send({ from: account });
+                    alert('Principal withdrawn successfully!');
+                } catch (error) {
+                    console.error(error);
+                    alert('Withdrawal failed. Please check the console for more details.');
+                }
+            } else {
+                alert('Please enter a valid amount.');
+            }
+        }
+
+        // Withdraw All Funds Function
+        async function withdrawAll() {
+            if (!account) {
+                alert('Please connect your wallet first.');
+                return;
+            }
+            if (confirm("Are you sure you want to withdraw all funds (principal + interest)?")) {
+                try {
+                    const contractAddress = 'YOUR_CONTRACT_ADDRESS'; // Replace with your contract address
+                    const abi = [/* YOUR_CONTRACT_ABI */]; // Replace with your contract ABI
+                    const contract = new web3.eth.Contract(abi, contractAddress);
+                    await contract.methods.withdrawAll().send({ from: account });
+                    alert('All funds withdrawn successfully!');
+                } catch (error) {
+                    console.error(error);
+                    alert('Withdrawal failed. Please check the console for more details.');
+                }
+            }
+        }
+
+        // Example: Admin Withdraw Function (To be implemented in Admin Interface)
+        async function adminWithdraw() {
+            if (!account) {
+                alert('Please connect your wallet first.');
+                return;
+            }
+            const amount = prompt("Enter the amount of USDT you wish to withdraw:");
+            if (amount > 0) {
+                try {
+                    const contractAddress = 'YOUR_CONTRACT_ADDRESS'; // Replace with your contract address
+                    const abi = [/* YOUR_CONTRACT_ABI */]; // Replace with your contract ABI
+                    const contract = new web3.eth.Contract(abi, contractAddress);
+                    // Convert amount to appropriate decimals (assuming USDT has 6 decimals)
+                    const amountInWei = web3.utils.toWei(amount, 'mwei');
+                    await contract.methods.adminWithdraw(amountInWei).send({ from: account });
+                    alert('Admin withdrawal successful!');
+                } catch (error) {
+                    console.error(error);
+                    alert('Admin withdrawal failed. Please check the console for more details.');
+                }
+            } else {
+                alert('Please enter a valid amount.');
+            }
+        }
+
+        // Initialize connection and handle account changes
+        window.addEventListener('load', () => {
+            if (window.ethereum) {
+                window.ethereum.on('accountsChanged', function (accounts) {
+                    account = accounts[0];
+                    if (accounts.length > 0) {
+                        document.getElementById('connectButton').innerText = 'Connected';
+                        document.getElementById('connectButton').style.backgroundColor = '#27ae60';
+                    } else {
+                        document.getElementById('connectButton').innerText = 'Connect Wallet';
+                        document.getElementById('connectButton').style.backgroundColor = '#2980b9';
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
