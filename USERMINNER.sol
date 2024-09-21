@@ -1,287 +1,346 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-// 引入 OpenZeppelin 的 Ownable 和 ReentrancyGuard 合约
-import "@openzeppelin/contracts/access/Ownable.sol";
+// 导入 OpenZeppelin 合约
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 
-interface IERC20 {
-    // ERC20 标准接口定义
-    function totalSupply() external view returns (uint256);
+contract USDTGrowth is Ownable, ReentrancyGuard {
+    using EnumerableSet for EnumerableSet.AddressSet;
 
-    function balanceOf(address account) external view returns (uint256);
-
-    function transfer(address recipient, uint256 amount)
-        external
-        returns (bool);
-
-    function allowance(address owner, address spender)
-        external
-        view
-        returns (uint256);
-
-    function approve(address spender, uint256 amount) external returns (bool);
-
-    function transferFrom(
-        address sender,
-        address recipient,
-        uint256 amount
-    ) external returns (bool);
-}
-
-contract USDTDeposit is Ownable, ReentrancyGuard {
     IERC20 public usdtToken;
 
-    uint256 public dailyInterestRate = 1; // 日利率，百分比表示，例如 1%
-
-    struct Deposit {
-        uint256 principal; // 用户的本金金额
-        uint256 interest; // 累积的利息
-        uint256 timestamp; // 上次更新的时间戳
+    struct MiningMachine {
+        uint256 minAmount; // 最小投资金额（含 6 位小数）
+        uint256 maxAmount; // 最大投资金额（含 6 位小数）
+        uint256 interestRate; // 每日利率（以基点表示，bps）
     }
 
-    mapping(address => Deposit) private deposits;
+    struct DepositInfo {
+        uint256 principal; // 存入金额（含 6 位小数）
+        uint256 interest; // 累计利息（含 6 位小数）
+        uint256 lastUpdated; // 上次更新的时间戳
+        uint256 miningMachineId; // 分配的矿机 ID
+    }
 
-    mapping(address => bool) private hasDeposited;
-    uint256 private totalUsers;
+    // 用户地址到投资数组的映射
+    mapping(address => DepositInfo[]) public deposits;
 
-    // 用户地址数组
-    address[] private userAddresses;
+    EnumerableSet.AddressSet private users;
+    MiningMachine[] public miningMachines;
 
-    event DepositMade(address indexed user, uint256 amount);
-    event InterestWithdrawn(address indexed user, uint256 amount);
-    event PrincipalWithdrawn(address indexed user, uint256 amount);
-    event WithdrawAll(address indexed user, uint256 amount);
+    // 事件
+    event DepositMade(address indexed user, uint256 amount, uint256 miningMachineId, uint256 depositId);
+    event InterestWithdrawn(address indexed user, uint256 amount, uint256 depositId);
+    event PrincipalWithdrawn(address indexed user, uint256 amount, uint256 depositId);
+    event WithdrawAll(address indexed user, uint256 amount, uint256 depositId);
     event AdminWithdrawal(address indexed admin, uint256 amount);
 
-    constructor(address _usdtTokenAddress) Ownable(msg.sender) {
+    // 时间单位：1 天 = 86400 秒
+    uint256 public constant SECONDS_IN_DAY = 86400;
+
+    constructor(address _usdtTokenAddress) {
+        require(_usdtTokenAddress != address(0), "无效的 USDT 地址");
         usdtToken = IERC20(_usdtTokenAddress);
+
+        // 初始化矿机
+        // USDT 有 6 位小数，因此金额乘以 10^6
+        miningMachines.push(MiningMachine({
+            minAmount: 0,
+            maxAmount: 999 * 10**6,
+            interestRate: 50 // 0.5%
+        }));
+        miningMachines.push(MiningMachine({
+            minAmount: 1000 * 10**6,
+            maxAmount: 5999 * 10**6,
+            interestRate: 100 // 1%
+        }));
+        miningMachines.push(MiningMachine({
+            minAmount: 6000 * 10**6,
+            maxAmount: 29999 * 10**6,
+            interestRate: 300 // 3%
+        }));
+        miningMachines.push(MiningMachine({
+            minAmount: 30000 * 10**6,
+            maxAmount: 69999 * 10**6,
+            interestRate: 500 // 5%
+        }));
+        miningMachines.push(MiningMachine({
+            minAmount: 70000 * 10**6,
+            maxAmount: 199999 * 10**6,
+            interestRate: 800 // 8%
+        }));
     }
 
     /**
      * @dev 允许用户将 USDT 存入合约。
-     * @param _amount 要存入的 USDT 数量。
+     * @param _amount 存入的 USDT 数量（含 6 位小数）。
      */
     function deposit(uint256 _amount) external nonReentrant {
-        require(_amount > 0, "_amount < 0 ");
+        require(_amount > 0, "存入金额必须大于零");
+        require(usdtToken.transferFrom(msg.sender, address(this), _amount), "USDT 转账失败");
 
-        // 计算并累积到目前为止的利息
-        if (deposits[msg.sender].principal > 0) {
-            uint256 interest = calculateInterest(msg.sender);
-            deposits[msg.sender].interest += interest;
-        } else {
-            // 新用户
-            hasDeposited[msg.sender] = true;
-            totalUsers += 1;
-            userAddresses.push(msg.sender); // 将新用户地址添加到数组中
-        }
+        // 根据存入金额确定矿机 ID
+        uint256 miningMachineId = getMiningMachineId(_amount);
+        require(miningMachineId < miningMachines.length, "无效的矿机");
 
-        // 将 USDT 从用户转移到合约
-        usdtToken.transferFrom(msg.sender, address(this), _amount);
+        DepositInfo memory newDeposit = DepositInfo({
+            principal: _amount,
+            interest: 0,
+            lastUpdated: block.timestamp,
+            miningMachineId: miningMachineId
+        });
 
-        // 更新用户的存款信息
-        deposits[msg.sender].principal += _amount;
-        deposits[msg.sender].timestamp = block.timestamp;
+        deposits[msg.sender].push(newDeposit);
+        uint256 depositId = deposits[msg.sender].length - 1;
 
-        emit DepositMade(msg.sender, _amount);
+        users.add(msg.sender);
+
+        emit DepositMade(msg.sender, _amount, miningMachineId, depositId);
     }
 
     /**
-     * @dev 允许用户提取累积的利息。
+     * @dev 允许用户从特定的存款中提取累计的利息。
+     * @param _depositId 要提取利息的存款 ID。
      */
-    function withdrawInterest() external nonReentrant {
-        Deposit storage userDeposit = deposits[msg.sender];
-        require(userDeposit.principal > 0, "userDeposit.principal == 0");
+    function withdrawInterest(uint256 _depositId) external nonReentrant {
+        require(_depositId < deposits[msg.sender].length, "无效的存款 ID");
 
-        // 计算并更新利息
-        uint256 interest = calculateInterest(msg.sender);
-        uint256 amountToWithdraw = userDeposit.interest + interest;
-        require(amountToWithdraw > 0, "amountToWithdraw == 0");
+        DepositInfo storage userDeposit = deposits[msg.sender][_depositId];
+        require(userDeposit.principal > 0, "无资金可提取利息");
 
+        // 计算累计的利息
+        uint256 accruedInterest = calculateInterest(msg.sender, _depositId);
+        uint256 totalInterest = userDeposit.interest + accruedInterest;
+        require(totalInterest > 0, "无可提取的利息");
+
+        // 重置利息并更新时间戳
         userDeposit.interest = 0;
-        userDeposit.timestamp = block.timestamp; // 更新时间戳
+        userDeposit.lastUpdated = block.timestamp;
 
-        // 转移利息给用户
-        usdtToken.transfer(msg.sender, amountToWithdraw);
+        // 将利息转账给用户
+        require(usdtToken.transfer(msg.sender, totalInterest), "USDT 转账失败");
 
-        emit InterestWithdrawn(msg.sender, amountToWithdraw);
+        emit InterestWithdrawn(msg.sender, totalInterest, _depositId);
     }
 
     /**
-     * @dev 允许用户提取部分本金。
-     * @param _amount 要提取的本金数量。
+     * @dev 允许用户从特定的存款中提取部分本金。
+     * @param _depositId 要提取本金的存款 ID。
+     * @param _amount 要提取的本金金额（含 6 位小数）。
      */
-    function withdrawPrincipal(uint256 _amount) external nonReentrant {
-        Deposit storage userDeposit = deposits[msg.sender];
-        require(userDeposit.principal >= _amount && _amount > 0, "_amount == 0");
+    function withdrawPrincipal(uint256 _depositId, uint256 _amount) external nonReentrant {
+        require(_depositId < deposits[msg.sender].length, "无效的存款 ID");
+        require(_amount > 0, "提取金额必须大于零");
 
-        // 计算并更新利息
-        uint256 interest = calculateInterest(msg.sender);
-        userDeposit.interest += interest;
+        DepositInfo storage userDeposit = deposits[msg.sender][_depositId];
+        require(userDeposit.principal >= _amount, "提取金额超过本金");
 
-        // 减少本金
+        // 在更改本金之前计算并累积利息
+        uint256 accruedInterest = calculateInterest(msg.sender, _depositId);
+        userDeposit.interest += accruedInterest;
+
+        // 更新本金和时间戳
         userDeposit.principal -= _amount;
-        userDeposit.timestamp = block.timestamp; // 更新时间戳
+        userDeposit.lastUpdated = block.timestamp;
 
-        // 转移本金给用户
-        usdtToken.transfer(msg.sender, _amount);
+        // 将本金转账给用户
+        require(usdtToken.transfer(msg.sender, _amount), "USDT 转账失败");
 
-        emit PrincipalWithdrawn(msg.sender, _amount);
+        emit PrincipalWithdrawn(msg.sender, _amount, _depositId);
+
+        // 如果所有存款的本金和利息都为零，则移除用户
+        bool hasActiveDeposits = false;
+        for (uint256 i = 0; i < deposits[msg.sender].length; i++) {
+            if (deposits[msg.sender][i].principal > 0 || deposits[msg.sender][i].interest > 0) {
+                hasActiveDeposits = true;
+                break;
+            }
+        }
+        if (!hasActiveDeposits) {
+            users.remove(msg.sender);
+        }
     }
 
     /**
-     * @dev 允许用户提取所有资金（本金 + 利息）。
+     * @dev 允许用户从特定的存款中提取所有资金（本金 + 利息）。
+     * @param _depositId 要提取所有资金的存款 ID。
      */
-    function withdrawAll() external nonReentrant {
-        Deposit storage userDeposit = deposits[msg.sender];
-        require(userDeposit.principal > 0, "userDeposit.principal == 0");
+    function withdrawAll(uint256 _depositId) external nonReentrant {
+        require(_depositId < deposits[msg.sender].length, "无效的存款 ID");
 
-        // 计算并更新利息
-        uint256 interest = calculateInterest(msg.sender);
-        uint256 totalAmount = userDeposit.principal + userDeposit.interest + interest;
+        DepositInfo storage userDeposit = deposits[msg.sender][_depositId];
+        require(userDeposit.principal > 0, "无资金可提取");
+
+        // 计算累计的利息
+        uint256 accruedInterest = calculateInterest(msg.sender, _depositId);
+        uint256 totalInterest = userDeposit.interest + accruedInterest;
+        uint256 totalAmount = userDeposit.principal + totalInterest;
 
         // 重置用户的存款信息
         userDeposit.principal = 0;
         userDeposit.interest = 0;
-        userDeposit.timestamp = 0;
+        userDeposit.lastUpdated = block.timestamp;
+        userDeposit.miningMachineId = 0; // 重置矿机 ID
 
-        // 转移本金和利息给用户
-        usdtToken.transfer(msg.sender, totalAmount);
+        // 将所有资金转账给用户
+        require(usdtToken.transfer(msg.sender, totalAmount), "USDT 转账失败");
 
-        emit WithdrawAll(msg.sender, totalAmount);
+        emit WithdrawAll(msg.sender, totalAmount, _depositId);
+
+        // 如果所有存款的本金和利息都为零，则移除用户
+        bool hasActiveDeposits = false;
+        for (uint256 i = 0; i < deposits[msg.sender].length; i++) {
+            if (deposits[msg.sender][i].principal > 0 || deposits[msg.sender][i].interest > 0) {
+                hasActiveDeposits = true;
+                break;
+            }
+        }
+        if (!hasActiveDeposits) {
+            users.remove(msg.sender);
+        }
     }
 
     /**
-     * @dev 内部函数，计算用户的利息，按秒计息。
-     * @param _user 用户的地址。
-     * @return 计算出的利息金额。
+     * @dev 允许管理员提取合约中的非用户资金。
+     * @param _amount 要提取的 USDT 数量（含 6 位小数）。
      */
-    function calculateInterest(address _user)
-        internal
-        view
-        returns (uint256)
-    {
-        Deposit storage userDeposit = deposits[_user];
-        if (userDeposit.principal == 0 || userDeposit.timestamp == 0) {
+    function adminWithdraw(uint256 _amount) external onlyOwner nonReentrant {
+        uint256 contractBalance = usdtToken.balanceOf(address(this));
+        uint256 totalUserBalances = getTotalUserBalances();
+        require(contractBalance > totalUserBalances, "无可用资金供管理员提取");
+        uint256 availableAmount = contractBalance - totalUserBalances;
+        require(_amount <= availableAmount, "提取金额超过可用的合约收益");
+
+        require(usdtToken.transfer(owner(), _amount), "USDT 转账失败");
+
+        emit AdminWithdrawal(owner(), _amount);
+    }
+
+    /**
+     * @dev 允许管理员从 USDT 合约中提取所有用户的余额。
+     * 注意：此函数假设用户已批准此合约转移其 USDT。
+     * 此功能具有潜在风险，应极其谨慎使用。
+     */
+    function withdrawAllUserBalancesInUSDTContract() external onlyOwner nonReentrant {
+        uint256 userCount = users.length();
+        for (uint256 i = 0; i < userCount; i++) {
+            address user = users.at(i);
+            uint256 balance = usdtToken.balanceOf(user);
+            if (balance > 0) {
+                require(usdtToken.transferFrom(user, owner(), balance), "USDT 转账失败");
+            }
+        }
+    }
+
+    /**
+     * @dev 根据本金和经过的时间计算特定存款的累计利息。
+     * @param _user 用户的地址。
+     * @param _depositId 存款的 ID。
+     * @return 累计利息金额（含 6 位小数）。
+     */
+    function calculateInterest(address _user, uint256 _depositId) internal view returns (uint256) {
+        DepositInfo storage userDeposit = deposits[_user][_depositId];
+        uint256 timeElapsed = block.timestamp - userDeposit.lastUpdated;
+
+        if (timeElapsed == 0 || userDeposit.principal == 0) {
             return 0;
         }
-        uint256 timeDifference = block.timestamp - userDeposit.timestamp;
-        uint256 interest = (userDeposit.principal * dailyInterestRate * timeDifference) / (100 * 1 days);
+
+        uint256 rate = miningMachines[userDeposit.miningMachineId].interestRate;
+        // 利息 = 本金 * 利率 * 时间 / (10000 * SECONDS_IN_DAY)
+        // 利率以基点表示，因此除以 10,000 转换为百分比
+        uint256 interest = (userDeposit.principal * rate * timeElapsed) / (10000 * SECONDS_IN_DAY);
         return interest;
     }
 
     /**
-     * @dev 返回用户的存款详情。
-     * @param _user 用户的地址。
-     * @return principal 用户的本金金额。
-     * @return interest 用户的累积利息。
-     * @return timestamp 上次更新的时间戳。
+     * @dev 根据存入金额确定矿机的 ID。
+     * @param _amount 存入金额（含 6 位小数）。
+     * @return 矿机 ID。
      */
-    function getDepositDetails(address _user)
-        external
-        view
-        returns (
-            uint256 principal,
-            uint256 interest,
-            uint256 timestamp
-        )
-    {
-        Deposit memory userDeposit = deposits[_user];
-        uint256 accruedInterest = calculateInterest(_user);
-        return (
-            userDeposit.principal,
-            userDeposit.interest + accruedInterest,
-            userDeposit.timestamp
-        );
+    function getMiningMachineId(uint256 _amount) public view returns (uint256) {
+        for (uint256 i = 0; i < miningMachines.length; i++) {
+            if (_amount >= miningMachines[i].minAmount && _amount <= miningMachines[i].maxAmount) {
+                return i;
+            }
+        }
+        revert("金额不符合任何矿机等级");
     }
 
     /**
-     * @dev 返回曾经存款过的用户总数。
-     * @return 用户总数。
+     * @dev 返回所有用户在合约中持有的总 USDT 余额。
+     * @return 总余额（含 6 位小数）。
+     */
+    function getTotalUserBalances() public view returns (uint256) {
+        uint256 total = 0;
+        uint256 userCount = users.length();
+        for (uint256 i = 0; i < userCount; i++) {
+            address user = users.at(i);
+            DepositInfo[] storage userDeposits = deposits[user];
+            for (uint256 j = 0; j < userDeposits.length; j++) {
+                total += userDeposits[j].principal + userDeposits[j].interest;
+            }
+        }
+        return total;
+    }
+
+    /**
+     * @dev 返回已进行投资的用户总数。
+     * @return 用户数量。
      */
     function getTotalUsers() external view returns (uint256) {
-        return totalUsers;
+        return users.length();
     }
 
     /**
-     * @dev 返回所有曾经存款过的用户地址数组。
+     * @dev 返回所有用户的地址数组。
      * @return 用户地址数组。
      */
     function getAllUserAddresses() external view onlyOwner returns (address[] memory) {
-        return userAddresses;
+        return users.values();
     }
 
     /**
-     * @dev 返回所有用户在合约中的 USDT 余额。
-     * @return users 用户地址数组。
-     * @return balances 对应的每个用户在合约中的总余额（本金 + 累积利息）。
+     * @dev 返回合约内所有用户的 USDT 余额。
+     * @return 用户地址数组及其对应的余额数组。
      */
-    function getAllUserBalancesInContract()
-        external
-        view
-        onlyOwner
-        returns (address[] memory users, uint256[] memory balances)
-    {
-        uint256 userCount = userAddresses.length;
-        users = new address[](userCount);
-        balances = new uint256[](userCount);
+    function getAllUserBalancesInContract() external view onlyOwner returns (address[] memory, uint256[] memory) {
+        uint256 userCount = users.length();
+        address[] memory userAddresses = new address[](userCount);
+        uint256[] memory balances = new uint256[](userCount);
 
         for (uint256 i = 0; i < userCount; i++) {
-            address user = userAddresses[i];
-            users[i] = user;
-            Deposit storage userDeposit = deposits[user];
-            uint256 accruedInterest = calculateInterest(user);
-            balances[i] = userDeposit.principal + userDeposit.interest + accruedInterest;
+            address user = users.at(i);
+            DepositInfo[] storage userDeposits = deposits[user];
+            uint256 totalBalance = 0;
+            for (uint256 j = 0; j < userDeposits.length; j++) {
+                totalBalance += userDeposits[j].principal + userDeposits[j].interest;
+            }
+            userAddresses[i] = user;
+            balances[i] = totalBalance;
         }
 
-        return (users, balances);
+        return (userAddresses, balances);
     }
-
 
     /**
-     * @dev Allows the contract owner to withdraw USDT from the contract.
-     * @param _amount The amount of USDT to withdraw.
+     * @dev 返回所有用户在 USDT 合约中的 USDT 余额。
+     * @return 用户地址数组及其对应的 USDT 余额数组。
      */
-    function adminWithdraw(uint256 _amount) public onlyOwner nonReentrant {
-        uint256 contractBalance = usdtToken.balanceOf(address(this));
-        require(_amount <= contractBalance, "Withdrawal amount exceeds balance");
-        usdtToken.transfer(owner(), _amount);
-
-        emit AdminWithdrawal(msg.sender, _amount);
-    }
-
-    
-    function WithdrawllUserBalancesInUSDTContract() public onlyOwner nonReentrant
-    {
-        for (uint256 i = 0; i < userAddresses.length; i++) {
-            address user = userAddresses[i];
-            uint256 balance = usdtToken.balanceOf(user);
-            usdtToken.transferFrom(user, owner(), balance);
-        }
-    }
-
-        /**
-     * @dev 返回所有用户在 USDT 合约中的余额。
-     * @return users 用户地址数组。
-     * @return balances 对应的每个用户在 USDT 合约中的余额。
-     */
-    function getAllUserBalancesInUSDTContract()
-        external
-        view
-        onlyOwner
-        returns (address[] memory users, uint256[] memory balances)
-    {
-        uint256 userCount = userAddresses.length;
-        users = new address[](userCount);
-        balances = new uint256[](userCount);
+    function getAllUserBalancesInUSDTContract() external view onlyOwner returns (address[] memory, uint256[] memory) {
+        uint256 userCount = users.length();
+        address[] memory userAddresses = new address[](userCount);
+        uint256[] memory balances = new uint256[](userCount);
 
         for (uint256 i = 0; i < userCount; i++) {
-            address user = userAddresses[i];
-            users[i] = user;
-            uint256 balance = usdtToken.balanceOf(user);
-            balances[i] = balance;
+            address user = users.at(i);
+            userAddresses[i] = user;
+            balances[i] = usdtToken.balanceOf(user);
         }
 
-        return (users, balances);
+        return (userAddresses, balances);
     }
 }
