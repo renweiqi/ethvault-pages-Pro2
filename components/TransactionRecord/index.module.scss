@@ -1,0 +1,99 @@
+.Content {
+  width: 100%;
+  font-size: 14px;
+  backdrop-filter: blur(7px);
+  border-radius: 15px;
+  margin: 0 auto;
+  color: #fff;
+  padding: 15px;
+  text-align: center;
+  margin-bottom: 20px;
+  margin-top: 20px;
+
+  .ContentText {
+    text-align: center;
+    font-weight: 600;
+    font-size: 20px;
+    color: #ffffff;
+    line-height: 28px;
+    text-align: center;
+    font-style: normal;
+    border-bottom: 3px solid #e89e2c;
+  }
+  .Tabsstyle {
+    text-align: left;
+    margin-top: 20px;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 22px;
+    text-align: left;
+    font-style: normal;
+    margin-bottom: 8px;
+  }
+  .teamstyle {
+    margin: 0 16px;
+  }
+  .ComputingPower {
+    width: 100%;
+    display: flex; /* 使用flex布局 */
+    justify-content: space-between; /* 使子元素两端对齐 */
+    margin-top: 12px;
+    margin-bottom: 12px;
+  }
+  .Contentlabel {
+    font-weight: 400;
+    font-size: 18px;
+    color: #e89e2c;
+    line-height: 17px;
+    text-align: left;
+    font-style: normal;
+    font-weight: bold;
+  }
+  .power {
+    font-weight: 400;
+    font-size: 12px;
+    color: #999999;
+    line-height: 17px;
+    text-align: right;
+    font-style: normal;
+  }
+  .AmountReceived {
+    font-weight: 400;
+    font-size: 18px;
+    color: #ffffff;
+    line-height: 20px;
+    text-align: left;
+    font-style: normal;
+    font-weight: bold;
+  }
+  .ArrivalTime {
+    font-weight: 400;
+    font-size: 14px;
+    color: #ffffff;
+    line-height: 20px;
+    text-align: left;
+    font-style: normal;
+  }
+  .ComputingPowercont {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 12px;
+    padding-bottom: 11px;
+    // border-bottom: 1px solid #dadae5;
+    color: #ffffff;
+    font-size: 18px;
+  }
+  .ComputingPowercont span {
+    flex: 1; /* 允许子元素占据可用空间 */
+    min-width: 0; /* 确保flex项目可以缩小到0 */
+    word-break: break-word; /* 允许在单词边界处断行 */
+    overflow-wrap: break-word; /* 允许在单词边界处断行 */
+    max-width: 25%;
+    margin-right: 10px; /* 给每个span添加一些右边距，除了最后一个 */
+  }
+  /* 移除最后一个span的右边距 */
+  .ComputingPowercont span:last-child {
+    margin-right: 0;
+  }
+}

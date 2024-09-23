@@ -1,0 +1,98 @@
+.pageMenu {
+  height: 360px;
+  background-position: center;
+  position: relative;
+  .top {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .menyBtn0 {
+    position: absolute;
+    top: 81%;
+    left: 211px;
+  }
+  .menyBtn1 {
+    position: absolute;
+    top: 82%;
+    left: 13%;
+  }
+  .menyBtn2 {
+    position: absolute;
+    left: 27%;
+    top: 59%;
+  }
+  .menyBtn3 {
+    position: absolute;
+    top: 78%;
+    left: 35%;
+  }
+  .menyBtn4 {
+    position: absolute;
+    top: 50%;
+    left: 0%;
+  }
+  .menyBtn5 {
+    position: absolute;
+    right: 2%;
+    bottom: 1%;
+  }
+
+  .menyBtn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .menyBtn-n {
+      color: #ffffff;
+      font-size: 14px;
+    }
+    .menyBtn-e {
+      color: #e5cf99;
+      font-size: 9px;
+      white-space: nowrap;
+    }
+  }
+  img {
+    max-width: none;
+  }
+  .img0 {
+    width: 48px;
+    height: 50px;
+  }
+  .img1 {
+    width: 39px;
+    height: 40px;
+  }
+  .img2 {
+    width: 31px;
+    height: 32px;
+  }
+  .img3 {
+    width: 31px;
+    height: 31px;
+  }
+  .img4 {
+    width: 100px;
+    height: 100px;
+  }
+  .img5 {
+    width: 46px;
+    height: 46px;
+  }
+  .video-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+  }
+  .content {
+    position: relative;
+    z-index: 1;
+    color: white;
+    text-align: center;
+    padding: 20px;
+  }
+}
