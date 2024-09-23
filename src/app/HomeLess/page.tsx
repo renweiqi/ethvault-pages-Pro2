@@ -7,18 +7,16 @@ const Content = dynamic(() => import("../../../components/CommBg"), {
 });
 import { MenuProvider } from "../../../components/MenuContext";
 import Market from "../../../components/Market";
-import Announcement from "../../../components/Announcement";
-
 
 const HomeLess: React.FC = () => {
   return (
     <MenuProvider>
       <TopMenu />
       <Content
-        title={"众神殿"}
+        title={"ETHVault矿池"}
         solt={
           <div>
-            众神殿王者之归来，致力为亿万星辰梦想家提供一个平等，互利，共赢，为实现Wed3.0和区块链技术无限魅力，随着区块链通证经济的发展，将会有更多的生态和功能的加入，为各位老板创造更大价值的财富盛宴！
+            ETHVault Pool是一个基于以太坊网络的质押挖矿平台，旨在通过质押资金帮助矿工获得稳定而全球的利润。参与者池可以通过质押资金参与矿池，并根据质押资金而产生的利润分配。我们的平台通过透明的规则和自动化的智能合约机制分配，确保矿工享受公平的收益。
           </div>
         }
       ></Content>

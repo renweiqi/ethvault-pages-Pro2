@@ -2,6 +2,8 @@
 import Image from "next/image";
 import styles from "./index.module.scss";
 import CallWallet from "../CallWallet";
+import logo from "../../public/images/logo.jpg";
+
 interface TopProps {
   onToggleRightMenu: () => void;
 }
@@ -10,7 +12,7 @@ const TopMenu: React.FC<TopProps> = ({ onToggleRightMenu }) => {
     <div className={styles.pagetop}>
       <Image
         className={styles.m1}
-        src="https://white-key-landfowl-741.mypinata.cloud/ipfs/QmWrNfknnSDJXPS5pdDx4wqeoaci1iei1ZL6npC9jxk3Dm/coin.png"
+        src={logo}
         alt="coin"
         width={50}
         height={50}
