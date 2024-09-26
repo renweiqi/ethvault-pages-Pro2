@@ -5,11 +5,32 @@
 }
 
 .chatbubble {
-  display: flex;
-  align-items: center;
-  border-radius: 10px;
-  padding: 10px;
-  position: relative;
+  display: flex; /* 使用Flexbox布局 */
+  justify-content: space-between; /* 子元素左右分布 */
+  align-items: center; /* 垂直居中 */
+}
+
+.chatbubble > div {
+  flex: 1;
+  text-align: left;
+}
+
+.textstyle {
+  font-weight: 600;
+  font-size: 18px;
+  color: #ffffff;
+  line-height: 25px;
+  text-align: center;
+  font-style: normal;
+}
+
+.centerstyle {
+  font-weight: 400;
+  font-size: 16px;
+  color: #e89e2c;
+  line-height: 64px;
+  text-align: center;
+  border-bottom: 1px solid #494956;
 }
 
 .chatbubble .icon {

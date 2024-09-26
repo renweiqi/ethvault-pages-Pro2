@@ -1,0 +1,85 @@
+.Content {
+  width: 90%;
+  font-size: 14px;
+  backdrop-filter: blur(7px);
+  border-radius: 15px;
+  margin: 98px auto 20px auto;
+  color: #fff;
+  padding: 20px;
+  text-align: center;
+  background: rgba(224, 224, 224, 0.19);
+
+  .MiningMachinestyle {
+    width: fit-content;
+    font-weight: 600;
+    font-size: 20px;
+    color: #ffffff;
+    line-height: 28px;
+    text-align: center;
+    font-style: normal;
+    border-bottom: 3px solid #e89e2c;
+    margin: 0 auto;
+  }
+
+  .Cardstyle {
+    margin-top: 24px;
+  }
+
+  .Cardstyleone {
+    display: flex;
+    justify-content: center;
+  }
+
+  .Card {
+    width: 162px;
+    border-radius: 10px;
+    overflow: hidden;
+    padding: 0;
+    border: none;
+    background: none;
+  }
+
+  .CardImageWrapper {
+    padding: 30px;
+    background: rgba(49, 47, 47, 0);
+    border-radius: 10px;
+    opacity: 0.8;
+    backdrop-filter: blur(2px);
+  }
+
+  .CardImage {
+    display: block;
+    margin: 0 auto;
+  }
+
+  .BGconter {
+    width: 100%;
+    padding: 12px 8px;
+    backdrop-filter: blur(2px);
+    background: #ffffff;
+  }
+
+  .CardTitle {
+    font-size: 16px;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #19181b;
+    line-height: 20px;
+    font-style: normal;
+  }
+
+  .Cardcenter {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 400;
+    font-size: 12px;
+    color: #19181b;
+    line-height: 17px;
+    font-style: normal;
+  }
+
+  .Cardcenter div {
+    line-height: 24px;
+  }
+}

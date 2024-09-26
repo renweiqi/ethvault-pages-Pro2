@@ -7,6 +7,7 @@ import logo from "../../public/images/logo.jpg";
 interface TopProps {
   onToggleRightMenu: () => void;
 }
+
 const TopMenu: React.FC<TopProps> = ({ onToggleRightMenu }) => {
   return (
     <div className={styles.pagetop}>
@@ -27,6 +28,7 @@ const TopMenu: React.FC<TopProps> = ({ onToggleRightMenu }) => {
         width={50}
         height={50}
       />
+
       <Image
         onClick={onToggleRightMenu}
         className={styles.m3}

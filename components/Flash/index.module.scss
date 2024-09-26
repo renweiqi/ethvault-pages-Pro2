@@ -73,12 +73,26 @@
     margin-bottom: 20px;
     margin-top: 8px;
   }
+  .Contentinterest {
+    display: flex; /* 使用Flexbox布局 */
+    justify-content: space-between; /* 子元素左右分布 */
+    align-items: center; /* 垂直居中 */
+  }
+  
   .Contentlabel {
     font-weight: 500;
     font-size: 16px;
     color: #ffffff;
     line-height: 22px;
-    text-align: left;
+    font-style: normal;
+  }
+  
+  .interest {
+    font-weight: 500;
+    font-size: 16px;
+    color: #e89e2c;
+    line-height: 22px;
+    text-align: right;
     font-style: normal;
   }
   .labelContainer {
@@ -120,6 +134,14 @@
     color: #ffffff;
     line-height: 22px;
     text-align: left;
+    font-style: normal;
+  }
+  .Colstyle {
+    font-weight: 400;
+    font-size: 14px;
+    color: #d8d8d8;
+    line-height: 20px;
+    text-align: center;
     font-style: normal;
   }
 }

@@ -10,6 +10,11 @@ import {
 } from "thirdweb";
 import axios from "axios";
 import { useSendTransaction, useActiveAccount } from "thirdweb/react";
+import {
+  CaretDownOutlined
+} from '@ant-design/icons';
+
+
 import { balanceOf } from "thirdweb/extensions/erc20";
 import styles from "./index.module.scss";
 const THIRDWEB_PROJECT_ID: any = process.env.NEXT_PUBLIC_TEMPLATE_CLIENT_ID;
@@ -66,8 +71,8 @@ const Commonform = () => {
   const [finalEffort, SetFinalEffort] = useState<any>(0);
 
   const selectAfterone = (
-    <Select defaultValue="ZSD" className="select-after">
-      <Option value="ZSD">ZSD</Option>
+    <Select defaultValue="MAX" className="select-after">
+      <Option value="MAX">MAX</Option>
     </Select>
   );
 
@@ -217,7 +222,7 @@ const Commonform = () => {
   return (
     <>
       <div className={styles.Content}>
-        <span className={styles.ContentText}>交易所</span>
+        <span className={styles.ContentText}>提款</span>
         <Form
           name="amount"
           onFinish={onFinish}
@@ -229,39 +234,41 @@ const Commonform = () => {
         >
           <Row>
             <Col span={24}>
+              <div className={styles.Contentinterest}>
+                <span className={styles.Contentlabel}>取出(USDT)</span>
+
+                <div>
+                  <span className={styles.interest}>利息</span>
+                  <CaretDownOutlined twoToneColor="#E89E2C" />
+                </div>
+              </div>
+            </Col>
+
+            <Col span={24} style={{ marginTop: 12, marginBottom: 12 }}>
               <Form.Item
-                label={<span className={styles.Contentlabel}>代币兑换</span>}
                 colon={false}
                 name="USDT_one_amount"
               >
                 <Input
                   addonAfter={selectAfterone}
-                  placeholder="请输入数量"
+                  placeholder="请输入提取数量"
                   className={styles.inputstyle}
                   onChange={(e: any) => {
                     const tokenValue = (e.target.value) / price * 10 ** 18;
-
                     form.setFieldsValue({
                       ZSD_two_amount: tokenValue,
                     });
                   }}
                 />
-              </Form.Item>
-            </Col>
-            <Col span={24}>
-              <Form.Item
-                colon={false}
-                name="ZSD_two_amount"
-              >
-                <Input
-                  addonAfter={selectAftertwo}
-                  className={styles.inputstyle}
-                  disabled
-                />
+
+                <Col span={11} className="Colstyle">
+                  <span style={{ color: '#d8d8d8' }}>全部利息 ：1200USDT</span>
+                </Col>
               </Form.Item>
             </Col>
           </Row>
-          <Row>
+
+          <Row style={{ marginTop: 12 }}>
             <Col span={24}>
               <Form.Item>
                 <Button
@@ -270,7 +277,7 @@ const Commonform = () => {
                   className={flg ? styles.buttonstyleflg : styles.buttonstyle}
                   disabled={flg}
                 >
-                  {flg ? '今日已兑换' : '兑换'}
+                  {flg ? '今日已兑换' : '取款'}
                 </Button>
               </Form.Item>
             </Col>

@@ -59,33 +59,32 @@ const Market = () => {
       );
 
       // 当前币价格
-      const USDtoZSDnum = await readContract({
-        contract: ZSDSwap,
-        method: "function getAmountZSDOut(uint256) view returns (uint256)",
-        params: [BigInt(1000000000000000000)],
-      });
-      const WeiBalance = USDtoZSDnum.toString();
+      // const USDtoZSDnum = await readContract({
+      //   contract: ZSDSwap,
+      //   method: "function getAmountZSDOut(uint256) view returns (uint256)",
+      //   params: [BigInt(1000000000000000000)],
+      // });
+      // const WeiBalance = USDtoZSDnum.toString();
+      // const list = {
+      //   coingeckoId: "bitcoin",
+      //   image: "https://white-key-landfowl-741.mypinata.cloud/ipfs/QmWrNfknnSDJXPS5pdDx4wqeoaci1iei1ZL6npC9jxk3Dm/coin.png",
+      //   marketCap: 5040000,
+      //   name: "Zsd",
+      //   price: (1 / (Number(WeiBalance) / (10 ** 18))).toFixed(5),
+      //   priceChangePercentage1H: 1.0204692461855924,
+      //   priceChangePercentage7D: -19.93160601388554,
+      //   change: 0.05,
+      //   serialNumber: 1,
+      //   sparkline: [
+      //     69578.0868687256, 68779.36958477591, 67978.65056486202, 66843.5884601612,
+      //     67431.81775217736, 67282.62285948903, 67422.2458091223, 66667.23020827338,
+      //   ],
+      //   symbol: "btc",
+      //   totalVolume: 105305152504
+      // };
+      // const updatedCurrencies = [list, ...response.data.data.coins];
 
-      const list = {
-        coingeckoId: "bitcoin",
-        image: "https://white-key-landfowl-741.mypinata.cloud/ipfs/QmWrNfknnSDJXPS5pdDx4wqeoaci1iei1ZL6npC9jxk3Dm/coin.png",
-        marketCap: 5040000,
-        name: "Zsd",
-        price: (1 / (Number(WeiBalance) / (10 ** 18))).toFixed(5),
-        priceChangePercentage1H: 1.0204692461855924,
-        priceChangePercentage7D: -19.93160601388554,
-        change: 0.05,
-        serialNumber: 1,
-        sparkline: [
-          69578.0868687256, 68779.36958477591, 67978.65056486202, 66843.5884601612,
-          67431.81775217736, 67282.62285948903, 67422.2458091223, 66667.23020827338,
-        ],
-        symbol: "btc",
-        totalVolume: 105305152504
-      };
-
-      const updatedCurrencies = [list, ...response.data.data.coins];
-      setCurrencies(updatedCurrencies);
+      setCurrencies(response.data.data.coins);
       setLoading(false);
     } catch (error) {
       console.error("请求错误:", error);

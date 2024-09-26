@@ -63,7 +63,7 @@ const RightMenu: React.FC = () => {
           height={50}
         />
         <div data-id="RightMenu" className={styles.text}>
-          闪兑
+          提款
         </div>
       </div>
       <div
@@ -80,24 +80,7 @@ const RightMenu: React.FC = () => {
           height={50}
         />
         <div data-id="RightMenu" className={styles.text}>
-          社区
-        </div>
-      </div>
-      <div
-        data-id="RightMenu"
-        className={styles.row}
-        onClick={() => handleCopyClick()}
-      >
-        <Image
-          data-id="RightMenu"
-          className={styles.img}
-          src="https://white-key-landfowl-741.mypinata.cloud/ipfs/QmWrNfknnSDJXPS5pdDx4wqeoaci1iei1ZL6npC9jxk3Dm/Invitationcode.png"
-          alt="coin"
-          width={50}
-          height={50}
-        />
-        <div data-id="RightMenu" className={styles.text}>
-          邀请码
+          联系我们
         </div>
       </div>
       <div

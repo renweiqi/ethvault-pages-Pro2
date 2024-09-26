@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useContext, useRef, useState } from "react";
+import React, { useEffect, useContext, useRef } from "react";
 import { useActiveAccount } from "thirdweb/react";
 import Image from "next/image";
 import styles from "./index.module.scss";
@@ -8,44 +8,39 @@ import { useRouter } from "next/navigation";
 import RightMenu from "../RightMenu";
 import { MenuContext } from "../MenuContext";
 import { copyToClipboard } from "../../public/clipboard";
-import Announcement from "../Announcement";
+// import Announcement from "../Announcement";
+import bgGif from "../../public/images/beijing.png";
 
 const imageArray = [
   {
     link: `/Machine`,
-    url: "https://white-key-landfowl-741.mypinata.cloud/ipfs/QmWrNfknnSDJXPS5pdDx4wqeoaci1iei1ZL6npC9jxk3Dm/kj.png",
+    url: "../../images/MININGMACHINE.png",
     name: "矿机",
     en: "MINING MACHINE",
   },
   {
     link: "/Personal",
-    url: "https://white-key-landfowl-741.mypinata.cloud/ipfs/QmWrNfknnSDJXPS5pdDx4wqeoaci1iei1ZL6npC9jxk3Dm/sy.png",
+    url: "../../images/PERSONALCENTER.png",
     name: "个人中心",
     en: "PERSONAL CENTER",
   },
   {
     link: "/Community",
-    url: "https://white-key-landfowl-741.mypinata.cloud/ipfs/QmWrNfknnSDJXPS5pdDx4wqeoaci1iei1ZL6npC9jxk3Dm/sq.png",
-    name: "社区",
-    en: "COMMUNITY",
-  },
-  {
-    link: "/InCode",
-    url: "https://white-key-landfowl-741.mypinata.cloud/ipfs/QmWrNfknnSDJXPS5pdDx4wqeoaci1iei1ZL6npC9jxk3Dm/yqm.png",
-    name: "邀请码",
-    en: "INVITATION CODE",
+    url: "../../images/ContactUs.png",
+    name: "联系我们",
+    en: "Contact Us",
   },
   {
     link: "/HomeLess",
-    url: "https://white-key-landfowl-741.mypinata.cloud/ipfs/QmWrNfknnSDJXPS5pdDx4wqeoaci1iei1ZL6npC9jxk3Dm/sy.png",
-    name: "首页",
-    en: "HOME",
+    url: "../../images/homepage.png",
+    name: "首 页",
+    en: "home page",
   },
   {
     link: "/Flash",
-    url: "https://white-key-landfowl-741.mypinata.cloud/ipfs/QmWrNfknnSDJXPS5pdDx4wqeoaci1iei1ZL6npC9jxk3Dm/sd.png",
-    name: "闪兑",
-    en: "INSTANT EXCHANGE",
+    url: "../../images/WithdrawMoney.png",
+    name: "取 款",
+    en: "withdraw money",
   },
 ];
 
@@ -87,9 +82,11 @@ const ClientMenu: React.FC = () => {
         <Top onToggleRightMenu={toggleRightMenu} />
 
         <div className={styles.videoBackground} id="nav">
-          <video autoPlay muted loop id="bg-video">
-            <source src="https://white-key-landfowl-741.mypinata.cloud/ipfs/QmWrNfknnSDJXPS5pdDx4wqeoaci1iei1ZL6npC9jxk3Dm/shequ.mp4" type="video/mp4" />
-          </video>
+          <Image
+            className={styles.imageGif}
+            src={bgGif}
+            alt=""
+          />
         </div>
 
         <div className={styles.top} ref={containerRef}>

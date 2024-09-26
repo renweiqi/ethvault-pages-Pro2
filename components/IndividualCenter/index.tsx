@@ -297,17 +297,17 @@ const Commonform = () => {
         <span className={styles.ContentText}>我的账户</span>
         <div className={styles.currencycontainer}>
           <div className={styles.currencyrow}>
-            <div className={styles.USDTstyle}>USDT(枚)</div>
             <div className={styles.USDTnuber}>{uSDTBalance}</div>
+            <div className={styles.USDTstyle}>本金（USDT）</div>
           </div>
           <div className={styles.currencyrow}>
-            <div className={styles.USDTstyle}>ZSD(枚)</div>
             <div className={styles.USDTnuber}>{zSDBalance}</div>
+            <div className={styles.USDTstyle}>利息(USDT)</div>
           </div>
         </div>
       </div>
 
-      <div className={styles.Content}>
+      {/* <div className={styles.Content}>
         <span className={styles.ContentText}>提取代币</span>
         <div className={styles.ContentInstructions}>(这里是提取代币的说明)</div>
         <Form
@@ -384,7 +384,7 @@ const Commonform = () => {
           </Row>
         </Form>
       </div >
-
+      
       <Modal
         title=""
         open={isModalOpen}
@@ -420,7 +420,7 @@ const Commonform = () => {
             </div>
           ))}
         </div>
-      </Modal >
+      </Modal > */}
     </>
   );
 };

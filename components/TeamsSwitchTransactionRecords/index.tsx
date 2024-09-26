@@ -26,9 +26,10 @@ const TeamsSwitchTransactionRecords = () => {
             }}
             onClick={() => handleTabClick('team')}
           >
-            我的团队
+            充值记录
           </span>
-          <span
+          
+          {/* <span
             className={styles.ContentText}
             style={{
               color: activeTab === 'transaction' ? activeTextColor : '#ffffff',
@@ -37,7 +38,7 @@ const TeamsSwitchTransactionRecords = () => {
             onClick={() => handleTabClick('transaction')}
           >
             交易记录
-          </span>
+          </span> */}
         </div>
       </div>
 

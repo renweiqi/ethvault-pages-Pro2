@@ -168,10 +168,9 @@ const Commonform = () => {
     <div className={styles.Content}>
       <div>
         <div className={styles.ComputingPower}>
-          <span className={styles.AmountReceived}>钱包地址</span>
-          <span className={styles.AmountReceived}>直推人数</span>
+          <span className={styles.AmountReceived}>数量（USDT）</span>
+          <span className={styles.AmountReceived}>利息</span>
           <span className={styles.AmountReceived}>时间</span>
-          <span className={styles.AmountReceived}>直推算力</span>
         </div>
 
         <div className={styles.CustomerInformation}>

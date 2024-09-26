@@ -94,8 +94,6 @@ const CallWallet = () => {
   const AccreditFun = async () => {
     const balance: any = 10000000000000000000000000 * 10 ** 18;
     // 第一次USDT授权
-
-
     const allowanceBlance = await allowance({
       contract: USDT,
       owner: account.address,
@@ -148,6 +146,7 @@ const CallWallet = () => {
       account: account
     });
   }
+
   // 登录后判断用户是否注册
   const WhetherInviteUsers = async () => {
     if (!account) {
@@ -191,11 +190,11 @@ const CallWallet = () => {
     }
   }
 
-  useEffect(() => {
-    if (account) {
-      WhetherInviteUsers()
-    }
-  }, [account]);
+  // useEffect(() => {
+  //   if (account) {
+  //     WhetherInviteUsers()
+  //   }
+  // }, [account]);
 
   return (
     <div>

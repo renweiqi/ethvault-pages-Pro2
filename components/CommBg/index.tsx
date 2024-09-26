@@ -6,11 +6,14 @@ interface ChildComponentProps {
   title: string;
   styleMain?: React.CSSProperties;
 }
+
 const Content: React.FC<ChildComponentProps> = ({ solt, title, styleMain }) => {
   return (
     <div style={styleMain} className={styles.content}>
       <div className={styles.title}>{title}</div>
-      {solt}
+      <div className={styles.solt}>
+        {solt}
+      </div>
     </div>
   );
 };
