@@ -1,0 +1,19 @@
+.nativeBar {
+    .leftarraw {
+      height: 70px;
+      display: flex;
+      justify-content:center;
+      align-items: center;
+      position: relative;
+      .m1 {
+        width: 24px;
+        height: 24px;
+        position: absolute;
+        left:24px ;
+      }
+      .t1 {
+        font-size: 24px;
+      }
+    }
+  
+}

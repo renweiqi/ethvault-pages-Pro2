@@ -15,8 +15,8 @@ import A1166ProS75T from "../../public/MiningMachine/A1166Pro-S-75T_.png";
 const MiningMachine = () => {
   const router = useRouter();
 
-  const goRoute = (url: any) => {
-    router.push(url.link);
+  const goRoute = (link: any) => {
+    router.push(link);
   };
 
   const imageArray = [
@@ -56,33 +56,33 @@ const MiningMachine = () => {
       interest: '利息',
       interestname: '2%/天'
     },
-    // {
-    //   link: "/MinerDetails",
-    //   src: A1566Pro180T,
-    //   name: "A1566Pro 180T",
-    //   topup: '充值',
-    //   topupNum: '20000-49999USDT',
-    //   interest: '利息',
-    //   interestname: '2.5%/天'
-    // },
-    // {
-    //   link: "/MinerDetails",
-    //   src: A1676Pro367T,
-    //   name: "A1676Pro 367T",
-    //   topup: '充值',
-    //   topupNum: '50000-99999USDT',
-    //   interest: '利息',
-    //   interestname: '3%/天'
-    // },
-    // {
-    //   link: "/MinerDetails",
-    //   src: A1166ProS75T,
-    //   name: "A1166Pro S 75T",
-    //   topup: '充值',
-    //   topupNum: '100000USDT以上',
-    //   interest: '利息',
-    //   interestname: '3.5%/天'
-    // },
+    {
+      link: "/MinerDetails",
+      src: A1566Pro180T,
+      name: "A1566Pro 180T",
+      topup: '充值',
+      topupNum: '20000-49999USDT',
+      interest: '利息',
+      interestname: '2.5%/天'
+    },
+    {
+      link: "/MinerDetails",
+      src: A1676Pro367T,
+      name: "A1676Pro 367T",
+      topup: '充值',
+      topupNum: '50000-99999USDT',
+      interest: '利息',
+      interestname: '3%/天'
+    },
+    {
+      link: "/MinerDetails",
+      src: A1166ProS75T,
+      name: "A1166Pro S 75T",
+      topup: '充值',
+      topupNum: '100000USDT以上',
+      interest: '利息',
+      interestname: '3.5%/天'
+    },
   ];
 
   return (
@@ -94,7 +94,7 @@ const MiningMachine = () => {
             span={12}
             key={i}
             className={styles.Cardstyleone}
-            onClick={() => goRoute(v)}
+            onClick={() => goRoute(`/MinerDetails?id=${v.name}`)}
           >
             <Card
               hoverable

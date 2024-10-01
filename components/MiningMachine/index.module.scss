@@ -1,5 +1,6 @@
 .Content {
   width: 90%;
+  height: 697px;
   font-size: 14px;
   backdrop-filter: blur(7px);
   border-radius: 15px;
@@ -8,6 +9,8 @@
   padding: 20px;
   text-align: center;
   background: rgba(224, 224, 224, 0.19);
+  overflow-y: auto;
+  overflow-x: hidden;
 
   .MiningMachinestyle {
     width: fit-content;
