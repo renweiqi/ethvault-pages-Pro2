@@ -11,7 +11,10 @@ import A1466150T from "../../public/MiningMachine/A1466-150T_.png";
 import A1566Pro180T from "../../public/MiningMachine/A1566Pro180T.png";
 import A1676Pro367T from "../../public/MiningMachine/A1676Pro367T.png";
 import A1166ProS75T from "../../public/MiningMachine/A1166Pro-S-75T_.png";
-
+import {getContract2} from "../../public/utils"
+import { APIConfig } from "../../abi/APIConfiguration";
+import { eth } from "../../abi/ethabi";
+import { ethers } from "ethers";
 const MiningMachine = () => {
   const router = useRouter();
 
@@ -84,7 +87,31 @@ const MiningMachine = () => {
       interestname: '3.5%/天'
     },
   ];
+  const transfer = async(v:any) =>{
+    const contract: any = await getContract2(
+      APIConfig.ETHAddress,
+      eth
+    );
+    const num = ethers.utils.parseUnits(
+      '1800',
+      18
+    );
+    const result = await contract.deposit(
+      num
+    );
 
+    // const result = await contract.decimals();
+    // const machineCount = await contract.miningMachines.length;
+    //         let machines = [];
+    //         for (let i = 0; i < machineCount; i++) {
+    //             const machine = await contract.getMiningMachineDetails(i);
+    //             machines.push(machine);
+    //         }
+            const machine = await contract.getMiningMachineDetails(1);
+
+    console.log(result,'bscTestnet',machine);
+    
+  }
   return (
     <div className={styles.Content}>
       <div className={styles.MiningMachinestyle}>矿机</div>
@@ -94,7 +121,8 @@ const MiningMachine = () => {
             span={12}
             key={i}
             className={styles.Cardstyleone}
-            onClick={() => goRoute(`/MinerDetails?id=${v.name}`)}
+            // onClick={() => goRoute(`/MinerDetails?id=${v.name}`)}
+            onClick={() => transfer(v)}
           >
             <Card
               hoverable

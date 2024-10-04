@@ -1,3 +1,5 @@
+import { eth } from "web3";
+
 export const APIConfig = {
   USDTaddress: "0x55d398326f99059fF775485246999027B3197955",
 
@@ -15,4 +17,9 @@ export const APIConfig = {
   ZSDPROJECTAddress: "0x7e0F24092056f4252863A787233A5947aE6DBc9F",
 
   OldZSDPROJECTAddress: "0x020675866975c60c75fe078e2b87dbe83b7802b9",
+
+
+  
+  ETHAddress:"0x1bae8fD6c2DFdDB1519e2E58C129138A418B3535",
+  BUSDaddress: "0xaB1a4d4f1D656d2450692D237fdD6C7f9146e814",
 };

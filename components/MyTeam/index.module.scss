@@ -60,6 +60,7 @@
     font-weight: 400;
     font-size: 18px;
     color: #ffffff;
+    display: inline-block;
     line-height: 20px;
     text-align: left;
     font-style: normal;
@@ -83,13 +84,8 @@
     font-size: 18px;
     border-bottom: #e89e2c;
   }
-  .ComputingPowercont span {
-    flex: 1; /* 允许子元素占据可用空间 */
-    min-width: 0; /* 确保flex项目可以缩小到0 */
-    word-break: break-word; /* 允许在单词边界处断行 */
-    overflow-wrap: break-word; /* 允许在单词边界处断行 */
-    max-width: 25%;
-    margin-right: 10px; /* 给每个span添加一些右边距，除了最后一个 */
+  .ComputingPowercont div {
+    text-align: left;
   }
   /* 移除最后一个span的右边距 */
   .ComputingPowercont span:last-child {

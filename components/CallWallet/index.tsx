@@ -4,7 +4,7 @@ import { message, Modal, Input, Form, Button, Row, Col } from "antd";
 import { createWallet, walletConnect } from "thirdweb/wallets";
 import { ConnectButton } from "thirdweb/react";
 import { approve, allowance } from "thirdweb/extensions/erc20";
-import { bsc } from "thirdweb/chains";
+import { bsc,bscTestnet } from "thirdweb/chains";
 import { client } from "../../src/app/client";
 import type { Metadata } from "next";
 import styles from "./index.module.scss";
@@ -203,7 +203,8 @@ const CallWallet = () => {
         client={client}
         wallets={wallets}
         connectModal={{ size: "compact" }}
-        chain={bsc}
+        // chain={bsc}
+        chain={bscTestnet}
       />
       {
         <Modal
