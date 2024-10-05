@@ -1,8 +1,213 @@
 .rewardcontainer {
   background-color: #000;
   color: #fff;
-  padding: 20px;
   max-width: 400px;
   margin: auto;
-  font-family: Arial, sans-serif;
+  height: 100vh;
+  .arrows {
+    display: flex;
+    justify-content: center;
+    margin: 16px 0;
+  }
+  .lconstyle {
+    cursor: pointer;
+    transition: transform 0.3s ease;
+  }
+
+  .Content {
+    width: 90%;
+    font-size: 14px;
+    backdrop-filter: blur(7px);
+    border-radius: 15px;
+    margin: 0 auto;
+    color: #fff;
+    padding: 15px;
+    text-align: center;
+    background: rgba(224, 224, 224, 0.19);
+    margin-top: 38px;
+    margin-bottom: 24px;
+    .inputstyle {
+      background: #d8d8d8;
+      border-radius: 4px;
+      line-height: 25px;
+    }
+    .buttonstyle {
+      width: 100%;
+      height: 40px;
+      background: #e89e2c;
+      backdrop-filter: blur(2px);
+      font-weight: 500;
+      font-size: 18px;
+      color: #ffffff;
+      line-height: 25px;
+      text-align: left;
+      font-style: normal;
+    }
+    .buttonstyleflg {
+      width: 100%;
+      height: 40px;
+      background: #494642;
+      backdrop-filter: blur(2px);
+      font-weight: 500;
+      font-size: 18px;
+      color: #ffffff;
+      line-height: 25px;
+      text-align: left;
+      font-style: normal;
+    }
+    .buttonHelpFriendstyle {
+      width: 100%;
+      height: 40px;
+      border: 1px solid #e89e2c;
+      color: #e89e2c;
+      font-size: 18px;
+      background: rgba(49, 47, 47, 0);
+      line-height: 25px;
+      border-radius: 4px;
+      // opacity: 0.8;
+      backdrop-filter: blur(2px);
+    }
+    .ContentText {
+      text-align: center;
+      font-weight: 600;
+      font-size: 20px;
+      color: #ffffff;
+      line-height: 28px;
+      text-align: center;
+      font-style: normal;
+      border-bottom: 3px solid #e89e2c;
+      margin-bottom: 20px;
+    }
+    .ContentInstructions {
+      font-weight: 400;
+      font-size: 14px;
+      color: #ffffff;
+      line-height: 20px;
+      text-align: left;
+      font-style: normal;
+      margin-bottom: 20px;
+      margin-top: 8px;
+    }
+    .Contentinterest {
+      display: flex; /* 使用Flexbox布局 */
+      justify-content: space-between; /* 子元素左右分布 */
+      align-items: center; /* 垂直居中 */
+    }
+
+    .Contentlabel {
+      font-weight: 500;
+      font-size: 16px;
+      color: #ffffff;
+      line-height: 22px;
+      font-style: normal;
+    }
+
+    .interest {
+      font-weight: 500;
+      font-size: 16px;
+      color: #e89e2c;
+      line-height: 22px;
+      text-align: right;
+      font-style: normal;
+    }
+    .labelContainer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .labelLeft {
+      margin-right: auto;
+
+      font-weight: 500;
+      font-size: 16px;
+      color: #ffffff;
+      line-height: 22px;
+      text-align: left;
+      font-style: normal;
+    }
+    .labelRight {
+      margin-left: auto;
+
+      font-weight: 400;
+      font-size: 14px;
+      color: #999999;
+      line-height: 20px;
+      text-align: left;
+      font-style: normal;
+    }
+    .CalculatedValue {
+      font-weight: 500;
+      font-size: 28px;
+      color: #e89e2c;
+      line-height: 40px;
+      text-align: left;
+      font-style: normal;
+    }
+    .Ustyle {
+      font-weight: 500;
+      font-size: 16px;
+      color: #ffffff;
+      line-height: 22px;
+      text-align: left;
+      font-style: normal;
+    }
+    .Colstyle {
+      font-weight: 400;
+      font-size: 14px;
+      color: #d8d8d8;
+      line-height: 20px;
+      text-align: center;
+      font-style: normal;
+    }
+  }
+  .conter {
+    width: 90%;
+    border-radius: 14px;
+    opacity: 0.8;
+    background: rgba(224, 224, 224, 0.19);
+    backdrop-filter: blur(7px);
+    margin: auto;
+    padding: 24px;
+    padding-bottom: 12px;
+  }
+  .contertitle {
+    width: 170px;
+    text-align: center;
+    margin-top: 24px;
+    font-weight: 600;
+    font-size: 20px;
+    color: #ffffff;
+    line-height: 28px;
+    margin: auto;
+    font-style: normal;
+    border-bottom: 3px solid #e89e2c;
+    margin-bottom: 24px;
+  }
+  .topup {
+    display: flex;
+    font-size: 16px;
+    gap: 24px;
+    font-weight: 600;
+    color: #ffffff;
+    line-height: 26px;
+    font-style: normal;
+    margin-top: 4px;
+  }
+  .ComputingPower {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 400;
+    font-size: 16px;
+    color: #ffffff;
+    line-height: 22px;
+    font-style: normal;
+    margin-top: 10px;
+  }
+  .lconstyle {
+    color: #e89e2c;
+    width: 24px;
+    height: 13px;
+    font-size: 30px;
+    margin-top: 24px;
+  }
 }

@@ -8,7 +8,6 @@ import { useRouter } from "next/navigation";
 import RightMenu from "../RightMenu";
 import { MenuContext } from "../MenuContext";
 import { copyToClipboard } from "../../public/clipboard";
-// import Announcement from "../Announcement";
 import bgGif from "../../public/images/beijing.png";
 
 const imageArray = [
@@ -24,12 +23,12 @@ const imageArray = [
     name: "个人中心",
     en: "PERSONAL CENTER",
   },
-  {
-    link: "/Community",
-    url: "../../images/ContactUs.png",
-    name: "联系我们",
-    en: "Contact Us",
-  },
+  // {
+  //   link: "/Community",
+  //   url: "../../images/ContactUs.png",
+  //   name: "联系我们",
+  //   en: "Contact Us",
+  // },
   {
     link: "/HomeLess",
     url: "../../images/homepage.png",
@@ -53,7 +52,9 @@ const ClientMenu: React.FC = () => {
   };
 
   const handleCopyClick = () => {
-    const textToCopy = `https://m.zsdcoin.com?ref=${account ? account.address : ''}`;
+    const textToCopy = `https://m.zsdcoin.com?ref=${
+      account ? account.address : ""
+    }`;
     copyToClipboard(textToCopy);
   };
 
@@ -82,11 +83,7 @@ const ClientMenu: React.FC = () => {
         <Top onToggleRightMenu={toggleRightMenu} />
 
         <div className={styles.videoBackground} id="nav">
-          <Image
-            className={styles.imageGif}
-            src={bgGif}
-            alt=""
-          />
+          <Image className={styles.imageGif} src={bgGif} alt="" />
         </div>
 
         <div className={styles.top} ref={containerRef}>

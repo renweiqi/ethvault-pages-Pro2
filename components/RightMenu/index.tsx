@@ -5,7 +5,6 @@ import styles from "./index.module.scss";
 import { useRouter } from "next/navigation";
 import { copyToClipboard } from "../../public/clipboard";
 
-
 const RightMenu: React.FC = () => {
   const router = useRouter();
   const handleCopyClick = () => {
@@ -66,7 +65,7 @@ const RightMenu: React.FC = () => {
           提款
         </div>
       </div>
-      <div
+      {/* <div
         data-id="RightMenu"
         className={styles.row}
         onClick={() => router.push("/Community")}
@@ -82,7 +81,7 @@ const RightMenu: React.FC = () => {
         <div data-id="RightMenu" className={styles.text}>
           联系我们
         </div>
-      </div>
+      </div> */}
       <div
         data-id="RightMenu"
         className={styles.row}

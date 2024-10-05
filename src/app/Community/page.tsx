@@ -1,10 +1,9 @@
 import React from "react";
 import dynamic from "next/dynamic";
-// import VideoPlayer from "../../../components/VideoPlayer";
 import Content from "../../../components/CommBg";
 import Image from "next/image";
 import styles from "./index.module.scss";
-import { MenuProvider } from "../../../components/MenuContext"; // 调整路径到实际位置
+import { MenuProvider } from "../../../components/MenuContext";
 const TopMenu = dynamic(() => import("../../../components/TopMenu"), {
   ssr: true,
 });
@@ -12,7 +11,6 @@ const Community = () => {
   return (
     <MenuProvider>
       <TopMenu />
-      {/* <VideoPlayer></VideoPlayer> */}
       <Content
         styleMain={{ marginTop: "36px" }}
         title={"联系我们"}

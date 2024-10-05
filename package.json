@@ -12,6 +12,7 @@
   "dependencies": {
     "@thirdweb-dev/sdk": "^4.0.99",
     "antd": "^5.19.2",
+    "antd-mobile": "^5.37.1",
     "axios": "^1.7.2",
     "compression": "^1.7.4",
     "express": "^4.19.2",
@@ -23,6 +24,7 @@
     "react-dom": "^18.3",
     "react-fast-marquee": "^1.6.5",
     "sass": "^1.77.8",
+    "sharp": "^0.33.5",
     "thirdweb": "^5",
     "web3": "^4.11.1"
   },

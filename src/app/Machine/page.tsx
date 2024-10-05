@@ -10,7 +10,6 @@ const Machine = () => {
   return (
     <MenuProvider>
       <TopMenu />
-
       <MiningMachine />
     </MenuProvider>
   );

@@ -2,12 +2,12 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import styles from "./index.module.scss";
-import leftarraw from "../../public/images/leftarraw2.png";
+import leftarraw from "../../public/images/leftarraw.png";
 import { useRouter } from "next/navigation";
 
 interface TopProps {
-  title: string
-  backUrl: string
+  title: string;
+  backUrl: string;
 }
 
 const NativeBar: React.FC<TopProps> = ({ title, backUrl }) => {
