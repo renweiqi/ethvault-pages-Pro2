@@ -2,44 +2,35 @@
 import React, { useState, useEffect } from "react";
 import styles from "./index.module.scss";
 import { useActiveAccount } from "thirdweb/react";
-import {getContract2} from "../../public/utils"
+import { getContract2 } from "../../public/utils";
 import { APIConfig } from "../../abi/APIConfiguration";
 import { eth } from "../../abi/ethabi";
-import {  formatWei } from "../../public/utils";
-
+import { formatWei } from "../../public/utils";
 
 const Commonform = () => {
   const [zSDBalance, setZSDBalance] = useState<any>();
   const [uSDTBalance, setUSDTBalance] = useState<any>();
   const account: any = useActiveAccount();
-  const getDetil = async() => {
-    const contract: any = await getContract2(
-      APIConfig.ETHAddress,
-      eth
-    );
-    
-    const result = await contract.getDeposits(
-      account.address
-    );
+  const getDetil = async () => {
+    const contract: any = await getContract2(APIConfig.ETHAddress, eth);
+
+    const result = await contract.getDeposits(account.address);
     let totalPrincipal = 0; // 本金
     let totalInterest = 0; // 利息
 
     for (let i = 0; i < result.length; i++) {
-        totalPrincipal += Number(formatWei(result[i]['principal'])) ;
-        totalInterest += Number(formatWei(result[i]['interest']));
+      totalPrincipal += Number(formatWei(result[i]["principal"]));
+      totalInterest += Number(formatWei(result[i]["interest"]));
     }
-    setUSDTBalance(totalPrincipal)
-    setZSDBalance(totalInterest)
-  }
+    setUSDTBalance(totalPrincipal);
+    setZSDBalance(totalInterest);
+  };
 
-  useEffect(()=>{
+  useEffect(() => {
     if (account) {
-    console.log(1111);
-    getDetil()
+      getDetil();
     }
-  },[account])
-
- 
+  }, [account]);
 
   return (
     <>

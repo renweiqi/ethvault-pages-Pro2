@@ -4,7 +4,12 @@
 /* .ant-input-disabled{
 	color:yellow !important;
 } */
-
+.allqina {
+  color: #d8d8d8;
+  font-size: 16px;
+  margin-top: 12px;
+  text-align: left;
+}
 :root {
   line-height: 1.5;
   font-weight: 400;
@@ -16,6 +21,19 @@
   font-optical-sizing: auto;
   font-style: normal;
   font-variation-settings: "slnt" 0;
+}
+.tikuan .ant-select-selector{
+  background:none !important;
+  border:none !important;
+  color: #E89E2C !important;
+}
+.tikuan .ant-select-selection-item{
+  background:none !important;
+  border:none !important;
+  color: #E89E2C !important;
+}
+.tikuan .ant-select-arrow{
+  color: #E89E2C !important;
 }
 
 @layer base {
