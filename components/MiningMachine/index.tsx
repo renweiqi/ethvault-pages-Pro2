@@ -124,7 +124,9 @@ const MiningMachine = () => {
             key={i}
             className={styles.Cardstyleone}
             onClick={() =>
-              goRoute(`/MinerDetails?id=${v.id}&topupNum=${v.topupNum}&interestname=${v.interestname}&name=${v.name}`)
+              goRoute(
+                `/MinerDetails?id=${v.id}&topupNum=${v.topupNum}&interestname=${v.interestname}&name=${v.name}`
+              )
             }
           >
             <Card hoverable className={styles.Card} bodyStyle={{ padding: 0 }}>
