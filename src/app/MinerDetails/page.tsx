@@ -1,10 +1,11 @@
 "use client";
-import React, { useState } from "react";
+
+import React, { Suspense, useState } from "react";
 import { Button, Form, Input, Row, Col, Select } from "antd";
-import { DownOutlined, UpOutlined } from "@ant-design/icons";
+import { DownOutlined, UpOutlined, CaretDownOutlined } from "@ant-design/icons";
+import { useSearchParams } from "next/navigation";
 import { APIConfig } from "../../../abi/APIConfiguration";
 import NativeBar from "../../../components/NativeBar";
-import { CaretDownOutlined } from "@ant-design/icons";
 import { getContract2 } from "../../../public/utils";
 import { eth } from "../../../abi/ethabi";
 import styles from "./index.module.scss";
@@ -12,12 +13,37 @@ import { ethers } from "ethers";
 
 const { Option } = Select;
 
-const initialHeight = "400px"; // 完全展开时的高度
-const minimizedHeight = "300px"; // 收起时的高度
+const initialHeight = "400px";
+const minimizedHeight = "300px";
 
-const MinerDetails = (props: any) => {
+const MinerDetails = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <MinerDetailsContent />
+    </Suspense>
+  );
+};
+
+const MinerDetailsContent = () => {
   const [form] = Form.useForm();
   const [expanded, setExpanded] = useState(false);
+  const searchParams = useSearchParams(); // 使用 hook 获取查询参数
+  const minerData = searchParams?.get("MinerData") || null;
+  console.log("minerData:", minerData);
+
+  let miner;
+  try {
+    if (minerData) {
+      miner = JSON.parse(minerData);
+    } else {
+      miner = null;
+    }
+    console.log("miner:", miner);
+  } catch (error) {
+    console.error("解析 MinerData 时出错:", error);
+    miner = null;
+  }
+
 
   const toggleExpand = () => {
     setExpanded(!expanded);
@@ -35,7 +61,7 @@ const MinerDetails = (props: any) => {
     { title: "外箱尺寸", value: "L420MM x W325mm x H4" },
     { title: "净重", value: "14.5kg" },
     { title: "毛重", value: "14.6kg" },
-    { title: "交流电压输入范围，Volt|", value: "200~300" },
+    { title: "交流电压输入范围，Volt", value: "200~300" },
     { title: "交流电源输入频率范围，Hz", value: "50~70" },
     { title: "交流电流输入范围，Amp", value: "16" },
   ];
@@ -44,7 +70,6 @@ const MinerDetails = (props: any) => {
     const contract: any = await getContract2(APIConfig.ETHAddress, eth);
     const num = ethers.utils.parseUnits(value.USDTnum, 18);
     const result = await contract.deposit(num);
-    const machine = await contract.getMiningMachineDetails(1);
     form.resetFields();
   };
 
@@ -58,14 +83,14 @@ const MinerDetails = (props: any) => {
             overflow: "hidden",
           }}
         >
-          <div className={styles.contertitle}>{props.searchParams.name}</div>
+          <div className={styles.contertitle}>{miner?.name}</div>
           <div className={styles.topup}>
             <span>充值</span>
-            <span>{props.searchParams.topupNum}</span>
+            <span>{miner?.topupNum}</span>
           </div>
           <div className={styles.topup}>
             <span>利息</span>
-            <span>{props.searchParams.interestname}</span>
+            <span>{miner?.interestname}</span>
           </div>
           <div>
             {specifications.map((item, index) => (
@@ -84,9 +109,7 @@ const MinerDetails = (props: any) => {
             />
           ) : (
             <DownOutlined
-              className={`${styles.lconstyle} ${
-                !expanded ? "rotate-down" : ""
-              }`}
+              className={`${styles.lconstyle} ${!expanded ? "rotate-down" : ""}`}
               onClick={toggleExpand}
             />
           )}
@@ -104,17 +127,10 @@ const MinerDetails = (props: any) => {
             <Col span={24}>
               <div className={styles.Contentinterest}>
                 <span className={styles.Contentlabel}>充值(USDT)</span>
-
                 <div className="tikuan">
                   <Select
                     defaultValue="USDT"
-                    suffixIcon={
-                      <CaretDownOutlined
-                        style={{
-                          color: "#E89E2C !important",
-                        }}
-                      />
-                    }
+                    suffixIcon={<CaretDownOutlined style={{ color: "#E89E2C" }} />}
                   >
                     <Option value="USDT">USDT</Option>
                   </Select>
@@ -125,19 +141,12 @@ const MinerDetails = (props: any) => {
               <Form.Item colon={false} name="USDTnum">
                 <Input placeholder="请输入数量" className={styles.inputstyle} />
               </Form.Item>
-              {/* <div className="allqina">
-                USDT可用余额 ：{props.searchParams?.uSDTBalance || "未知"}
-              </div> */}
             </Col>
           </Row>
           <Row style={{ marginTop: 24 }}>
             <Col span={24}>
               <Form.Item>
-                <Button
-                  type="primary"
-                  htmlType="submit"
-                  className={styles.buttonstyle}
-                >
+                <Button type="primary" htmlType="submit" className={styles.buttonstyle}>
                   充值
                 </Button>
               </Form.Item>

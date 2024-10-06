@@ -22,9 +22,30 @@ const MiningMachine = () => {
   const account: any = useActiveAccount();
   const [uSDTBalance, setUSDTBalance] = useState<any>();
 
-  const goRoute = (link: any) => {
-    router.push(link);
+  // const goRoute = (link: any) => {
+  //   router.push(link);
+  // };
+
+  // const goRoute = (link: any, minerData: any) => {
+  //   const serializedData = encodeURIComponent(JSON.stringify(minerData));
+  //   router.push(`${link}?MinerData=${serializedData}`);
+  // };
+
+  const goRoute = (link: any, minerData: any) => {
+    const serializedData = encodeURIComponent(
+      JSON.stringify({
+        id: minerData.id,
+        link: minerData.link,
+        name: minerData.name,
+        topup: minerData.topup,
+        topupNum: minerData.topupNum,
+        interest: minerData.interest,
+        interestname: minerData.interestname,
+      })
+    );
+    router.push(`${link}?MinerData=${serializedData}`);
   };
+
 
   const getDetil = async () => {
     const contract: any = await getContract2(APIConfig.ETHAddress, eth);
@@ -123,11 +144,12 @@ const MiningMachine = () => {
             span={12}
             key={i}
             className={styles.Cardstyleone}
-            onClick={() =>
-              goRoute(
-                `/MinerDetails?id=${v.id}&topupNum=${v.topupNum}&interestname=${v.interestname}&name=${v.name}`
-              )
-            }
+            // onClick={() =>
+            //   goRoute(
+            //     `/MinerDetails?id=${v.id}&topupNum=${v.topupNum}&interestname=${v.interestname}&name=${v.name}`
+            //   )
+            // }
+            onClick={() => goRoute(`/MinerDetails`, v)}
           >
             <Card hoverable className={styles.Card} bodyStyle={{ padding: 0 }}>
               <div className={styles.CardImageWrapper}>
