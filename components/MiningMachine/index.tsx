@@ -22,15 +22,6 @@ const MiningMachine = () => {
   const account: any = useActiveAccount();
   const [uSDTBalance, setUSDTBalance] = useState<any>();
 
-  // const goRoute = (link: any) => {
-  //   router.push(link);
-  // };
-
-  // const goRoute = (link: any, minerData: any) => {
-  //   const serializedData = encodeURIComponent(JSON.stringify(minerData));
-  //   router.push(`${link}?MinerData=${serializedData}`);
-  // };
-
   const goRoute = (link: any, minerData: any) => {
     const serializedData = encodeURIComponent(
       JSON.stringify({
@@ -144,11 +135,6 @@ const MiningMachine = () => {
             span={12}
             key={i}
             className={styles.Cardstyleone}
-            // onClick={() =>
-            //   goRoute(
-            //     `/MinerDetails?id=${v.id}&topupNum=${v.topupNum}&interestname=${v.interestname}&name=${v.name}`
-            //   )
-            // }
             onClick={() => goRoute(`/MinerDetails`, v)}
           >
             <Card hoverable className={styles.Card} bodyStyle={{ padding: 0 }}>

@@ -1,8 +1,12 @@
 "use client";
 
 import React, { Suspense, useState } from "react";
-import { Button, Form, Input, Row, Col, Select } from "antd";
-import { DownOutlined, UpOutlined, CaretDownOutlined } from "@ant-design/icons";
+import { Button, Form, InputNumber, Row, Col, Select, message } from "antd";
+import {
+  DownOutlined,
+  UpOutlined,
+  CaretDownOutlined,
+} from "@ant-design/icons";
 import { useSearchParams } from "next/navigation";
 import { APIConfig } from "../../../abi/APIConfiguration";
 import NativeBar from "../../../components/NativeBar";
@@ -27,9 +31,8 @@ const MinerDetails = () => {
 const MinerDetailsContent = () => {
   const [form] = Form.useForm();
   const [expanded, setExpanded] = useState(false);
-  const searchParams = useSearchParams(); // 使用 hook 获取查询参数
+  const searchParams = useSearchParams();
   const minerData = searchParams?.get("MinerData") || null;
-  console.log("minerData:", minerData);
 
   let miner;
   try {
@@ -38,40 +41,89 @@ const MinerDetailsContent = () => {
     } else {
       miner = null;
     }
-    console.log("miner:", miner);
   } catch (error) {
     console.error("解析 MinerData 时出错:", error);
     miner = null;
   }
 
-
   const toggleExpand = () => {
     setExpanded(!expanded);
+  };
+
+  // 根据 miner.id 获取对应的最小值和最大值
+  const getMinMax = () => {
+    if (!miner || !miner.id) {
+      return { min: 1, max: Infinity };
+    }
+
+    switch (miner.id) {
+      case 1:
+        return { min: 1, max: 999 };
+      case 2:
+        return { min: 1000, max: 5999 };
+      case 3:
+        return { min: 6000, max: 14999 };
+      case 4:
+        return { min: 15000, max: 29999 };
+      case 5:
+        return { min: 30000, max: 59999 };
+      case 6:
+        return { min: 60000, max: 99999 };
+      case 7:
+        return { min: 100000, max: Infinity };
+      default:
+        return { min: 1, max: Infinity };
+    }
+  };
+
+  // 验证输入值是否在限制范围内
+  const validateInput = (rule: any, value: any) => {
+    if (value === undefined || value === null || value === "") {
+      return Promise.reject("请输入数量");
+    }
+
+    const numValue = Number(value);
+    if (isNaN(numValue) || numValue <= 0 || !Number.isInteger(numValue)) {
+      return Promise.reject("请输入有效的正整数金额");
+    }
+
+    const { min, max } = getMinMax();
+
+    if (numValue < min || numValue > max) {
+      return Promise.reject("输入值超出范围，请输入有效的金额");
+    }
+
+    return Promise.resolve();
+  };
+
+  const onFinish = async (values: any) => {
+    try {
+      const num = ethers.utils.parseUnits(values.USDTnum.toString(), 18);
+      const contract: any = await getContract2(APIConfig.ETHAddress, eth);
+      const result = await contract.deposit(num);
+      message.success("充值成功！");
+      form.resetFields();
+    } catch (error) {
+      message.error("充值失败，请稍后再试");
+    }
   };
 
   const specifications = [
     { title: "额定算力", value: "180TH/s, -9%~+9%" },
     { title: "能效比", value: "23.5J/TH, -7%~+7%" },
     { title: "功耗", value: "3259W, -10%~+10%" },
-    { title: "连接方式", value: "RJ45 LLK 100M" },
-    { title: "风扇", value: "4* 12050 FAN" },
-    { title: "风量，CFM", value: "420MAX" },
-    { title: "运行温度", value: "-7°C~39°C" },
-    { title: "裸机尺寸", value: "L271mm x W198mm x H2" },
-    { title: "外箱尺寸", value: "L420MM x W325mm x H4" },
-    { title: "净重", value: "14.5kg" },
-    { title: "毛重", value: "14.6kg" },
-    { title: "交流电压输入范围，Volt", value: "200~300" },
-    { title: "交流电源输入频率范围，Hz", value: "50~70" },
-    { title: "交流电流输入范围，Amp", value: "16" },
+    { title: "连接方式", value: "RJ45 1G Ethernet" },
+    { title: "风扇", value: "4 x 12050 FAN" },
+    { title: "风量，CFM", value: "420 MAX" },
+    { title: "运行温度", value: "-7°C ~ 39°C" },
+    { title: "裸机尺寸", value: "L271mm x W198mm x H290mm" },
+    { title: "外箱尺寸", value: "L420mm x W325mm x H430mm" },
+    { title: "净重", value: "14.5 kg" },
+    { title: "毛重", value: "14.6 kg" },
+    { title: "交流电压输入范围，Volt", value: "200 ~ 300 V" },
+    { title: "交流电源输入频率范围，Hz", value: "50 ~ 70 Hz" },
+    { title: "交流电流输入范围，Amp", value: "16 A" },
   ];
-
-  const onFinish = async (value: any) => {
-    const contract: any = await getContract2(APIConfig.ETHAddress, eth);
-    const num = ethers.utils.parseUnits(value.USDTnum, 18);
-    const result = await contract.deposit(num);
-    form.resetFields();
-  };
 
   return (
     <div className={styles.rewardcontainer}>
@@ -130,7 +182,9 @@ const MinerDetailsContent = () => {
                 <div className="tikuan">
                   <Select
                     defaultValue="USDT"
-                    suffixIcon={<CaretDownOutlined style={{ color: "#E89E2C" }} />}
+                    suffixIcon={
+                      <CaretDownOutlined style={{ color: "#E89E2C" }} />
+                    }
                   >
                     <Option value="USDT">USDT</Option>
                   </Select>
@@ -138,15 +192,38 @@ const MinerDetailsContent = () => {
               </div>
             </Col>
             <Col span={24} style={{ marginTop: 12, marginBottom: 12 }}>
-              <Form.Item colon={false} name="USDTnum">
-                <Input placeholder="请输入数量" className={styles.inputstyle} />
+              <Form.Item
+                colon={false}
+                name="USDTnum"
+                rules={[
+                  { required: true, message: "请输入数量" },
+                  { validator: validateInput },
+                ]}
+              >
+                <InputNumber
+                  placeholder="请输入数量"
+                  className={styles.inputstyle}
+                  style={{ width: "100%" }}
+                  min={getMinMax().min}
+                  max={
+                    getMinMax().max !== Infinity ? getMinMax().max : undefined
+                  }
+                  step={1}
+                  parser={(value) => Math.floor(Number(value || "0"))}
+                  formatter={(value) => `${value}`}
+                  stringMode // 确保输入值为字符串，避免精度丢失
+                />
               </Form.Item>
             </Col>
           </Row>
           <Row style={{ marginTop: 24 }}>
             <Col span={24}>
               <Form.Item>
-                <Button type="primary" htmlType="submit" className={styles.buttonstyle}>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  className={styles.buttonstyle}
+                >
                   充值
                 </Button>
               </Form.Item>
