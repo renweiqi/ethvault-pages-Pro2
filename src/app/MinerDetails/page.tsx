@@ -7,10 +7,10 @@ import {
   UpOutlined,
   CaretDownOutlined,
 } from "@ant-design/icons";
-import { useSearchParams } from "next/navigation";
 import { APIConfig } from "../../../abi/APIConfiguration";
 import NativeBar from "../../../components/NativeBar";
 import { getContract2 } from "../../../public/utils";
+import { useSearchParams } from "next/navigation";
 import { eth } from "../../../abi/ethabi";
 import styles from "./index.module.scss";
 import { ethers } from "ethers";
@@ -211,7 +211,7 @@ const MinerDetailsContent = () => {
                   step={1}
                   parser={(value) => Math.floor(Number(value || "0"))}
                   formatter={(value) => `${value}`}
-                  stringMode // 确保输入值为字符串，避免精度丢失
+                  stringMode
                 />
               </Form.Item>
             </Col>

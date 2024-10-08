@@ -4,6 +4,7 @@ import Image from "next/image";
 import styles from "./index.module.scss";
 import { useRouter } from "next/navigation";
 import { copyToClipboard } from "../../public/clipboard";
+import Administrator from "../../public/images/Administrator.png";
 
 const RightMenu: React.FC = () => {
   const router = useRouter();
@@ -97,6 +98,23 @@ const RightMenu: React.FC = () => {
         />
         <div data-id="RightMenu" className={styles.text}>
           个人中心
+        </div>
+      </div>
+      <div
+        data-id="RightMenu"
+        className={styles.row}
+        onClick={() => router.push("/Administrator")}
+      >
+        <Image
+          data-id="RightMenu"
+          className={styles.img}
+          src={Administrator}
+          alt="coin"
+          width={50}
+          height={50}
+        />
+        <div data-id="RightMenu" className={styles.text}>
+          管理员
         </div>
       </div>
     </div>
