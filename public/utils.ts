@@ -6,10 +6,8 @@ import { BigNumber } from "ethers";
 import { ethers } from "ethers";
 import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 import { useActiveAccount } from "thirdweb/react";
-
-
-
-
+import { USDTAbi } from "../abi/USDTAbi";
+import { APIConfig } from "../abi/APIConfiguration";
 
 //获取登录后的钱包地址
 // const account: any = useActiveAccount();
@@ -39,7 +37,7 @@ export const getContract = async (address: any, abi: any) => {
 
   const provider = sdk.getProvider(); // 获取 provider
   const network = await provider.getNetwork(); // 使用 ethers.js 获取网络信息
-  console.log("实例，并传入签名者:", signer,ethereum);
+  console.log("实例，并传入签名者:", signer, ethereum);
   // 获取钱包地址
   const walletAddress = await signer.getAddress();
   console.log("钱包地址:", walletAddress);
@@ -67,7 +65,7 @@ export const uploadData = (imgurl: string) => {
       const byteNumbers = Array.from(byteChars, (char) => char.charCodeAt(0));
       const byteArray = new Uint8Array(byteNumbers);
       const imageBlob = new Blob([byteArray], { type: "image/png" });
-      
+
       // 创建一个 File 对象
       const file = new File([imageBlob], "image.png", { type: "image/png" });
 
@@ -204,10 +202,6 @@ export const formatTimestamp = (timestamp: any) => {
     .padStart(2, "0")}`;
 };
 
-
-
-
-
 /**
  * 去掉18个0
  */
@@ -224,4 +218,32 @@ export const filterAddress = (address: string) => {
   return !targetAddresses
     .map((addr) => addr.toLowerCase())
     .includes(address.toLowerCase());
-}
+};
+
+/**
+ * 查询币种余额
+ */
+export const getTokenBalance = async (address: string) => {
+  // BNB 测试网的 RPC URL
+  const bnbTestnetRpcUrl = "https://data-seed-prebsc-1-s1.binance.org:8545/";
+  // 创建Provider实例
+  const provider = new ethers.providers.JsonRpcProvider(bnbTestnetRpcUrl);
+  const walletAddress = address;
+  const tokenContract = new ethers.Contract(
+    APIConfig.BUSDaddress,
+    USDTAbi,
+    provider
+  );
+  // 获取代币余额
+  const balance = await tokenContract.balanceOf(walletAddress);
+
+  // 获取代币的 decimals 属性
+  const decimals = await tokenContract.decimals();
+
+  // 可选：获取代币的符号
+  const symbol = await tokenContract.symbol();
+
+  // 调整余额为可读格式
+  const tokenBalance = ethers.utils.formatUnits(balance, decimals);
+  return tokenBalance
+};
