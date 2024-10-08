@@ -10,7 +10,7 @@ import NativeBar from "../../../components/NativeBar";
 const Personal = () => {
   return (
     <MenuProvider>
-      <NativeBar title="" backUrl="/Machine" />
+      <NativeBar title="" backUrl="/HomeLess" />
       1111111111111
     </MenuProvider>
   );
