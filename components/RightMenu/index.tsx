@@ -9,7 +9,7 @@ import Administrator from "../../public/images/Administrator.png";
 const RightMenu: React.FC = () => {
   const router = useRouter();
   const handleCopyClick = () => {
-    const textToCopy = "这里是你想要复制的文本1";
+    const textToCopy = "这里是你想要复制的文本";
     copyToClipboard(textToCopy);
   };
 

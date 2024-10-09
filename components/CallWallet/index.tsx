@@ -4,7 +4,7 @@ import { message, Modal, Input, Form, Button, Row, Col } from "antd";
 import { createWallet, walletConnect } from "thirdweb/wallets";
 import { ConnectButton } from "thirdweb/react";
 import { approve, allowance } from "thirdweb/extensions/erc20";
-import { bsc,bscTestnet } from "thirdweb/chains";
+import { bsc, bscTestnet, sepolia } from "thirdweb/chains";
 import { client } from "../../src/app/client";
 import type { Metadata } from "next";
 import styles from "./index.module.scss";
@@ -204,47 +204,8 @@ const CallWallet = () => {
         wallets={wallets}
         connectModal={{ size: "compact" }}
         // chain={bsc}
-        chain={bscTestnet}
+        chain={sepolia}
       />
-      {
-        <Modal
-          title=""
-          open={isModalOpen}
-          onOk={handleOk}
-          onCancel={handleCancel}
-          destroyOnClose={true}
-          width={"90%"}
-          style={{ margin: 'auto', top: '20%' }}
-          footer={
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <Button onClick={handleCancel} className={styles.Cancelstyle}>
-                取消
-              </Button>
-              <Button
-                className={styles.verifystyle}
-                htmlType="submit"
-              // onClick={onFriendRechargeFun}
-              >
-                确认
-              </Button>
-            </div>
-          }
-        >
-          <Form form={form} name="friendRechargeForm">
-            <Row>
-              <div className={styles.Topmodel}>邀请人地址</div>
-              <Col span={24}>
-                <Form.Item name="Invitelink">
-                  <Input
-                    className={styles.inputstyle}
-                    placeholder="请填写/粘帖邀请链地址"
-                  />
-                </Form.Item>
-              </Col>
-            </Row>
-          </Form>
-        </Modal>
-      }
     </div>
   );
 };
