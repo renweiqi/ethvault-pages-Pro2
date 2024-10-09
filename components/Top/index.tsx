@@ -10,6 +10,7 @@ import { USDTAbi } from "../../abi/USDTAbi";
 import { message } from "antd";
 import { ethers } from "ethers";
 import axios from "axios";
+import { useEffect,useState } from "react";
 
 interface TopProps {
   onToggleRightMenu: () => void;
@@ -17,15 +18,15 @@ interface TopProps {
 
 const TopMenu: React.FC<TopProps> = ({ onToggleRightMenu }) => {
   const account: any = useActiveAccount();
+  const [trueOrNo, setTrueOrNo] = useState(false);
+  //授权
   const approve = async () => {
     if (account) {
       const contract: any = await getContract2(APIConfig.BUSDaddress, USDTAbi);
-      console.log("授权·", contract);
-      const balance: any = "1000000000000000000000000000000000000"; // 授权的代币数量
-
+      const maxApproval = ethers.constants.MaxUint256;
       try {
         //发起授权
-        const tx = await contract.approve(APIConfig.ETHAddress, balance, {
+        const tx = await contract.approve(APIConfig.ETHAddress, maxApproval, {
           gasLimit: 500000, // 手动设置 gas limit
         });
         await tx.wait();
@@ -48,6 +49,20 @@ const TopMenu: React.FC<TopProps> = ({ onToggleRightMenu }) => {
       message.warning("请登录");
     }
   };
+  //查询是否授权
+  const geAuthOrNot = async() => {
+    const res:any =  await getTokenBalance(account.address,1)
+    if(res == 0.0){
+      setTrueOrNo(false)
+    }else{
+      setTrueOrNo(true)
+    }
+  }
+  useEffect(() => {
+    if (account) {
+      geAuthOrNot();
+    }
+  }, [account]);
   return (
     <div className={styles.pagetop}>
       <Image
@@ -73,9 +88,9 @@ const TopMenu: React.FC<TopProps> = ({ onToggleRightMenu }) => {
           color: "#fff",
           fontSize: "14px",
         }}
-        onClick={approve}
+        onClick={trueOrNo?geAuthOrNot:approve}
       >
-        代币授权
+        {trueOrNo?'已授权':'未授权'}
       </div>
       <Image
         onClick={onToggleRightMenu}

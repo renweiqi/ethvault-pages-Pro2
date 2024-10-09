@@ -27,10 +27,10 @@ const Personal = () => {
       label: "授权",
       key: 0,
     },
-    {
-      label: "提币",
-      key: 1,
-    },
+    // {
+    //   label: "提币",
+    //   key: 1,
+    // },
   ];
   useEffect(() => {
     getWallet();

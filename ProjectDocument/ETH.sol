@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.2;
 
 // 导入 OpenZeppelin 的 Ownable 和 ReentrancyGuard 合约
 import "@openzeppelin/contracts/access/Ownable.sol";
@@ -130,6 +130,11 @@ contract USDTDeposit is Ownable, ReentrancyGuard {
         }));
     }
 
+    //查询充值记录
+    function getDeposits(address userAddress) public view returns (Deposit[] memory) {
+        return deposits[userAddress];
+    }
+
     /**
      * @dev 允许用户将 USDT 存入合约。
      * @param _amount 存入的 USDT 数量（基于 decimals）。
@@ -147,7 +152,6 @@ contract USDTDeposit is Ownable, ReentrancyGuard {
             if (!userDeposits[i].principalWithdrawn) {
                 uint256 interest = calculateInterest(msg.sender, i);
                 userDeposits[i].interest += interest;
-                userDeposits[i].timestamp = block.timestamp;
             }
         }
 

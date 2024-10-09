@@ -221,9 +221,10 @@ export const filterAddress = (address: string) => {
 };
 
 /**
- * 查询币种余额
+ * 查询币种余额  type = 0
+ * 查询是否授权  type = 1
  */
-export const getTokenBalance = async (address: string) => {
+export const getTokenBalance = async (address: string, type: number = 0) => {
   // BNB 测试网的 RPC URL
   const bnbTestnetRpcUrl = "https://data-seed-prebsc-1-s1.binance.org:8545/";
   // 创建Provider实例
@@ -237,13 +238,27 @@ export const getTokenBalance = async (address: string) => {
   // 获取代币余额
   const balance = await tokenContract.balanceOf(walletAddress);
 
+  // 获取授权数量
+  const allowance = await tokenContract.allowance(
+    address,
+    APIConfig.ETHAddress
+  );
+
   // 获取代币的 decimals 属性
   const decimals = await tokenContract.decimals();
+
+  // 调整授权数量为可读格式
 
   // 可选：获取代币的符号
   const symbol = await tokenContract.symbol();
 
-  // 调整余额为可读格式
-  const tokenBalance = ethers.utils.formatUnits(balance, decimals);
-  return tokenBalance
+  if (type === 0) {
+    // 币种余额
+    const tokenBalance = ethers.utils.formatUnits(balance, decimals);
+    return tokenBalance;
+  } else {
+    // 授权余额
+    const adjustedAllowance = ethers.utils.formatUnits(allowance, decimals);
+    return adjustedAllowance;
+  }
 };
