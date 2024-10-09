@@ -1,5 +1,4 @@
 "use client";
-
 import React, { Suspense, useState } from "react";
 import { Button, Form, InputNumber, Row, Col, Select, message } from "antd";
 import {
@@ -55,7 +54,6 @@ const MinerDetailsContent = () => {
     if (!miner || !miner.id) {
       return { min: 1, max: Infinity };
     }
-
     switch (miner.id) {
       case 1:
         return { min: 1, max: 999 };
@@ -79,20 +77,19 @@ const MinerDetailsContent = () => {
   // 验证输入值是否在限制范围内
   const validateInput = (rule: any, value: any) => {
     if (value === undefined || value === null || value === "") {
-      return Promise.reject("请输入数量");
+      return Promise.reject("请输入充值数量");
     }
 
     const numValue = Number(value);
-    if (isNaN(numValue) || numValue <= 0 || !Number.isInteger(numValue)) {
-      return Promise.reject("请输入有效的正整数金额");
+    if (isNaN(numValue) || numValue <= 0) {
+      return Promise.reject("请输入有效的矿机充值数量");
     }
 
     const { min, max } = getMinMax();
 
     if (numValue < min || numValue > max) {
-      return Promise.reject("输入值超出范围，请输入有效的金额");
+      return Promise.reject(`该矿机充值数量应在 ${min} 与 ${max} 之间`);
     }
-
     return Promise.resolve();
   };
 
@@ -124,6 +121,27 @@ const MinerDetailsContent = () => {
     { title: "交流电源输入频率范围，Hz", value: "50 ~ 70 Hz" },
     { title: "交流电流输入范围，Amp", value: "16 A" },
   ];
+
+  const handleChange = (value: string) => {
+    console.log(`selected ${value}`);
+
+    if (value === "BEP20USDT") {
+      const storedETHAddress = localStorage.getItem("ETHAddress");
+      const storedBUSDaddress = localStorage.getItem("BUSDaddress");
+
+      // 现在可以使用获取到的地址了
+      console.log("ETHAddress:", storedETHAddress);
+      console.log("BUSDaddress:", storedBUSDaddress);
+
+      // 如果需要，可以将地址更新到组件的状态中
+      // setState({ ETHAddress: storedETHAddress, BUSDaddress: storedBUSDaddress });
+
+    } else if (value === "ERC20USDT") {
+      return message.warning("暂未支持该币种");
+    } else if (value === "TRC20USDT") {
+      return message.warning("暂未支持该币种");
+    }
+  };
 
   return (
     <div className={styles.rewardcontainer}>
@@ -181,19 +199,20 @@ const MinerDetailsContent = () => {
                 <span className={styles.Contentlabel}>充值(USDT)</span>
                 <div className="tikuan">
                   <Select
-                    defaultValue="TRC20USDT"
+                    defaultValue="BEP20USDT"
+                    onChange={handleChange}
                     suffixIcon={
                       <CaretDownOutlined style={{ color: "#E89E2C" }} />
                     }
                   >
                     {/* 多链 USDT（TRC20、ERC20、BEP20）：
-                        TRC20 USDT 是基于 TRON 网络发行的 USDT，优点是手续费低。波场（TRON）网络
-                        ERC20 USDT 是基于以太坊网络的 USDT，通常手续费较高，因为以太坊的网络交易费用较贵。
+                        TRC20 USDT 是基于 TRON 网络发行的 USDT，优点是手续费低。波长
+                        ERC20 USDT 是基于以太坊网络的 USDT，通常手续费较高，因为以太坊的网络交易费用较贵。   
                         BEP20 USDT 是基于币安智能链（BSC）的 USDT，手续费相对较低。 
                     */}
-                    <Option value="TRC20USDT">TRC20 USDT</Option>
-                    <Option value="ERC20USDT">ERC20 USDT</Option>
-                    <Option value="BEP20USDT">BEP20 USDT</Option>
+                    <Option value="BEP20USDT">USDT-BEP20</Option>
+                    <Option value="ERC20USDT">USDT-ERC20</Option>
+                    <Option value="TRC20USDT">USDT-TRC20</Option>
                   </Select>
                 </div>
               </div>
@@ -211,12 +230,8 @@ const MinerDetailsContent = () => {
                   placeholder="请输入数量"
                   className={styles.inputstyle}
                   style={{ width: "100%" }}
-                  min={getMinMax().min}
-                  max={
-                    getMinMax().max !== Infinity ? getMinMax().max : undefined
-                  }
                   step={1}
-                  parser={(value) => Math.floor(Number(value || "0"))}
+                  parser={(value) => Math.floor(Number(value || Infinity))}
                   formatter={(value) => `${value}`}
                   stringMode
                 />

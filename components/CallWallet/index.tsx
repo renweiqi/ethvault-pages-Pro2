@@ -47,7 +47,7 @@ const wallets: any = [
 const USDT = getContract({
   client: client,
   address: APIConfig.USDTaddress,
-  chain: bsc,
+  chain: bscTestnet,
   abi: contractABI,
 });
 
@@ -56,14 +56,14 @@ const ZSD = getContract({
   client: client,
   address: APIConfig.ZSDaddress,
   abi: contractZSDABI,
-  chain: bsc,
+  chain: bscTestnet,
 });
 
 // ZSDProject
 const ZSDProjectfun = getContract({
   client: client,
   address: APIConfig.ZSDPROJECTAddress,
-  chain: bsc,
+  chain: bscTestnet,
   abi: contractZSDPROJECTABI,
 });
 
@@ -204,7 +204,7 @@ const CallWallet = () => {
         wallets={wallets}
         connectModal={{ size: "compact" }}
         // chain={bsc}
-        chain={sepolia}
+        chain={bscTestnet}
       />
     </div>
   );

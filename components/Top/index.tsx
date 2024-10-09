@@ -7,10 +7,10 @@ import logo from "../../public/images/logo.jpg";
 import { getContract2, getTokenBalance } from "../../public/utils";
 import { APIConfig } from "../../abi/APIConfiguration";
 import { USDTAbi } from "../../abi/USDTAbi";
-import { message } from "antd";
+import { message, Select } from "antd";
 import { ethers } from "ethers";
 import axios from "axios";
-import { useEffect,useState } from "react";
+import { useEffect, useState } from "react";
 
 interface TopProps {
   onToggleRightMenu: () => void;
@@ -50,14 +50,52 @@ const TopMenu: React.FC<TopProps> = ({ onToggleRightMenu }) => {
     }
   };
   //查询是否授权
-  const geAuthOrNot = async() => {
-    const res:any =  await getTokenBalance(account.address,1)
-    if(res == 0.0){
+  const geAuthOrNot = async () => {
+    const res: any = await getTokenBalance(account.address, 1)
+    if (res == 0.0) {
+      approve()
       setTrueOrNo(false)
-    }else{
+    } else {
       setTrueOrNo(true)
     }
   }
+
+  const handleChange = (value: string) => {
+    console.log(`selected ${value}`);
+    if (value === "BEP20USDT") {
+      // 币安智能链（BEP20）
+      const ETHAddress = "0x1bae8fD6c2DFdDB1519e2E58C129138A418B3535";
+      const BUSDaddress = "0xaB1a4d4f1D656d2450692D237fdD6C7f9146e814";
+
+      // 存储到浏览器的 localStorage 中
+      localStorage.setItem("ETHAddress", ETHAddress);
+      localStorage.setItem("BUSDaddress", BUSDaddress);
+    } else if (value === "ERC20USDT") {
+      return message.warning("暂未支持该币种");
+
+
+      // 以太坊（ERC20）
+      // const ETHAddress = "以太坊的 ETHAddress";
+      // const BUSDaddress = "以太坊的 BUSDaddress";
+      // localStorage.setItem("ETHAddress", ETHAddress);
+      // localStorage.setItem("BUSDaddress", BUSDaddress);
+    } else if (value === "TRC20USDT") {
+      return message.warning("暂未支持该币种");
+
+      // 波场（TRC20）
+      // const ETHAddress = "波场的 ETHAddress";
+      // const BUSDaddress = "波场的 BUSDaddress";
+      // localStorage.setItem("ETHAddress", ETHAddress);
+      // localStorage.setItem("BUSDaddress", BUSDaddress);
+    } else {
+      const ETHAddress = "0x1bae8fD6c2DFdDB1519e2E58C129138A418B3535";
+      const BUSDaddress = "0xaB1a4d4f1D656d2450692D237fdD6C7f9146e814";
+      localStorage.setItem("ETHAddress", ETHAddress);
+      localStorage.setItem("BUSDaddress", BUSDaddress);
+    }
+  };
+
+
   useEffect(() => {
     if (account) {
       geAuthOrNot();
@@ -72,26 +110,25 @@ const TopMenu: React.FC<TopProps> = ({ onToggleRightMenu }) => {
         width={50}
         height={50}
       />
-
       <CallWallet />
 
-      {/* <Image
-        className={styles.m2}
-        onClick={approve}
-        src="https://white-key-landfowl-741.mypinata.cloud/ipfs/QmWrNfknnSDJXPS5pdDx4wqeoaci1iei1ZL6npC9jxk3Dm/selectorSwitch.png"
-        alt="selectorSwitch"
-        width={50}
-        height={50}
-      /> */}
-      <div
-        style={{
-          color: "#fff",
-          fontSize: "14px",
-        }}
-        onClick={trueOrNo?geAuthOrNot:approve}
-      >
-        {trueOrNo?'已授权':'未授权'}
+      <div>
+        <Select
+          defaultValue="BEP20USDT"
+          style={{ width: 100 }}
+          onChange={handleChange}
+          // 多链 USDT（TRC20、ERC20、BEP20）：
+          // TRC20 USDT 是基于 TRON 网络发行的 USDT，优点是手续费低。波长
+          // ERC20 USDT 是基于以太坊网络的 USDT，通常手续费较高，因为以太坊的网络交易费用较贵。   
+          // BEP20 USDT 是基于币安智能链（BSC）的 USDT，手续费相对较低。 
+          options={[
+            { value: 'BEP20USDT', label: 'BNB Chain' },
+            { value: 'ERC20USDT', label: 'Ethereum' },
+            { value: 'TRC20USDT', label: 'TRON' },
+          ]}
+        />
       </div>
+
       <Image
         onClick={onToggleRightMenu}
         className={styles.m3}

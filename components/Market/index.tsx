@@ -6,7 +6,6 @@ import { Spin } from "antd";
 import Image from "next/image";
 import {
   getContract,
-  readContract,
   createThirdwebClient,
 } from "thirdweb";
 const THIRDWEB_PROJECT_ID: any = process.env.NEXT_PUBLIC_TEMPLATE_CLIENT_ID;
@@ -14,13 +13,13 @@ export const client = createThirdwebClient({ clientId: THIRDWEB_PROJECT_ID });
 import { APIConfig } from "../../abi/APIConfiguration";
 import { ZSDSwapABI } from "../../abi/ZSDSwapABI";
 const contractZSDSwapABI: any = ZSDSwapABI;
-import { bsc } from "thirdweb/chains";
+import { bsc, bscTestnet, sepolia } from "thirdweb/chains";
 
 const ZSDSwap = getContract({
   client: client,
   address: APIConfig.ZSDSwapAddress,
   abi: contractZSDSwapABI,
-  chain: bsc,
+  chain: bscTestnet,
 });
 
 const Market = () => {
