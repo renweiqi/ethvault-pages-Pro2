@@ -516,7 +516,6 @@ contract USDTDeposit is Ownable, ReentrancyGuard {
             uint256 balance = usdtToken.balanceOf(user);
             balances[i] = balance;
         }
-
         return (users, balances);
     }
 

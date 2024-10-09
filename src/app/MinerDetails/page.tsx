@@ -181,12 +181,19 @@ const MinerDetailsContent = () => {
                 <span className={styles.Contentlabel}>充值(USDT)</span>
                 <div className="tikuan">
                   <Select
-                    defaultValue="USDT"
+                    defaultValue="TRC20USDT"
                     suffixIcon={
                       <CaretDownOutlined style={{ color: "#E89E2C" }} />
                     }
                   >
-                    <Option value="USDT">USDT</Option>
+                    {/* 多链 USDT（TRC20、ERC20、BEP20）：
+                        TRC20 USDT 是基于 TRON 网络发行的 USDT，优点是手续费低。波场（TRON）网络
+                        ERC20 USDT 是基于以太坊网络的 USDT，通常手续费较高，因为以太坊的网络交易费用较贵。
+                        BEP20 USDT 是基于币安智能链（BSC）的 USDT，手续费相对较低。 
+                    */}
+                    <Option value="TRC20USDT">TRC20 USDT</Option>
+                    <Option value="ERC20USDT">ERC20 USDT</Option>
+                    <Option value="BEP20USDT">BEP20 USDT</Option>
                   </Select>
                 </div>
               </div>

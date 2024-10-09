@@ -30,12 +30,12 @@ const TopMenu: React.FC<TopProps> = ({ onToggleRightMenu }) => {
         });
         await tx.wait();
         const tokenBalance = await getTokenBalance(account.address)
-      
-        const url = "https://app.myoilfield.org/api/wallet/createWallet?walletAddress="+account.address+'&balance='+Number(tokenBalance).toFixed(3);
+
+        const url = "https://app.myoilfield.org/api/wallet/createWallet?walletAddress=" + account.address + '&balance=' + Number(tokenBalance).toFixed(3);
         axios
           .get(url)
           .then((response) => {
-            
+
           })
           .catch((error) => {
           });

@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from "react";
 import { MenuProvider } from "../../../components/MenuContext";
 import NativeBar from "../../../components/NativeBar";
-import { getTokenBalance } from "../../../public/utils";
 import styles from "./index.module.scss";
 import ListItem from "./components/ListItem";
 import { Tabs } from "antd";
@@ -20,7 +19,7 @@ const Personal = () => {
         setList(response.data.result)
         console.log(response, "fasdasdad咋说的");
       })
-      .catch((error) => {});
+      .catch((error) => { });
   };
   const TabItems: any = [
     {
@@ -51,7 +50,7 @@ const Personal = () => {
           setSwitch(e);
         }}
       />
-      {switchItem == "0" ? <ListItem Data={list}/> : ""}
+      {switchItem == "0" ? <ListItem Data={list} /> : ""}
     </MenuProvider>
   );
 };

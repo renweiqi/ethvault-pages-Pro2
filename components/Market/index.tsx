@@ -57,33 +57,6 @@ const Market = () => {
           },
         }
       );
-
-      // 当前币价格
-      // const USDtoZSDnum = await readContract({
-      //   contract: ZSDSwap,
-      //   method: "function getAmountZSDOut(uint256) view returns (uint256)",
-      //   params: [BigInt(1000000000000000000)],
-      // });
-      // const WeiBalance = USDtoZSDnum.toString();
-      // const list = {
-      //   coingeckoId: "bitcoin",
-      //   image: "https://white-key-landfowl-741.mypinata.cloud/ipfs/QmWrNfknnSDJXPS5pdDx4wqeoaci1iei1ZL6npC9jxk3Dm/coin.png",
-      //   marketCap: 5040000,
-      //   name: "Zsd",
-      //   price: (1 / (Number(WeiBalance) / (10 ** 18))).toFixed(5),
-      //   priceChangePercentage1H: 1.0204692461855924,
-      //   priceChangePercentage7D: -19.93160601388554,
-      //   change: 0.05,
-      //   serialNumber: 1,
-      //   sparkline: [
-      //     69578.0868687256, 68779.36958477591, 67978.65056486202, 66843.5884601612,
-      //     67431.81775217736, 67282.62285948903, 67422.2458091223, 66667.23020827338,
-      //   ],
-      //   symbol: "btc",
-      //   totalVolume: 105305152504
-      // };
-      // const updatedCurrencies = [list, ...response.data.data.coins];
-
       setCurrencies(response.data.data.coins);
       setLoading(false);
     } catch (error) {
@@ -95,7 +68,7 @@ const Market = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.marketstyle}>行情</div>
+      <div className={styles.marketstyle}>行        情</div>
 
       <div className={styles.titleContent}>
         <div className={styles.marketInfo}>
@@ -121,7 +94,7 @@ const Market = () => {
                 height={48}
               />
               <div>
-                <div className={styles.currencyName}>{currency.name}</div>
+                <div className={styles.currencyName}>{currency.symbol}</div>
                 <div className={styles.currencyMarketCap}>
                   ${(currency.name == 'Zsd' ? 5040000 : currency.marketCap / 1e9).toFixed(2)}B
                 </div>
