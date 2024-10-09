@@ -204,7 +204,7 @@ const CallWallet = () => {
         wallets={wallets}
         connectModal={{ size: "compact" }}
         // chain={bsc}
-        chain={sepolia}
+        chain={bscTestnet}
       />
     </div>
   );

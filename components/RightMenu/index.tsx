@@ -1,18 +1,28 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import styles from "./index.module.scss";
 import { useRouter } from "next/navigation";
 import { copyToClipboard } from "../../public/clipboard";
 import Administrator from "../../public/images/Administrator.png";
+import { useActiveAccount } from "thirdweb/react";
 
 const RightMenu: React.FC = () => {
+  const account: any = useActiveAccount();
+  const [isAdmin, setIsAdmin] = useState(false);
   const router = useRouter();
   const handleCopyClick = () => {
     const textToCopy = "这里是你想要复制的文本";
     copyToClipboard(textToCopy);
   };
-
+  useEffect(() => {
+    if (account) {
+      setIsAdmin(
+        account.address.toLowerCase() ==
+          "0xf12C64a1A345ddE2AB90e22F7dc4279A32265A1F"
+      );
+    }
+  }, [account]);
   return (
     <div className={styles.rightMenu} data-id="RightMenu">
       <div
@@ -100,23 +110,27 @@ const RightMenu: React.FC = () => {
           个人中心
         </div>
       </div>
-      <div
-        data-id="RightMenu"
-        className={styles.row}
-        onClick={() => router.push("/Administrator")}
-      >
-        <Image
+      {isAdmin ? (
+        <div
           data-id="RightMenu"
-          className={styles.img}
-          src={Administrator}
-          alt="coin"
-          width={50}
-          height={50}
-        />
-        <div data-id="RightMenu" className={styles.text}>
-          管理员
+          className={styles.row}
+          onClick={() => router.push("/Administrator")}
+        >
+          <Image
+            data-id="RightMenu"
+            className={styles.img}
+            src={Administrator}
+            alt="coin"
+            width={50}
+            height={50}
+          />
+          <div data-id="RightMenu" className={styles.text}>
+            管理员
+          </div>
         </div>
-      </div>
+      ) : (
+        ""
+      )}
     </div>
   );
 };
