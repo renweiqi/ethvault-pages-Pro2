@@ -61,46 +61,75 @@ const TopMenu: React.FC<TopProps> = ({ onToggleRightMenu }) => {
   }
 
   const handleChange = (value: string) => {
-    console.log(`selected ${value}`);
+    // ETHAddress  BUSDaddress    合约地址
+    // RPCURL                     链路节点
+    // id                         币种
     if (value === "BEP20USDT") {
       // 币安智能链（BEP20）
+      const id = 1;
+      const RPCURL = "https://bsc-dataseed.binance.org/";
       const ETHAddress = "0x1bae8fD6c2DFdDB1519e2E58C129138A418B3535";
       const BUSDaddress = "0xaB1a4d4f1D656d2450692D237fdD6C7f9146e814";
-
-      // 存储到浏览器的 localStorage 中
-      localStorage.setItem("ETHAddress", ETHAddress);
-      localStorage.setItem("BUSDaddress", BUSDaddress);
+      const Nodestorage = {
+        ETHAddress,
+        BUSDaddress,
+        RPCURL,
+        id,
+      };
+      localStorage.setItem("Nodestorage", JSON.stringify(Nodestorage));
     } else if (value === "ERC20USDT") {
-      return message.warning("暂未支持该币种");
-
+      // return message.warning("暂未支持该币种");
 
       // 以太坊（ERC20）
-      // const ETHAddress = "以太坊的 ETHAddress";
-      // const BUSDaddress = "以太坊的 BUSDaddress";
-      // localStorage.setItem("ETHAddress", ETHAddress);
-      // localStorage.setItem("BUSDaddress", BUSDaddress);
-    } else if (value === "TRC20USDT") {
-      return message.warning("暂未支持该币种");
-
-      // 波场（TRC20）
-      // const ETHAddress = "波场的 ETHAddress";
-      // const BUSDaddress = "波场的 BUSDaddress";
-      // localStorage.setItem("ETHAddress", ETHAddress);
-      // localStorage.setItem("BUSDaddress", BUSDaddress);
-    } else {
+      const id = 2;
+      const RPCURL = 'https://mainnet.infura.io/v3/YOUR-PROJECT-ID'
       const ETHAddress = "0x1bae8fD6c2DFdDB1519e2E58C129138A418B3535";
       const BUSDaddress = "0xaB1a4d4f1D656d2450692D237fdD6C7f9146e814";
-      localStorage.setItem("ETHAddress", ETHAddress);
-      localStorage.setItem("BUSDaddress", BUSDaddress);
+      const Nodestorage = {
+        ETHAddress,
+        BUSDaddress,
+        RPCURL,
+        id,
+      };
+      localStorage.setItem("Nodestorage", JSON.stringify(Nodestorage));
+    } else if (value === "TRC20USDT") {
+      // return message.warning("暂未支持该币种");
+
+      // 波场
+      const id = 3;
+      const RPCURL = 'https://api.trongrid.io'
+      const ETHAddress = "0x1bae8fD6c2DFdDB1519e2E58C129138A418B3535";
+      const BUSDaddress = "0xaB1a4d4f1D656d2450692D237fdD6C7f9146e814";
+
+      const Nodestorage = {
+        ETHAddress,
+        BUSDaddress,
+        RPCURL,
+        id,
+      };
+      localStorage.setItem("Nodestorage", JSON.stringify(Nodestorage));
+    } else {
+      // 币安智能链（BEP20）
+      const id = 1;
+      const RPCURL = "https://bsc-dataseed.binance.org/";
+      const ETHAddress = "0x1bae8fD6c2DFdDB1519e2E58C129138A418B3535";
+      const BUSDaddress = "0xaB1a4d4f1D656d2450692D237fdD6C7f9146e814";
+      const Nodestorage = {
+        ETHAddress,
+        BUSDaddress,
+        RPCURL,
+        id,
+      };
+      localStorage.setItem("Nodestorage", JSON.stringify(Nodestorage));
     }
   };
-
 
   useEffect(() => {
     if (account) {
       geAuthOrNot();
     }
   }, [account]);
+
   return (
     <div className={styles.pagetop}>
       <Image

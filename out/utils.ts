@@ -225,8 +225,10 @@ export const filterAddress = (address: string) => {
  * 查询是否授权  type = 1
  */
 export const getTokenBalance = async (address: string, type: number = 0) => {
+
   // BNB 测试网的 RPC URL
   const bnbTestnetRpcUrl = "https://data-seed-prebsc-1-s1.binance.org:8545/";
+
   // 创建Provider实例
   const provider = new ethers.providers.JsonRpcProvider(bnbTestnetRpcUrl);
   const walletAddress = address;
