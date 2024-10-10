@@ -69,7 +69,7 @@ const Commonform = ({ Data }: Props) => {
                           width: "30%",
                         }}
                       >
-                        {formatWei(item["interest"])}
+                        {Number(formatWei(item["interest"])).toFixed(3)}
                       </div>
                       <div
                         style={{

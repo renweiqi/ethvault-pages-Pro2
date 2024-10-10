@@ -23,7 +23,7 @@ const Commonform = () => {
       totalInterest += Number(formatWei(result[i]["interest"]));
     }
     setUSDTBalance(totalPrincipal);
-    setZSDBalance(totalInterest);
+    setZSDBalance(Number(totalInterest).toFixed(3));
   };
 
   useEffect(() => {

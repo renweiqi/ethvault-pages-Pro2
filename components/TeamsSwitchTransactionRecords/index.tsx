@@ -17,10 +17,15 @@ const TeamsSwitchTransactionRecords = () => {
       eth
     );
     
+    const result2 = await contract.getAllUserBalancesInContract();
+    console.log(result2,'result2result2');
+    
     const result = await contract.getDeposits(
       account.address
     );
     setDepList(result)
+
+
   }
 
   useEffect(()=>{

@@ -146,7 +146,9 @@ const Commonform = () => {
                             }}
                           >
                             <div>利息:</div>
-                            <div>{formatWei(item["interest"])}</div>
+                            <div>
+                              {Number(formatWei(item["interest"])).toFixed(3)}
+                            </div>
                           </div>
                         </div>
                       </Option>
@@ -185,30 +187,33 @@ const Commonform = () => {
             <Col span={24} style={{ marginTop: 12, marginBottom: 12 }}>
               <Form.Item colon={false} name="USDT_one_amount">
                 <Input
+                  disabled={bjlx == "lx"}
                   addonAfter={selectAfterone}
                   placeholder="请输入提取数量"
                   className={styles.inputstyle}
                   value={num}
                   onChange={(e: any) => {
-                    let value = e.target.value.replace(/\D/g, "");
-                    const total = Number(
-                      bjlx == "bj"
-                        ? selectItem.length != 0
-                          ? formatWei(selectItem[0])
+                    if (bjlx == "bj") {
+                      let value = e.target.value.replace(/\D/g, "");
+                      const total = Number(
+                        bjlx == "bj"
+                          ? selectItem.length != 0
+                            ? formatWei(selectItem[0])
+                            : 0
+                          : selectItem.length != 0
+                          ? formatWei(selectItem[1])
                           : 0
-                        : selectItem.length != 0
-                        ? formatWei(selectItem[1])
-                        : 0
-                    );
-                    if (bjlx == "lx") {
-                      value = total;
-                    } else {
-                      if (total < value) {
+                      );
+                      if (bjlx == "lx") {
                         value = total;
+                      } else {
+                        if (total < value) {
+                          value = total;
+                        }
                       }
-                    }
 
-                    setNum(value);
+                      setNum(value);
+                    }
                   }}
                 />
                 {bjlx == "bj" ? (
@@ -219,7 +224,9 @@ const Commonform = () => {
                 ) : (
                   <div className="allqina">
                     全部利息 ：
-                    {selectItem.length != 0 ? formatWei(selectItem[1]) : 0}
+                    {selectItem.length != 0
+                      ? Number(formatWei(selectItem[1])).toFixed(3)
+                      : 0}
                   </div>
                 )}
               </Form.Item>
