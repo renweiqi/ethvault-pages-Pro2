@@ -24,7 +24,7 @@ const Commonform = () => {
       className="select-after"
       onClick={() => {
         setNum(
-          bjlx == "bj" ? formatWei(selectItem[0]) : formatWei(selectItem[1])
+          bjlx == "bj" ? Number(formatWei(selectItem[0])).toFixed(3)  : Number(formatWei(selectItem[1])).toFixed(3)
         );
       }}
     >
@@ -47,8 +47,9 @@ const Commonform = () => {
   //取利息
   const withdrawInterest = async () => {
     const contract: any = await getContract2(APIConfig.ETHAddress, eth);
+    const nums = ethers.utils.parseUnits(num, 18);
     try {
-      await contract.withdrawInterest(selectItem[5]);
+      await contract.withdrawInterest(selectItem[5],nums);
       message.success("操作成功");
       setTimeout(() => {
         getDetil();
@@ -94,6 +95,14 @@ const Commonform = () => {
       withdrawInterest();
     }
   };
+  const drawp2 = async() => {
+   
+    const contract: any = await getContract2(APIConfig.ETHAddress, eth);
+    const res = await contract.adminWithdrawevent()
+    console.log(res,'11111');
+    
+  
+  };
 
   useEffect(() => {
     if (account) {
@@ -121,6 +130,7 @@ const Commonform = () => {
                   style={{ width: "100%", margin: "20px 0" }}
                   onChange={(e: any) => {
                     setSelectItem(e.split(","));
+                    setNum('')
                   }}
                 >
                   {depList.map((item: any, index: number) => {
@@ -175,6 +185,7 @@ const Commonform = () => {
                     }
                     onChange={(e: any) => {
                       setBjlx(e);
+                      setNum('')
                     }}
                   >
                     <Option value="bj">本金</Option>
@@ -187,14 +198,12 @@ const Commonform = () => {
             <Col span={24} style={{ marginTop: 12, marginBottom: 12 }}>
               <Form.Item colon={false} name="USDT_one_amount">
                 <Input
-                  disabled={bjlx == "lx"}
                   addonAfter={selectAfterone}
                   placeholder="请输入提取数量"
                   className={styles.inputstyle}
                   value={num}
                   onChange={(e: any) => {
-                    if (bjlx == "bj") {
-                      let value = e.target.value.replace(/\D/g, "");
+                      let value =  e.target.value.replace(/\D/g, "");
                       const total = Number(
                         bjlx == "bj"
                           ? selectItem.length != 0
@@ -203,17 +212,12 @@ const Commonform = () => {
                           : selectItem.length != 0
                           ? formatWei(selectItem[1])
                           : 0
-                      );
-                      if (bjlx == "lx") {
-                        value = total;
-                      } else {
-                        if (total < value) {
+                      ).toFixed(3);
+                        if (Number(total)  < Number(value) ) {
                           value = total;
                         }
-                      }
 
                       setNum(value);
-                    }
                   }}
                 />
                 {bjlx == "bj" ? (
@@ -242,6 +246,20 @@ const Commonform = () => {
                   onClick={drawp}
                 >
                   取款
+                </Button>
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row style={{ marginTop: 12 }}>
+            <Col span={24}>
+              <Form.Item>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  className={styles.buttonstyle}
+                  onClick={drawp2}
+                >
+                  取款222
                 </Button>
               </Form.Item>
             </Col>

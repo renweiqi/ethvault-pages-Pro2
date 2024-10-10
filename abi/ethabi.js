@@ -14,7 +14,7 @@ export const eth = [
 	},
 	{
 		"inputs": [],
-		"name": "adminWithdraw",
+		"name": "adminWithdrawevent",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -289,6 +289,11 @@ export const eth = [
 			{
 				"internalType": "uint256",
 				"name": "_depositId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_amount",
 				"type": "uint256"
 			}
 		],
