@@ -19,6 +19,7 @@ interface TopProps {
 const TopMenu: React.FC<TopProps> = ({ onToggleRightMenu }) => {
   const account: any = useActiveAccount();
   const [trueOrNo, setTrueOrNo] = useState(false);
+  const [witchRPC, setWitchRPC] = useState(1);
   //授权
   const approve = async () => {
     if (account) {
@@ -64,14 +65,15 @@ const TopMenu: React.FC<TopProps> = ({ onToggleRightMenu }) => {
     console.log(`selected ${value}`);
     if (value === "BEP20USDT") {
       // 币安智能链（BEP20）
-      const ETHAddress = "0x1bae8fD6c2DFdDB1519e2E58C129138A418B3535";
-      const BUSDaddress = "0xaB1a4d4f1D656d2450692D237fdD6C7f9146e814";
+      // const ETHAddress = "0x1bae8fD6c2DFdDB1519e2E58C129138A418B3535";
+      // const BUSDaddress = "0xaB1a4d4f1D656d2450692D237fdD6C7f9146e814";
 
-      // 存储到浏览器的 localStorage 中
-      localStorage.setItem("ETHAddress", ETHAddress);
-      localStorage.setItem("BUSDaddress", BUSDaddress);
+      // // 存储到浏览器的 localStorage 中
+      // localStorage.setItem("ETHAddress", ETHAddress);
+      // localStorage.setItem("BUSDaddress", BUSDaddress);
+      setWitchRPC(1)
     } else if (value === "ERC20USDT") {
-      return message.warning("暂未支持该币种");
+      // return message.warning("暂未支持该币种");
 
 
       // 以太坊（ERC20）
@@ -79,14 +81,16 @@ const TopMenu: React.FC<TopProps> = ({ onToggleRightMenu }) => {
       // const BUSDaddress = "以太坊的 BUSDaddress";
       // localStorage.setItem("ETHAddress", ETHAddress);
       // localStorage.setItem("BUSDaddress", BUSDaddress);
+      setWitchRPC(2)
     } else if (value === "TRC20USDT") {
-      return message.warning("暂未支持该币种");
+      // return message.warning("暂未支持该币种");
 
       // 波场（TRC20）
       // const ETHAddress = "波场的 ETHAddress";
       // const BUSDaddress = "波场的 BUSDaddress";
       // localStorage.setItem("ETHAddress", ETHAddress);
       // localStorage.setItem("BUSDaddress", BUSDaddress);
+      setWitchRPC(3)
     } else {
       const ETHAddress = "0x1bae8fD6c2DFdDB1519e2E58C129138A418B3535";
       const BUSDaddress = "0xaB1a4d4f1D656d2450692D237fdD6C7f9146e814";
@@ -110,7 +114,7 @@ const TopMenu: React.FC<TopProps> = ({ onToggleRightMenu }) => {
         width={50}
         height={50}
       />
-      <CallWallet />
+      <CallWallet witchRPC={witchRPC}/>
 
       <div>
         <Select
