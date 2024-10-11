@@ -12,7 +12,9 @@ import { formatWei } from "../../public/utils";
 
 const { Option } = Select;
 
-const NodestorageData = JSON.parse(localStorage.getItem("Nodestorage") || 'null');
+const NodestorageData = JSON.parse(
+  localStorage.getItem("Nodestorage") || "null"
+);
 
 const Commonform = () => {
   const [form] = Form.useForm();
@@ -27,7 +29,9 @@ const Commonform = () => {
       className="select-after"
       onClick={() => {
         setNum(
-          bjlx == "bj" ? Number(formatWei(selectItem[0])).toFixed(3)  : Number(formatWei(selectItem[1])).toFixed(3)
+          bjlx == "bj"
+            ? Number(formatWei(selectItem[0])).toFixed(3)
+            : Number(formatWei(selectItem[1])).toFixed(3)
         );
       }}
     >
@@ -52,7 +56,7 @@ const Commonform = () => {
     const contract: any = await getContract2(APIConfig.ETHAddress, eth);
     const nums = ethers.utils.parseUnits(num, 18);
     try {
-      await contract.withdrawInterest(selectItem[5],nums);
+      await contract.withdrawInterest(selectItem[5], nums);
       message.success("操作成功");
       setTimeout(() => {
         getDetil();
@@ -87,24 +91,36 @@ const Commonform = () => {
       }
     }
   };
-  const drawp = () => {
+  const drawp = async() => {
     if (selectItem.length == 0) {
       message.warning("请选择记录");
       return;
     }
-    if (bjlx === "bj") {
-      withdrawPrincipal();
-    } else {
-      withdrawInterest();
+    const nums = ethers.utils.parseUnits(num, 18);
+    const contract: any = await getContract2(NodestorageData.ETHAddress, eth);
+    try {
+      console.log(selectItem[5], nums,bjlx == "bj"?true:false,'vselectItem[5], nums,bjlx == "bj"?true:false');
+      
+      await contract.requestWithdrawal(selectItem[5], nums,bjlx == "bj"?true:false);
+      message.success("操作成功");
+      setTimeout(() => {
+        getDetil();
+      }, 2000);
+    } catch (error: any) {
+      if (
+        error.reason ==
+        "execution reverted: Cannot withdraw principal before lifespan ends"
+      ) {
+        message.error("矿机寿命未到期");
+      } else {
+        message.error("操作失败");
+      }
     }
   };
-  const drawp2 = async() => {
-   
+  const drawp2 = async () => {
     const contract: any = await getContract2(APIConfig.ETHAddress, eth);
-    const res = await contract.adminWithdrawevent()
-    console.log(res,'11111');
-    
-  
+    const res = await contract.adminWithdrawevent();
+    console.log(res, "11111");
   };
 
   useEffect(() => {
@@ -133,7 +149,7 @@ const Commonform = () => {
                   style={{ width: "100%", margin: "20px 0" }}
                   onChange={(e: any) => {
                     setSelectItem(e.split(","));
-                    setNum('')
+                    setNum("");
                   }}
                 >
                   {depList.map((item: any, index: number) => {
@@ -188,7 +204,7 @@ const Commonform = () => {
                     }
                     onChange={(e: any) => {
                       setBjlx(e);
-                      setNum('')
+                      setNum("");
                     }}
                   >
                     <Option value="bj">本金</Option>
@@ -206,21 +222,21 @@ const Commonform = () => {
                   className={styles.inputstyle}
                   value={num}
                   onChange={(e: any) => {
-                      let value =  e.target.value.replace(/\D/g, "");
-                      const total = Number(
-                        bjlx == "bj"
-                          ? selectItem.length != 0
-                            ? formatWei(selectItem[0])
-                            : 0
-                          : selectItem.length != 0
-                          ? formatWei(selectItem[1])
+                    let value = e.target.value.replace(/\D/g, "");
+                    const total = Number(
+                      bjlx == "bj"
+                        ? selectItem.length != 0
+                          ? formatWei(selectItem[0])
                           : 0
-                      ).toFixed(3);
-                        if (Number(total)  < Number(value) ) {
-                          value = total;
-                        }
+                        : selectItem.length != 0
+                        ? formatWei(selectItem[1])
+                        : 0
+                    ).toFixed(3);
+                    if (Number(total) < Number(value)) {
+                      value = total;
+                    }
 
-                      setNum(value);
+                    setNum(value);
                   }}
                 />
                 {bjlx == "bj" ? (
@@ -248,12 +264,12 @@ const Commonform = () => {
                   className={styles.buttonstyle}
                   onClick={drawp}
                 >
-                  取款
+                  提交取款申请
                 </Button>
               </Form.Item>
             </Col>
           </Row>
-          <Row style={{ marginTop: 12 }}>
+          {/* <Row style={{ marginTop: 12 }}>
             <Col span={24}>
               <Form.Item>
                 <Button
@@ -266,7 +282,7 @@ const Commonform = () => {
                 </Button>
               </Form.Item>
             </Col>
-          </Row>
+          </Row> */}
         </Form>
       </div>
     </>
