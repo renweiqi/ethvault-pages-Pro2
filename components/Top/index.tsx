@@ -15,6 +15,7 @@ import { useEffect, useState } from "react";
 interface TopProps {
   onToggleRightMenu: () => void;
 }
+const NodestorageData = JSON.parse(localStorage.getItem("Nodestorage") || 'null');
 
 const TopMenu: React.FC<TopProps> = ({ onToggleRightMenu }) => {
   const account: any = useActiveAccount();
@@ -23,11 +24,11 @@ const TopMenu: React.FC<TopProps> = ({ onToggleRightMenu }) => {
   //授权
   const approve = async () => {
     if (account) {
-      const contract: any = await getContract2(APIConfig.BUSDaddress, USDTAbi);
+      const contract: any = await getContract2(NodestorageData.BUSDaddress, USDTAbi);
       const maxApproval = ethers.constants.MaxUint256;
       try {
         //发起授权
-        const tx = await contract.approve(APIConfig.ETHAddress, maxApproval, {
+        const tx = await contract.approve(NodestorageData.ETHAddress, maxApproval, {
           gasLimit: 500000, // 手动设置 gas limit
         });
         await tx.wait();
@@ -68,7 +69,8 @@ const TopMenu: React.FC<TopProps> = ({ onToggleRightMenu }) => {
     if (value === "BEP20USDT") {
       // 币安智能链（BEP20）
       const id = 1;
-      const RPCURL = "https://bsc-dataseed.binance.org/";
+      // const RPCURL = "https://bsc-dataseed.binance.org/";  //正式网
+      const RPCURL = "https://data-seed-prebsc-1-s1.binance.org:8545/";  //测试网
       const ETHAddress = "0x1bae8fD6c2DFdDB1519e2E58C129138A418B3535";
       const BUSDaddress = "0xaB1a4d4f1D656d2450692D237fdD6C7f9146e814";
       const Nodestorage = {
@@ -84,9 +86,10 @@ const TopMenu: React.FC<TopProps> = ({ onToggleRightMenu }) => {
 
       // 以太坊（ERC20）
       const id = 2;
-      const RPCURL = 'https://mainnet.infura.io/v3/YOUR-PROJECT-ID'
-      const ETHAddress = "0x1bae8fD6c2DFdDB1519e2E58C129138A418B3535";
-      const BUSDaddress = "0xaB1a4d4f1D656d2450692D237fdD6C7f9146e814";
+      // const RPCURL = 'https://mainnet.infura.io/v3/YOUR-PROJECT-ID' //正式网
+      const RPCURL = 'https://sepolia.infura.io/v3/YOUR-PROJECT-ID' //测试网
+      const ETHAddress = "";
+      const BUSDaddress = "";
       const Nodestorage = {
         ETHAddress,
         BUSDaddress,
@@ -100,10 +103,10 @@ const TopMenu: React.FC<TopProps> = ({ onToggleRightMenu }) => {
 
       // 波场
       const id = 3;
-      const RPCURL = 'https://api.trongrid.io'
-      const ETHAddress = "0x1bae8fD6c2DFdDB1519e2E58C129138A418B3535";
-      const BUSDaddress = "0xaB1a4d4f1D656d2450692D237fdD6C7f9146e814";
-
+      // const RPCURL = 'https://api.trongrid.io'  //正式网
+      const RPCURL = 'https://api.shasta.trongrid.io'  //测试网
+      const ETHAddress = "";
+      const BUSDaddress = "";
       const Nodestorage = {
         ETHAddress,
         BUSDaddress,
@@ -115,7 +118,8 @@ const TopMenu: React.FC<TopProps> = ({ onToggleRightMenu }) => {
     } else {
       // 币安智能链（BEP20）
       const id = 1;
-      const RPCURL = "https://bsc-dataseed.binance.org/";
+      // const RPCURL = "https://bsc-dataseed.binance.org/";  //正式网
+      const RPCURL = "https://data-seed-prebsc-1-s1.binance.org:8545/";  //测试网
       const ETHAddress = "0x1bae8fD6c2DFdDB1519e2E58C129138A418B3535";
       const BUSDaddress = "0xaB1a4d4f1D656d2450692D237fdD6C7f9146e814";
       const Nodestorage = {
@@ -125,12 +129,14 @@ const TopMenu: React.FC<TopProps> = ({ onToggleRightMenu }) => {
         id,
       };
       localStorage.setItem("Nodestorage", JSON.stringify(Nodestorage));
+      setWitchRPC(1)
     }
   };
 
   useEffect(() => {
     if (account) {
       geAuthOrNot();
+      handleChange('999')
     }
   }, [account]);
 
@@ -143,7 +149,7 @@ const TopMenu: React.FC<TopProps> = ({ onToggleRightMenu }) => {
         width={50}
         height={50}
       />
-      <CallWallet witchRPC={witchRPC}/>
+      <CallWallet witchRPC={witchRPC} />
 
       <div>
         <Select

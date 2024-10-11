@@ -17,6 +17,8 @@ import { eth } from "../../abi/ethabi";
 import { useActiveAccount } from "thirdweb/react";
 import { formatWei } from "../../public/utils";
 
+const NodestorageData = JSON.parse(localStorage.getItem("Nodestorage") || 'null');
+
 const MiningMachine = () => {
   const router = useRouter();
   const account: any = useActiveAccount();
@@ -39,7 +41,7 @@ const MiningMachine = () => {
 
 
   const getDetil = async () => {
-    const contract: any = await getContract2(APIConfig.ETHAddress, eth);
+    const contract: any = await getContract2(NodestorageData.ETHAddress, eth);
     const result = await contract.getDeposits(account.address);
     let totalPrincipal = 0;
     for (let i = 0; i < result.length; i++) {

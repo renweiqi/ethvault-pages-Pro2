@@ -11,6 +11,9 @@ import { eth } from "../../abi/ethabi";
 import { formatWei } from "../../public/utils";
 
 const { Option } = Select;
+
+const NodestorageData = JSON.parse(localStorage.getItem("Nodestorage") || 'null');
+
 const Commonform = () => {
   const [form] = Form.useForm();
   const account: any = useActiveAccount();
@@ -33,7 +36,7 @@ const Commonform = () => {
   );
 
   const getDetil = async () => {
-    const contract: any = await getContract2(APIConfig.ETHAddress, eth);
+    const contract: any = await getContract2(NodestorageData.ETHAddress, eth);
     const result = await contract.getDeposits(account.address);
     setDepList(result);
   };
@@ -46,7 +49,7 @@ const Commonform = () => {
 
   //取利息
   const withdrawInterest = async () => {
-    const contract: any = await getContract2(APIConfig.ETHAddress, eth);
+    const contract: any = await getContract2(NodestorageData.ETHAddress, eth);
     try {
       await contract.withdrawInterest(selectItem[5]);
       message.success("操作成功");
@@ -65,7 +68,7 @@ const Commonform = () => {
   //取本金
   const withdrawPrincipal = async () => {
     const nums = ethers.utils.parseUnits(num, 18);
-    const contract: any = await getContract2(APIConfig.ETHAddress, eth);
+    const contract: any = await getContract2(NodestorageData.ETHAddress, eth);
     try {
       await contract.withdrawPrincipal(selectItem[5], nums);
       message.success("操作成功");
@@ -197,8 +200,8 @@ const Commonform = () => {
                           ? formatWei(selectItem[0])
                           : 0
                         : selectItem.length != 0
-                        ? formatWei(selectItem[1])
-                        : 0
+                          ? formatWei(selectItem[1])
+                          : 0
                     );
                     if (bjlx == "lx") {
                       value = total;

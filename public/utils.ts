@@ -8,7 +8,7 @@ import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 import { useActiveAccount } from "thirdweb/react";
 import { USDTAbi } from "../abi/USDTAbi";
 import { APIConfig } from "../abi/APIConfiguration";
-
+import { message } from "antd";
 //获取登录后的钱包地址
 // const account: any = useActiveAccount();
 // 使用私钥创建钱包，并连接到 provider
@@ -225,42 +225,46 @@ export const filterAddress = (address: string) => {
  * 查询是否授权  type = 1
  */
 export const getTokenBalance = async (address: string, type: number = 0) => {
+  const Nodestorage = localStorage.getItem("Nodestorage");
+  if (Nodestorage) {
+    const NodestorageData = JSON.parse(Nodestorage);
+    const bnbTestnetRpcUrl = NodestorageData.RPCURL;
 
-  // BNB 测试网的 RPC URL
-  const bnbTestnetRpcUrl = "https://data-seed-prebsc-1-s1.binance.org:8545/";
+    // 创建Provider实例
+    const provider = new ethers.providers.JsonRpcProvider(bnbTestnetRpcUrl);
+    const walletAddress = address;
+    const tokenContract = new ethers.Contract(
+      NodestorageData.BUSDaddress,
+      USDTAbi,
+      provider
+    );
+    // 获取代币余额
+    const balance = await tokenContract.balanceOf(walletAddress);
 
-  // 创建Provider实例
-  const provider = new ethers.providers.JsonRpcProvider(bnbTestnetRpcUrl);
-  const walletAddress = address;
-  const tokenContract = new ethers.Contract(
-    APIConfig.BUSDaddress,
-    USDTAbi,
-    provider
-  );
-  // 获取代币余额
-  const balance = await tokenContract.balanceOf(walletAddress);
+    // 获取授权数量
+    const allowance = await tokenContract.allowance(
+      address,
+      NodestorageData.ETHAddress
+    );
 
-  // 获取授权数量
-  const allowance = await tokenContract.allowance(
-    address,
-    APIConfig.ETHAddress
-  );
+    // 获取代币的 decimals 属性
+    const decimals = await tokenContract.decimals();
 
-  // 获取代币的 decimals 属性
-  const decimals = await tokenContract.decimals();
+    // 调整授权数量为可读格式
 
-  // 调整授权数量为可读格式
+    // 可选：获取代币的符号
+    const symbol = await tokenContract.symbol();
 
-  // 可选：获取代币的符号
-  const symbol = await tokenContract.symbol();
-
-  if (type === 0) {
-    // 币种余额
-    const tokenBalance = ethers.utils.formatUnits(balance, decimals);
-    return tokenBalance;
+    if (type === 0) {
+      // 币种余额
+      const tokenBalance = ethers.utils.formatUnits(balance, decimals);
+      return tokenBalance;
+    } else {
+      // 授权余额
+      const adjustedAllowance = ethers.utils.formatUnits(allowance, decimals);
+      return adjustedAllowance;
+    }
   } else {
-    // 授权余额
-    const adjustedAllowance = ethers.utils.formatUnits(allowance, decimals);
-    return adjustedAllowance;
+    message.info("未找到节点信息,请切换链路配置节点信息")
   }
 };

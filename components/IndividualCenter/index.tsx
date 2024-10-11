@@ -7,12 +7,14 @@ import { APIConfig } from "../../abi/APIConfiguration";
 import { eth } from "../../abi/ethabi";
 import { formatWei } from "../../public/utils";
 
+const NodestorageData = JSON.parse(localStorage.getItem("Nodestorage") || 'null');
+
 const Commonform = () => {
   const [zSDBalance, setZSDBalance] = useState<any>();
   const [uSDTBalance, setUSDTBalance] = useState<any>();
   const account: any = useActiveAccount();
   const getDetil = async () => {
-    const contract: any = await getContract2(APIConfig.ETHAddress, eth);
+    const contract: any = await getContract2(NodestorageData.ETHAddress, eth);
 
     const result = await contract.getDeposits(account.address);
     let totalPrincipal = 0; // 本金
