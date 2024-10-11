@@ -71,7 +71,7 @@ const TopMenu: React.FC<TopProps> = ({ onToggleRightMenu }) => {
       const id = 1;
       // const RPCURL = "https://bsc-dataseed.binance.org/";  //正式网
       const RPCURL = "https://data-seed-prebsc-1-s1.binance.org:8545/";  //测试网
-      const ETHAddress = "0x0C3d2E62b0244497429D7A81C08F81CF420f33a7";
+      const ETHAddress = "0x38Bb23fcbdf44eD2751A2F38D96439f5C306Adc6";
       const BUSDaddress = "0xaB1a4d4f1D656d2450692D237fdD6C7f9146e814";
       const Nodestorage = {
         ETHAddress,
@@ -120,7 +120,7 @@ const TopMenu: React.FC<TopProps> = ({ onToggleRightMenu }) => {
       const id = 1;
       // const RPCURL = "https://bsc-dataseed.binance.org/";  //正式网
       const RPCURL = "https://data-seed-prebsc-1-s1.binance.org:8545/";  //测试网
-      const ETHAddress = "0x0C3d2E62b0244497429D7A81C08F81CF420f33a7";
+      const ETHAddress = "0x38Bb23fcbdf44eD2751A2F38D96439f5C306Adc6";
       const BUSDaddress = "0xaB1a4d4f1D656d2450692D237fdD6C7f9146e814";
       const Nodestorage = {
         ETHAddress,
