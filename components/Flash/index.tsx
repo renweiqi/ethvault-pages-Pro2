@@ -49,12 +49,8 @@ const Commonform = () => {
 
   //取利息
   const withdrawInterest = async () => {
-<<<<<<< HEAD
-    const contract: any = await getContract2(NodestorageData.ETHAddress, eth);
-=======
     const contract: any = await getContract2(APIConfig.ETHAddress, eth);
     const nums = ethers.utils.parseUnits(num, 18);
->>>>>>> cf79d701ce15c921e1fe293b2d8eb008b1e50ac4
     try {
       await contract.withdrawInterest(selectItem[5],nums);
       message.success("操作成功");
@@ -219,24 +215,10 @@ const Commonform = () => {
                           : selectItem.length != 0
                           ? formatWei(selectItem[1])
                           : 0
-<<<<<<< HEAD
-                        : selectItem.length != 0
-                          ? formatWei(selectItem[1])
-                          : 0
-                    );
-                    if (bjlx == "lx") {
-                      value = total;
-                    } else {
-                      if (total < value) {
-                        value = total;
-                      }
-                    }
-=======
                       ).toFixed(3);
                         if (Number(total)  < Number(value) ) {
                           value = total;
                         }
->>>>>>> cf79d701ce15c921e1fe293b2d8eb008b1e50ac4
 
                       setNum(value);
                   }}
