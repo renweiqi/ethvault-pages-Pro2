@@ -19,11 +19,20 @@ const TeamsSwitchTransactionRecords = () => {
       NodestorageData.ETHAddress,
       eth
     );
+<<<<<<< HEAD
 
+=======
+    
+    const result2 = await contract.getAllUserBalancesInContract();
+    console.log(result2,'result2result2');
+    
+>>>>>>> cf79d701ce15c921e1fe293b2d8eb008b1e50ac4
     const result = await contract.getDeposits(
       account.address
     );
     setDepList(result)
+
+
   }
 
   useEffect(() => {
