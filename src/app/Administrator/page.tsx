@@ -6,34 +6,62 @@ import styles from "./index.module.scss";
 import ListItem from "./components/ListItem";
 import { Tabs } from "antd";
 import axios from "axios";
+import { getContract2 } from "../../../public/utils";
+import { eth } from "../../../abi/ethabi";
+
+const NodestorageData = JSON.parse(localStorage.getItem("Nodestorage") || 'null');
 
 const Personal = () => {
   const [switchItem, setSwitch] = useState("0");
   const [list, setList] = useState([]);
+  const [listexamine, setListexamine] = useState([]);
+
+  const getDetil = async () => {
+    try {
+      const contract: any = await getContract2(NodestorageData.ETHAddress, eth);
+      const result = await contract.getAllPendingWithdrawalRequests();
+      setListexamine(result);
+    } catch (error) {
+      console.error("Error fetching withdrawal requests:", error);
+    }
+  };
 
   const getWallet = async () => {
     const url = "https://app.myoilfield.org/api/wallet/getWallet";
-    axios
-      .get(url)
-      .then((response) => {
-        setList(response.data.result)
-        console.log(response, "fasdasdad咋说的");
-      })
-      .catch((error) => { });
+    try {
+      const response = await axios.get(url);
+      setList(response.data.result);
+    } catch (error) {
+      console.error("Error fetching wallet data:", error);
+    }
   };
-  const TabItems: any = [
+
+  const TabItems = [
     {
       label: "授权",
-      key: 0,
+      key: "0",
     },
-    // {
-    //   label: "提币",
-    //   key: 1,
-    // },
+    {
+      label: "审核",
+      key: "1",
+    },
   ];
+
   useEffect(() => {
     getWallet();
+    getDetil();
   }, [switchItem]);
+
+  const handleTabChange = (key: string) => {
+    setSwitch(key);
+
+    if (key === "0") {
+      getWallet();
+    } else if (key === "1") {
+      getDetil();
+    }
+  };
+
   return (
     <MenuProvider>
       <NativeBar title="管理员" backUrl="/HomeLess" />
@@ -46,11 +74,9 @@ const Personal = () => {
         }}
         className={styles.Tabs}
         items={TabItems}
-        onChange={(e: any) => {
-          setSwitch(e);
-        }}
+        onChange={handleTabChange}
       />
-      {switchItem == "0" ? <ListItem Data={list} /> : ""}
+      {<ListItem Data={list} switchItem={switchItem} listexamine={listexamine} />}
     </MenuProvider>
   );
 };
