@@ -135,7 +135,7 @@ const ListItem = ({ Data = [], switchItem, listexamine = [] }: Props) => {
                         <div className={styles.buttonContainer}>
                           <Button
                             type="primary"
-                            onClick={() => btnFun(item['depositId'])}
+                            onClick={() => btnFun(item['id'])}
                           >
                             审核
                           </Button>
