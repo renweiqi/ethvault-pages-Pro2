@@ -147,8 +147,8 @@ const TopMenu: React.FC<TopProps> = ({ onToggleRightMenu }) => {
         className={styles.m1}
         src={logo}
         alt="coin"
-        width={50}
-        height={50}
+        width={40}
+        height={40}
       />
       <CallWallet witchRPC={witchRPC} />
 
