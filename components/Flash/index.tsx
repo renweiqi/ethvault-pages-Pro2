@@ -117,11 +117,6 @@ const Commonform = () => {
     }
   };
 
-  // const drawp2 = async () => {
-  //   const contract: any = await getContract2(APIConfig.ETHAddress, eth);
-  //   const res = await contract.adminWithdrawevent();
-  //   console.log(res, "11111");
-  // };
 
   useEffect(() => {
     if (account) {

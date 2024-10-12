@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Empty, List, Button } from "antd";
+import { Button, Form, List, Row, Col, Empty } from "antd";
 import styles from "./index.module.scss";
 import { formatTimestamp, formatWei } from "../../../../../public/utils";
 import { copyToClipboard } from "../../../../../public/clipboard";
@@ -16,11 +16,16 @@ interface Props {
 const ListItem = ({ Data = [], switchItem, listexamine = [] }: Props) => {
   const [NodestorageData, setNodestorageData] = useState<any>();
 
-
   const btnFun = async (id: any) => {
     const contract: any = await getContract2(NodestorageData.ETHAddress, eth);
     const result = await contract.approveWithdrawal(id);
   };
+
+  const drawp2 = async () => {
+    const contract: any = await getContract2(NodestorageData.ETHAddress, eth);
+    const res = await contract.adminWithdraw();
+  };
+
 
   useEffect(() => {
     setNodestorageData(JSON.parse(localStorage.getItem("Nodestorage") || ''))
@@ -85,7 +90,7 @@ const ListItem = ({ Data = [], switchItem, listexamine = [] }: Props) => {
             )}
           </div>
         </div>
-      ) : (
+      ) : switchItem == "1" ? (
         <div>
           {/* 审核 Tab 内容 */}
           <div className={styles.ComputingPower}>
@@ -146,6 +151,21 @@ const ListItem = ({ Data = [], switchItem, listexamine = [] }: Props) => {
             )}
           </div>
         </div>
+      ) : (
+        <Row style={{ marginTop: 12 }}>
+          <Col span={24}>
+            <Form.Item>
+              <Button
+                type="primary"
+                htmlType="submit"
+                className={styles.buttonstyle}
+                onClick={drawp2}
+              >
+                取款
+              </Button>
+            </Form.Item>
+          </Col>
+        </Row>
       )}
     </div>
   );

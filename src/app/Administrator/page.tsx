@@ -43,6 +43,10 @@ const Personal = () => {
       label: "审核",
       key: "1",
     },
+    {
+      label: "提取",
+      key: "2",
+    },
   ];
 
   useEffect(() => {
