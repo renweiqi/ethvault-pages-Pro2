@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Empty, List, Button } from "antd";
 import styles from "./index.module.scss";
 import { formatTimestamp, formatWei } from "../../../../../public/utils";
@@ -12,16 +12,19 @@ interface Props {
   listexamine?: Array<any>;
   switchItem: any;
 }
-const NodestorageData = JSON.parse(
-  localStorage.getItem("Nodestorage") || "null"
-);
 
 const ListItem = ({ Data = [], switchItem, listexamine = [] }: Props) => {
+  const [NodestorageData, setNodestorageData] = useState<any>();
+
+
   const btnFun = async (id: any) => {
     const contract: any = await getContract2(NodestorageData.ETHAddress, eth);
     const result = await contract.approveWithdrawal(id);
   };
 
+  useEffect(() => {
+    setNodestorageData(JSON.parse(localStorage.getItem("Nodestorage") || ''))
+  }, []);
   return (
     <div className={styles.Content}>
       {switchItem == "0" ? (
@@ -78,9 +81,7 @@ const ListItem = ({ Data = [], switchItem, listexamine = [] }: Props) => {
                 />
               </div>
             ) : (
-              <Empty
-                description={<span style={{ color: "#FFFFFF" }}>暂无数据</span>}
-              />
+              <Empty description={<span style={{ color: "#FFFFFF" }}>暂无数据</span>} />
             )}
           </div>
         </div>
@@ -118,10 +119,7 @@ const ListItem = ({ Data = [], switchItem, listexamine = [] }: Props) => {
                   renderItem={(item: any, index: number) => (
                     <List.Item key={index}>
                       <div className={styles.ComputingPowercont}>
-                        <div
-                          className={styles.walletAddress}
-                          onClick={() => copyToClipboard(item.walletAddress)}
-                        >
+                        <div className={styles.walletAddress} onClick={() => copyToClipboard(item.walletAddress)}>
                           {item.user.replace(/^(.{4}).*(.{4})$/, "$1...$2")}
                         </div>
                         <div className={styles.amount}>
@@ -133,7 +131,7 @@ const ListItem = ({ Data = [], switchItem, listexamine = [] }: Props) => {
                         <div className={styles.buttonContainer}>
                           <Button
                             type="primary"
-                            onClick={() => btnFun(item["depositId"])}
+                            onClick={() => btnFun(item['depositId'])}
                           >
                             审核
                           </Button>
@@ -144,9 +142,7 @@ const ListItem = ({ Data = [], switchItem, listexamine = [] }: Props) => {
                 />
               </div>
             ) : (
-              <Empty
-                description={<span style={{ color: "#FFFFFF" }}>暂无数据</span>}
-              />
+              <Empty description={<span style={{ color: "#FFFFFF" }}>暂无数据</span>} />
             )}
           </div>
         </div>
@@ -155,4 +151,4 @@ const ListItem = ({ Data = [], switchItem, listexamine = [] }: Props) => {
   );
 };
 
-export default ListItem;
+export default ListItem; 

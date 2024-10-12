@@ -9,14 +9,11 @@ import axios from "axios";
 import { getContract2 } from "../../../public/utils";
 import { eth } from "../../../abi/ethabi";
 
-const NodestorageData = JSON.parse(
-  localStorage.getItem("Nodestorage") || "null"
-);
-
 const Personal = () => {
   const [switchItem, setSwitch] = useState("0");
   const [list, setList] = useState([]);
   const [listexamine, setListexamine] = useState([]);
+  const [NodestorageData, setNodestorageData] = useState<any>({});
 
   const getDetil = async () => {
     try {
@@ -50,6 +47,7 @@ const Personal = () => {
   ];
 
   useEffect(() => {
+    setNodestorageData(JSON.parse(localStorage.getItem("Nodestorage") || ''))
     getWallet();
     getDetil();
   }, [switchItem]);
@@ -78,13 +76,7 @@ const Personal = () => {
         items={TabItems}
         onChange={handleTabChange}
       />
-      {
-        <ListItem
-          Data={list}
-          switchItem={switchItem}
-          listexamine={listexamine}
-        />
-      }
+      {<ListItem Data={list} switchItem={switchItem} listexamine={listexamine} />}
     </MenuProvider>
   );
 };

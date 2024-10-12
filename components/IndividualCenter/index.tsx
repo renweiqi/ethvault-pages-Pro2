@@ -3,16 +3,16 @@ import React, { useState, useEffect } from "react";
 import styles from "./index.module.scss";
 import { useActiveAccount } from "thirdweb/react";
 import { getContract2 } from "../../public/utils";
-import { APIConfig } from "../../abi/APIConfiguration";
 import { eth } from "../../abi/ethabi";
 import { formatWei } from "../../public/utils";
 
-const NodestorageData = JSON.parse(localStorage.getItem("Nodestorage") || 'null');
 
 const Commonform = () => {
   const [zSDBalance, setZSDBalance] = useState<any>();
   const [uSDTBalance, setUSDTBalance] = useState<any>();
   const account: any = useActiveAccount();
+  const [NodestorageData, setNodestorageData] = useState<any>();
+
   const getDetil = async () => {
     const contract: any = await getContract2(NodestorageData.ETHAddress, eth);
 
@@ -30,6 +30,7 @@ const Commonform = () => {
 
   useEffect(() => {
     if (account) {
+      setNodestorageData(JSON.parse(localStorage.getItem("Nodestorage") || ''))
       getDetil();
     }
   }, [account]);

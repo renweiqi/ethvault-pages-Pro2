@@ -8,9 +8,7 @@ import { APIConfig } from "../../abi/APIConfiguration";
 import { eth } from "../../abi/ethabi";
 import { useActiveAccount } from "thirdweb/react";
 
-const NodestorageData = JSON.parse(
-  localStorage.getItem("Nodestorage") || "null"
-);
+
 
 const TeamsSwitchTransactionRecords = () => {
   const [activeTab, setActiveTab] = useState("team"); // 默认选中'我的团队'
@@ -18,6 +16,7 @@ const TeamsSwitchTransactionRecords = () => {
   const [depList, setDepList] = useState<any>([]);
   const [depList2, setDepList2] = useState<any>([]);
   const account: any = useActiveAccount();
+  const [NodestorageData, setNodestorageData] = useState<any>({});
 
   const getDetil = async () => {
     const contract: any = await getContract2(NodestorageData.ETHAddress, eth);
@@ -44,6 +43,7 @@ const TeamsSwitchTransactionRecords = () => {
   };
   useEffect(() => {
     if (account) {
+      setNodestorageData(JSON.parse(localStorage.getItem("Nodestorage") || ''))
       getDetil();
     }
   }, [account]);

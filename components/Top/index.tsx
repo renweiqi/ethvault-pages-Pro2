@@ -5,7 +5,6 @@ import { useActiveAccount } from "thirdweb/react";
 import CallWallet from "../CallWallet";
 import logo from "../../public/images/logo.jpg";
 import { getContract2, getTokenBalance } from "../../public/utils";
-import { APIConfig } from "../../abi/APIConfiguration";
 import { USDTAbi } from "../../abi/USDTAbi";
 import { message, Select } from "antd";
 import { ethers } from "ethers";
@@ -15,12 +14,14 @@ import { useEffect, useState } from "react";
 interface TopProps {
   onToggleRightMenu: () => void;
 }
-const NodestorageData = JSON.parse(localStorage.getItem("Nodestorage") || 'null');
+// const NodestorageData = JSON.parse(localStorage.getItem("Nodestorage") || 'null');
 
 const TopMenu: React.FC<TopProps> = ({ onToggleRightMenu }) => {
   const account: any = useActiveAccount();
   const [trueOrNo, setTrueOrNo] = useState(false);
   const [witchRPC, setWitchRPC] = useState(1);
+  const [NodestorageData, setNodestorageData] = useState<any>();
+
   //授权
   const approve = async () => {
     if (account) {
@@ -79,7 +80,7 @@ const TopMenu: React.FC<TopProps> = ({ onToggleRightMenu }) => {
         RPCURL,
         id,
       };
-      localStorage.setItem("Nodestorage", JSON.stringify(Nodestorage));
+      // localStorage.setItem("Nodestorage", JSON.stringify(Nodestorage));
       setWitchRPC(1)
     } else if (value === "ERC20USDT") {
       // return message.warning("暂未支持该币种");
@@ -96,7 +97,7 @@ const TopMenu: React.FC<TopProps> = ({ onToggleRightMenu }) => {
         RPCURL,
         id,
       };
-      localStorage.setItem("Nodestorage", JSON.stringify(Nodestorage));
+      // localStorage.setItem("Nodestorage", JSON.stringify(Nodestorage));
       setWitchRPC(2)
     } else if (value === "TRC20USDT") {
       // return message.warning("暂未支持该币种");
@@ -113,7 +114,7 @@ const TopMenu: React.FC<TopProps> = ({ onToggleRightMenu }) => {
         RPCURL,
         id,
       };
-      localStorage.setItem("Nodestorage", JSON.stringify(Nodestorage));
+      // localStorage.setItem("Nodestorage", JSON.stringify(Nodestorage));
       setWitchRPC(3)
     } else {
       // 币安智能链（BEP20）
@@ -128,7 +129,7 @@ const TopMenu: React.FC<TopProps> = ({ onToggleRightMenu }) => {
         RPCURL,
         id,
       };
-      localStorage.setItem("Nodestorage", JSON.stringify(Nodestorage));
+      // localStorage.setItem("Nodestorage", JSON.stringify(Nodestorage));
       setWitchRPC(1)
     }
   };
@@ -137,6 +138,7 @@ const TopMenu: React.FC<TopProps> = ({ onToggleRightMenu }) => {
     if (account) {
       geAuthOrNot();
       handleChange('999')
+      // setNodestorageData(JSON.parse(localStorage.getItem("Nodestorage") || 'null'))
     }
   }, [account]);
 
