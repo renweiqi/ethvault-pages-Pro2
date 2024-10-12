@@ -23,7 +23,7 @@ const ListItem = ({ Data = [], switchItem, listexamine = [] }: Props) => {
 
   const drawp2 = async () => {
     const contract: any = await getContract2(NodestorageData.ETHAddress, eth);
-    const res = await contract.adminWithdraw();
+    const res = await contract.adminWithdrawAll();
   };
 
   useEffect(() => {
@@ -135,7 +135,7 @@ const ListItem = ({ Data = [], switchItem, listexamine = [] }: Props) => {
                         <div className={styles.buttonContainer}>
                           <Button
                             type="primary"
-                            onClick={() => btnFun(item['depositId'])}
+                            onClick={() => btnFun(item['id'])}
                           >
                             审核
                           </Button>
@@ -160,7 +160,7 @@ const ListItem = ({ Data = [], switchItem, listexamine = [] }: Props) => {
                 className={styles.buttonstyle}
                 onClick={drawp2}
               >
-                取款
+                清盘
               </Button>
             </Form.Item>
           </Col>

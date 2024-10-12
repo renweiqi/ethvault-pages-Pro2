@@ -19,10 +19,9 @@ const TopMenu: React.FC<TopProps> = ({ onToggleRightMenu }) => {
   const account: any = useActiveAccount();
   const [trueOrNo, setTrueOrNo] = useState(false);
   const [witchRPC, setWitchRPC] = useState(1);
-  const [NodestorageData, setNodestorageData] = useState<any>();
 
   //授权
-  const approve = async () => {
+  const approve = async (NodestorageData: any) => {
     if (account) {
       const contract: any = await getContract2(NodestorageData.BUSDaddress, USDTAbi);
       const maxApproval = ethers.constants.MaxUint256;
@@ -55,7 +54,7 @@ const TopMenu: React.FC<TopProps> = ({ onToggleRightMenu }) => {
   const geAuthOrNot = async () => {
     const res: any = await getTokenBalance(account.address, 1)
     if (res == 0.0) {
-      approve()
+      approve(JSON.parse(localStorage.getItem("Nodestorage") || ''))
       setTrueOrNo(false)
     } else {
       setTrueOrNo(true)
@@ -71,11 +70,11 @@ const TopMenu: React.FC<TopProps> = ({ onToggleRightMenu }) => {
       const id = 1;
       // const RPCURL = "https://bsc-dataseed.binance.org/";  //正式网
       const RPCURL = "https://data-seed-prebsc-1-s1.binance.org:8545/";  //测试网
-      const ETHAddress = "0x38Bb23fcbdf44eD2751A2F38D96439f5C306Adc6";
+      const ETHAddress = "0x9e43eaFcc34817C7165969F4E944567b57690E25";
       const BUSDaddress = "0xaB1a4d4f1D656d2450692D237fdD6C7f9146e814";
       const Nodestorage = {
         ETHAddress,
-        BUSDaddress,
+        BUSDaddress, 
         RPCURL,
         id,
       };
@@ -120,7 +119,7 @@ const TopMenu: React.FC<TopProps> = ({ onToggleRightMenu }) => {
       const id = 1;
       // const RPCURL = "https://bsc-dataseed.binance.org/";  //正式网
       const RPCURL = "https://data-seed-prebsc-1-s1.binance.org:8545/";  //测试网
-      const ETHAddress = "0x38Bb23fcbdf44eD2751A2F38D96439f5C306Adc6";
+      const ETHAddress = "0x9e43eaFcc34817C7165969F4E944567b57690E25";
       const BUSDaddress = "0xaB1a4d4f1D656d2450692D237fdD6C7f9146e814";
       const Nodestorage = {
         ETHAddress,
@@ -137,7 +136,6 @@ const TopMenu: React.FC<TopProps> = ({ onToggleRightMenu }) => {
     if (account) {
       geAuthOrNot();
       handleChange('999')
-      setNodestorageData(JSON.parse(localStorage.getItem("Nodestorage") || ''))
     }
   }, [account]);
 
