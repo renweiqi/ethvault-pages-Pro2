@@ -38,8 +38,8 @@ const MiningMachine = () => {
     router.push(`${link}?MinerData=${serializedData}`);
   };
 
-  const getDetil = async () => {
-    const contract: any = await getContract2(NodestorageData.ETHAddress, eth);
+  const getDetil = async (Nodestorage: any) => {
+    const contract: any = await getContract2(Nodestorage.ETHAddress, eth);
     const result = await contract.getDeposits(account.address);
     let totalPrincipal = 0;
     for (let i = 0; i < result.length; i++) {
@@ -123,8 +123,7 @@ const MiningMachine = () => {
 
   useEffect(() => {
     if (account) {
-      setNodestorageData(JSON.parse(localStorage.getItem("Nodestorage") || ''))
-      getDetil();
+      getDetil(JSON.parse(localStorage.getItem("Nodestorage") || ''));
     }
   }, [account]);
   return (

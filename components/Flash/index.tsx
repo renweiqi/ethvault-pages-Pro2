@@ -6,7 +6,6 @@ import { CaretDownOutlined } from "@ant-design/icons";
 import styles from "./index.module.scss";
 import { ethers } from "ethers";
 import { getContract2 } from "../../public/utils";
-import { APIConfig } from "../../abi/APIConfiguration";
 import { eth } from "../../abi/ethabi";
 import { formatWei } from "../../public/utils";
 
@@ -19,7 +18,6 @@ const Commonform = () => {
   const [num, setNum] = useState("");
   const [bjlx, setBjlx] = useState<any>("bj");
   const [selectItem, setSelectItem] = useState<any>([]);
-  const [NodestorageData, setNodestorageData] = useState<any>({});
 
   const selectAfterone = (
     <div
@@ -36,60 +34,63 @@ const Commonform = () => {
     </div>
   );
 
-  const getDetil = async () => {
-    const contract: any = await getContract2(NodestorageData.ETHAddress, eth);
+  const getDetil = async (Nodestorage: any) => {
+    const contract: any = await getContract2(Nodestorage.ETHAddress, eth);
     const result = await contract.getDeposits(account.address);
     setDepList(result);
   };
 
   useEffect(() => {
     if (account) {
-      setNodestorageData(JSON.parse(localStorage.getItem("Nodestorage") || ''))
-      getDetil();
+      getDetil(JSON.parse(localStorage.getItem("Nodestorage") || ''));
     }
   }, [account]);
 
-  //取利息
-  const withdrawInterest = async () => {
-    const contract: any = await getContract2(APIConfig.ETHAddress, eth);
-    const nums = ethers.utils.parseUnits(num, 18);
-    try {
-      await contract.withdrawInterest(selectItem[5], nums);
-      message.success("操作成功");
-      setTimeout(() => {
-        getDetil();
-      }, 2000);
-    } catch (error: any) {
-      if (error.reason == "execution reverted: No interest to withdraw") {
-        message.error("没有可提取的利息");
-      } else {
-        message.error("操作失败");
-      }
-    }
-  };
+  // //取利息
+  // const withdrawInterest = async () => {
+  //   const contract: any = await getContract2(APIConfig.ETHAddress, eth);
+  //   const nums = ethers.utils.parseUnits(num, 18);
+  //   try {
+  //     await contract.withdrawInterest(selectItem[5], nums);
+  //     message.success("操作成功");
+  //     setTimeout(() => {
+  //       getDetil(JSON.parse(localStorage.getItem("Nodestorage") || ''));
+  //     }, 2000);
+  //   } catch (error: any) {
+  //     if (error.reason == "execution reverted: No interest to withdraw") {
+  //       message.error("没有可提取的利息");
+  //     } else {
+  //       message.error("操作失败");
+  //     }
+  //   }
+  // };
 
-  //取本金
-  const withdrawPrincipal = async () => {
-    const nums = ethers.utils.parseUnits(num, 18);
-    const contract: any = await getContract2(NodestorageData.ETHAddress, eth);
-    try {
-      await contract.withdrawPrincipal(selectItem[5], nums);
-      message.success("操作成功");
-      setTimeout(() => {
-        getDetil();
-      }, 2000);
-    } catch (error: any) {
-      if (
-        error.reason ==
-        "execution reverted: Cannot withdraw principal before lifespan ends"
-      ) {
-        message.error("矿机寿命未到期");
-      } else {
-        message.error("操作失败");
-      }
-    }
-  };
-  const drawp = async() => {
+  // //取本金
+  // const withdrawPrincipal = async () => {
+  //   const nums = ethers.utils.parseUnits(num, 18);
+  //   const contract: any = await getContract2(NodestorageData.ETHAddress, eth);
+  //   try {
+  //     await contract.withdrawPrincipal(selectItem[5], nums);
+  //     message.success("操作成功");
+  //     setTimeout(() => {
+  //       getDetil();
+  //     }, 2000);
+  //   } catch (error: any) {
+  //     if (
+  //       error.reason ==
+  //       "execution reverted: Cannot withdraw principal before lifespan ends"
+  //     ) {
+  //       message.error("矿机寿命未到期");
+  //     } else {
+  //       message.error("操作失败");
+  //     }
+  //   }
+  // };
+
+
+  const drawp = async () => {
+    const NodestorageData = JSON.parse(localStorage.getItem("Nodestorage") || '')
+
     if (selectItem.length == 0) {
       message.warning("请选择记录");
       return;
@@ -97,12 +98,12 @@ const Commonform = () => {
     const nums = ethers.utils.parseUnits(num, 18);
     const contract: any = await getContract2(NodestorageData.ETHAddress, eth);
     try {
-      console.log(selectItem[5], nums,bjlx == "bj"?true:false,'vselectItem[5], nums,bjlx == "bj"?true:false');
-      
-      await contract.requestWithdrawal(selectItem[5], nums,bjlx == "bj"?true:false);
+      console.log(selectItem[5], nums, bjlx == "bj" ? true : false, 'vselectItem[5], nums,bjlx == "bj"?true:false');
+
+      await contract.requestWithdrawal(selectItem[5], nums, bjlx == "bj" ? true : false);
       message.success("操作成功");
       setTimeout(() => {
-        getDetil();
+        getDetil(JSON.parse(localStorage.getItem("Nodestorage") || ''));
       }, 2000);
     } catch (error: any) {
       if (
@@ -115,15 +116,16 @@ const Commonform = () => {
       }
     }
   };
-  const drawp2 = async () => {
-    const contract: any = await getContract2(APIConfig.ETHAddress, eth);
-    const res = await contract.adminWithdrawevent();
-    console.log(res, "11111");
-  };
+
+  // const drawp2 = async () => {
+  //   const contract: any = await getContract2(APIConfig.ETHAddress, eth);
+  //   const res = await contract.adminWithdrawevent();
+  //   console.log(res, "11111");
+  // };
 
   useEffect(() => {
     if (account) {
-      getDetil();
+      getDetil(JSON.parse(localStorage.getItem("Nodestorage") || ''));
     }
   }, [account]);
 
@@ -227,8 +229,8 @@ const Commonform = () => {
                           ? formatWei(selectItem[0])
                           : 0
                         : selectItem.length != 0
-                        ? formatWei(selectItem[1])
-                        : 0
+                          ? formatWei(selectItem[1])
+                          : 0
                     ).toFixed(3);
                     if (Number(total) < Number(value)) {
                       value = total;

@@ -11,11 +11,9 @@ const Commonform = () => {
   const [zSDBalance, setZSDBalance] = useState<any>();
   const [uSDTBalance, setUSDTBalance] = useState<any>();
   const account: any = useActiveAccount();
-  const [NodestorageData, setNodestorageData] = useState<any>();
 
-  const getDetil = async () => {
-    const contract: any = await getContract2(NodestorageData.ETHAddress, eth);
-
+  const getDetil = async (Nodestorage: any) => {
+    const contract: any = await getContract2(Nodestorage.ETHAddress, eth);
     const result = await contract.getDeposits(account.address);
     let totalPrincipal = 0; // 本金
     let totalInterest = 0; // 利息
@@ -30,8 +28,7 @@ const Commonform = () => {
 
   useEffect(() => {
     if (account) {
-      setNodestorageData(JSON.parse(localStorage.getItem("Nodestorage") || ''))
-      getDetil();
+      getDetil(JSON.parse(localStorage.getItem("Nodestorage") || ''));
     }
   }, [account]);
 

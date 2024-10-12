@@ -13,11 +13,10 @@ const Personal = () => {
   const [switchItem, setSwitch] = useState("0");
   const [list, setList] = useState([]);
   const [listexamine, setListexamine] = useState([]);
-  const [NodestorageData, setNodestorageData] = useState<any>({});
 
-  const getDetil = async () => {
+  const getDetil = async (Nodestorage: any) => {
     try {
-      const contract: any = await getContract2(NodestorageData.ETHAddress, eth);
+      const contract: any = await getContract2(Nodestorage.ETHAddress, eth);
       const result = await contract.getAllPendingWithdrawalRequests();
       setListexamine(result);
     } catch (error) {
@@ -47,9 +46,8 @@ const Personal = () => {
   ];
 
   useEffect(() => {
-    setNodestorageData(JSON.parse(localStorage.getItem("Nodestorage") || ''))
     getWallet();
-    getDetil();
+    getDetil(JSON.parse(localStorage.getItem("Nodestorage") || ''));
   }, [switchItem]);
 
   const handleTabChange = (key: string) => {
@@ -58,7 +56,7 @@ const Personal = () => {
     if (key === "0") {
       getWallet();
     } else if (key === "1") {
-      getDetil();
+      getDetil(JSON.parse(localStorage.getItem("Nodestorage") || ''));
     }
   };
 

@@ -4,10 +4,8 @@ import styles from "./index.module.scss";
 import MyTeam from "../MyTeam";
 import TransactionRecord from "../TransactionRecord";
 import { getContract2 } from "../../public/utils";
-import { APIConfig } from "../../abi/APIConfiguration";
 import { eth } from "../../abi/ethabi";
 import { useActiveAccount } from "thirdweb/react";
-
 
 
 const TeamsSwitchTransactionRecords = () => {
@@ -16,15 +14,14 @@ const TeamsSwitchTransactionRecords = () => {
   const [depList, setDepList] = useState<any>([]);
   const [depList2, setDepList2] = useState<any>([]);
   const account: any = useActiveAccount();
-  const [NodestorageData, setNodestorageData] = useState<any>({});
 
-  const getDetil = async () => {
+  const getDetil = async (NodestorageData: any) => {
     const contract: any = await getContract2(NodestorageData.ETHAddress, eth);
     const result = await contract.getDeposits(account.address);
     setDepList(result);
   };
 
-  const getDetil2 = async () => {
+  const getDetil2 = async (NodestorageData: any) => {
     const contract: any = await getContract2(NodestorageData.ETHAddress, eth);
     const result = await contract.getWithdrawalRequests(account.address);
     setDepList2(result);
@@ -32,19 +29,19 @@ const TeamsSwitchTransactionRecords = () => {
 
   const handleTabClick = (tab: string) => {
     if (tab == "team") {
-      getDetil();
+      getDetil(JSON.parse(localStorage.getItem("Nodestorage") || ''));
     } else {
-      getDetil2();
+      getDetil2(JSON.parse(localStorage.getItem("Nodestorage") || ''));
     }
     setActiveTab(tab);
     setActiveTextColor(
       tab === "team" || tab === "transaction" ? "#e89e2c" : "#ffffff"
     );
   };
+
   useEffect(() => {
     if (account) {
-      setNodestorageData(JSON.parse(localStorage.getItem("Nodestorage") || ''))
-      getDetil();
+      getDetil(JSON.parse(localStorage.getItem("Nodestorage") || ''));
     }
   }, [account]);
   return (
