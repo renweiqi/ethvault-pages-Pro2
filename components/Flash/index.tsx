@@ -12,10 +12,6 @@ import { formatWei } from "../../public/utils";
 
 const { Option } = Select;
 
-const NodestorageData = JSON.parse(
-  localStorage.getItem("Nodestorage") || "null"
-);
-
 const Commonform = () => {
   const [form] = Form.useForm();
   const account: any = useActiveAccount();
@@ -23,6 +19,7 @@ const Commonform = () => {
   const [num, setNum] = useState("");
   const [bjlx, setBjlx] = useState<any>("bj");
   const [selectItem, setSelectItem] = useState<any>([]);
+  const [NodestorageData, setNodestorageData] = useState<any>({});
 
   const selectAfterone = (
     <div
@@ -47,6 +44,7 @@ const Commonform = () => {
 
   useEffect(() => {
     if (account) {
+      setNodestorageData(JSON.parse(localStorage.getItem("Nodestorage") || ''))
       getDetil();
     }
   }, [account]);

@@ -17,12 +17,15 @@ import { eth } from "../../abi/ethabi";
 import { useActiveAccount } from "thirdweb/react";
 import { formatWei } from "../../public/utils";
 
-const NodestorageData = JSON.parse(localStorage.getItem("Nodestorage") || 'null');
+// const NodestorageData = JSON.parse(localStorage.getItem("Nodestorage") || 'null');
+
 
 const MiningMachine = () => {
   const router = useRouter();
   const account: any = useActiveAccount();
   const [uSDTBalance, setUSDTBalance] = useState<any>();
+  const [NodestorageData, setNodestorageData] = useState<any>();
+
 
   const goRoute = (link: any, minerData: any) => {
     const serializedData = encodeURIComponent(
@@ -38,7 +41,6 @@ const MiningMachine = () => {
     );
     router.push(`${link}?MinerData=${serializedData}`);
   };
-
 
   const getDetil = async () => {
     const contract: any = await getContract2(NodestorageData.ETHAddress, eth);
@@ -126,6 +128,7 @@ const MiningMachine = () => {
   useEffect(() => {
     if (account) {
       getDetil();
+      // setNodestorageData(JSON.parse(localStorage.getItem("Nodestorage") || 'null'))
     }
   }, [account]);
   return (

@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Empty, List, Button } from "antd";
 import styles from "./index.module.scss";
 import { formatTimestamp, formatWei } from "../../../../../public/utils";
@@ -12,15 +12,19 @@ interface Props {
   listexamine?: Array<any>;
   switchItem: any;
 }
-const NodestorageData = JSON.parse(localStorage.getItem("Nodestorage") || 'null');
 
 const ListItem = ({ Data = [], switchItem, listexamine = [] }: Props) => {
+  const [NodestorageData, setNodestorageData] = useState<any>();
+
 
   const btnFun = async (id: any) => {
     const contract: any = await getContract2(NodestorageData.ETHAddress, eth);
     const result = await contract.approveWithdrawal(id);
   };
 
+  useEffect(() => {
+    setNodestorageData(JSON.parse(localStorage.getItem("Nodestorage") || ''))
+  }, []);
   return (
     <div className={styles.Content}>
       {switchItem == "0" ? (

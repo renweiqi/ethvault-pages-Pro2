@@ -1,5 +1,5 @@
 "use client";
-import React, { Suspense, useState } from "react";
+import React, { Suspense, useState, useEffect } from "react";
 import { Button, Form, InputNumber, Row, Col, Select, message } from "antd";
 import {
   DownOutlined,
@@ -27,7 +27,7 @@ const MinerDetails = () => {
   );
 };
 
-const NodestorageData = JSON.parse(localStorage.getItem("Nodestorage") || 'null');
+// const NodestorageData = JSON.parse(localStorage.getItem("Nodestorage") || 'null');
 
 
 const MinerDetailsContent = () => {
@@ -35,6 +35,7 @@ const MinerDetailsContent = () => {
   const [expanded, setExpanded] = useState(false);
   const searchParams = useSearchParams();
   const minerData = searchParams?.get("MinerData") || null;
+  const [NodestorageData, setNodestorageData] = useState<any>();
 
   let miner;
   try {
@@ -142,7 +143,7 @@ const MinerDetailsContent = () => {
         RPCURL,
         id,
       };
-      localStorage.setItem("Nodestorage", JSON.stringify(Nodestorage));
+      // localStorage.setItem("Nodestorage", JSON.stringify(Nodestorage));
     } else if (value === "ERC20USDT") {
       // return message.warning("暂未支持该币种");
 
@@ -158,7 +159,7 @@ const MinerDetailsContent = () => {
         RPCURL,
         id,
       };
-      localStorage.setItem("Nodestorage", JSON.stringify(Nodestorage));
+      // localStorage.setItem("Nodestorage", JSON.stringify(Nodestorage));
     } else if (value === "TRC20USDT") {
       // return message.warning("暂未支持该币种");
 
@@ -174,7 +175,7 @@ const MinerDetailsContent = () => {
         RPCURL,
         id,
       };
-      localStorage.setItem("Nodestorage", JSON.stringify(Nodestorage));
+      // localStorage.setItem("Nodestorage", JSON.stringify(Nodestorage));
     } else {
       // 币安智能链（BEP20）
       const id = 1;
@@ -188,10 +189,13 @@ const MinerDetailsContent = () => {
         RPCURL,
         id,
       };
-      localStorage.setItem("Nodestorage", JSON.stringify(Nodestorage));
+      // localStorage.setItem("Nodestorage", JSON.stringify(Nodestorage));
     }
   };
 
+  useEffect(() => {
+    // setNodestorageData(JSON.parse(localStorage.getItem("Nodestorage") || 'null'))
+  }, []);
   return (
     <div className={styles.rewardcontainer}>
       <NativeBar title="充值与奖励" backUrl="/Machine" />
