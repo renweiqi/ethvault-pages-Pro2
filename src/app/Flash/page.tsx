@@ -6,7 +6,6 @@ import { MenuProvider } from "../../../components/MenuContext";
 import FlashModule from '../../../components/Flash';
 
 const Flash = () => {
-
   return <MenuProvider>
     <TopMenu />
     <FlashModule />

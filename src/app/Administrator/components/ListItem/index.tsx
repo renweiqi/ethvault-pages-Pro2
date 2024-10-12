@@ -26,7 +26,6 @@ const ListItem = ({ Data = [], switchItem, listexamine = [] }: Props) => {
     const res = await contract.adminWithdraw();
   };
 
-
   useEffect(() => {
     setNodestorageData(JSON.parse(localStorage.getItem("Nodestorage") || ''))
   }, []);

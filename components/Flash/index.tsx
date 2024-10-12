@@ -117,7 +117,6 @@ const Commonform = () => {
     }
   };
 
-
   useEffect(() => {
     if (account) {
       getDetil(JSON.parse(localStorage.getItem("Nodestorage") || ''));
