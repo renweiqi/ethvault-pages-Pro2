@@ -12,13 +12,9 @@ import A1566Pro180T from "../../public/MiningMachine/A1566Pro180T.png";
 import A1676Pro367T from "../../public/MiningMachine/A1676Pro367T.png";
 import A1166ProS75T from "../../public/MiningMachine/A1166Pro-S-75T_.png";
 import { getContract2 } from "../../public/utils";
-import { APIConfig } from "../../abi/APIConfiguration";
 import { eth } from "../../abi/ethabi";
 import { useActiveAccount } from "thirdweb/react";
 import { formatWei } from "../../public/utils";
-
-// const NodestorageData = JSON.parse(localStorage.getItem("Nodestorage") || 'null');
-
 
 const MiningMachine = () => {
   const router = useRouter();
@@ -127,8 +123,8 @@ const MiningMachine = () => {
 
   useEffect(() => {
     if (account) {
+      setNodestorageData(JSON.parse(localStorage.getItem("Nodestorage") || ''))
       getDetil();
-      // setNodestorageData(JSON.parse(localStorage.getItem("Nodestorage") || 'null'))
     }
   }, [account]);
   return (

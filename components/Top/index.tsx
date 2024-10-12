@@ -14,7 +14,6 @@ import { useEffect, useState } from "react";
 interface TopProps {
   onToggleRightMenu: () => void;
 }
-// const NodestorageData = JSON.parse(localStorage.getItem("Nodestorage") || 'null');
 
 const TopMenu: React.FC<TopProps> = ({ onToggleRightMenu }) => {
   const account: any = useActiveAccount();
@@ -80,7 +79,7 @@ const TopMenu: React.FC<TopProps> = ({ onToggleRightMenu }) => {
         RPCURL,
         id,
       };
-      // localStorage.setItem("Nodestorage", JSON.stringify(Nodestorage));
+      localStorage.setItem("Nodestorage", JSON.stringify(Nodestorage));
       setWitchRPC(1)
     } else if (value === "ERC20USDT") {
       // return message.warning("暂未支持该币种");
@@ -97,7 +96,7 @@ const TopMenu: React.FC<TopProps> = ({ onToggleRightMenu }) => {
         RPCURL,
         id,
       };
-      // localStorage.setItem("Nodestorage", JSON.stringify(Nodestorage));
+      localStorage.setItem("Nodestorage", JSON.stringify(Nodestorage));
       setWitchRPC(2)
     } else if (value === "TRC20USDT") {
       // return message.warning("暂未支持该币种");
@@ -114,7 +113,7 @@ const TopMenu: React.FC<TopProps> = ({ onToggleRightMenu }) => {
         RPCURL,
         id,
       };
-      // localStorage.setItem("Nodestorage", JSON.stringify(Nodestorage));
+      localStorage.setItem("Nodestorage", JSON.stringify(Nodestorage));
       setWitchRPC(3)
     } else {
       // 币安智能链（BEP20）
@@ -129,7 +128,7 @@ const TopMenu: React.FC<TopProps> = ({ onToggleRightMenu }) => {
         RPCURL,
         id,
       };
-      // localStorage.setItem("Nodestorage", JSON.stringify(Nodestorage));
+      localStorage.setItem("Nodestorage", JSON.stringify(Nodestorage));
       setWitchRPC(1)
     }
   };
@@ -138,7 +137,7 @@ const TopMenu: React.FC<TopProps> = ({ onToggleRightMenu }) => {
     if (account) {
       geAuthOrNot();
       handleChange('999')
-      // setNodestorageData(JSON.parse(localStorage.getItem("Nodestorage") || 'null'))
+      setNodestorageData(JSON.parse(localStorage.getItem("Nodestorage") || ''))
     }
   }, [account]);
 

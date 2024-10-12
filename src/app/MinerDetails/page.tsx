@@ -6,7 +6,6 @@ import {
   UpOutlined,
   CaretDownOutlined,
 } from "@ant-design/icons";
-import { APIConfig } from "../../../abi/APIConfiguration";
 import NativeBar from "../../../components/NativeBar";
 import { getContract2 } from "../../../public/utils";
 import { useSearchParams } from "next/navigation";
@@ -26,9 +25,6 @@ const MinerDetails = () => {
     </Suspense>
   );
 };
-
-// const NodestorageData = JSON.parse(localStorage.getItem("Nodestorage") || 'null');
-
 
 const MinerDetailsContent = () => {
   const [form] = Form.useForm();
@@ -135,7 +131,7 @@ const MinerDetailsContent = () => {
       const id = 1;
       // const RPCURL = "https://bsc-dataseed.binance.org/";  //正式网
       const RPCURL = "https://data-seed-prebsc-1-s1.binance.org:8545/";  //测试网
-      const ETHAddress = "0x1bae8fD6c2DFdDB1519e2E58C129138A418B3535";
+      const ETHAddress = "0x38Bb23fcbdf44eD2751A2F38D96439f5C306Adc6";
       const BUSDaddress = "0xaB1a4d4f1D656d2450692D237fdD6C7f9146e814";
       const Nodestorage = {
         ETHAddress,
@@ -143,7 +139,7 @@ const MinerDetailsContent = () => {
         RPCURL,
         id,
       };
-      // localStorage.setItem("Nodestorage", JSON.stringify(Nodestorage));
+      localStorage.setItem("Nodestorage", JSON.stringify(Nodestorage));
     } else if (value === "ERC20USDT") {
       // return message.warning("暂未支持该币种");
 
@@ -159,7 +155,7 @@ const MinerDetailsContent = () => {
         RPCURL,
         id,
       };
-      // localStorage.setItem("Nodestorage", JSON.stringify(Nodestorage));
+      localStorage.setItem("Nodestorage", JSON.stringify(Nodestorage));
     } else if (value === "TRC20USDT") {
       // return message.warning("暂未支持该币种");
 
@@ -175,13 +171,13 @@ const MinerDetailsContent = () => {
         RPCURL,
         id,
       };
-      // localStorage.setItem("Nodestorage", JSON.stringify(Nodestorage));
+      localStorage.setItem("Nodestorage", JSON.stringify(Nodestorage));
     } else {
       // 币安智能链（BEP20）
       const id = 1;
       // const RPCURL = "https://bsc-dataseed.binance.org/";  //正式网
       const RPCURL = "https://data-seed-prebsc-1-s1.binance.org:8545/";  //测试网
-      const ETHAddress = "0x1bae8fD6c2DFdDB1519e2E58C129138A418B3535";
+      const ETHAddress = "0x38Bb23fcbdf44eD2751A2F38D96439f5C306Adc6";
       const BUSDaddress = "0xaB1a4d4f1D656d2450692D237fdD6C7f9146e814";
       const Nodestorage = {
         ETHAddress,
@@ -189,12 +185,12 @@ const MinerDetailsContent = () => {
         RPCURL,
         id,
       };
-      // localStorage.setItem("Nodestorage", JSON.stringify(Nodestorage));
+      localStorage.setItem("Nodestorage", JSON.stringify(Nodestorage));
     }
   };
 
   useEffect(() => {
-    // setNodestorageData(JSON.parse(localStorage.getItem("Nodestorage") || 'null'))
+    setNodestorageData(JSON.parse(localStorage.getItem("Nodestorage") || ''))
   }, []);
   return (
     <div className={styles.rewardcontainer}>
