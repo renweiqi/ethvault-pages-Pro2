@@ -131,7 +131,7 @@ const MinerDetailsContent = () => {
       const id = 1;
       // const RPCURL = "https://bsc-dataseed.binance.org/";  //正式网
       const RPCURL = "https://data-seed-prebsc-1-s1.binance.org:8545/";  //测试网
-      const ETHAddress = "0x9e43eaFcc34817C7165969F4E944567b57690E25";
+      const ETHAddress = "0x6d23D8356E9e8A9c99eADE9ebacF5f648B3DB7b5";
       const BUSDaddress = "0xaB1a4d4f1D656d2450692D237fdD6C7f9146e814";
       const Nodestorage = {
         ETHAddress, 
@@ -177,7 +177,7 @@ const MinerDetailsContent = () => {
       const id = 1;
       // const RPCURL = "https://bsc-dataseed.binance.org/";  //正式网
       const RPCURL = "https://data-seed-prebsc-1-s1.binance.org:8545/";  //测试网
-      const ETHAddress = "0x9e43eaFcc34817C7165969F4E944567b57690E25";
+      const ETHAddress = "0x6d23D8356E9e8A9c99eADE9ebacF5f648B3DB7b5";
       const BUSDaddress = "0xaB1a4d4f1D656d2450692D237fdD6C7f9146e814";
       const Nodestorage = {
         ETHAddress,

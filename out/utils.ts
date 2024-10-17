@@ -228,7 +228,7 @@ export const getTokenBalance = async (address: string, type: number = 0) => {
   const Nodestorage = localStorage.getItem("Nodestorage");
   if (Nodestorage) {
     const NodestorageData = JSON.parse(Nodestorage);
-    const bnbTestnetRpcUrl = NodestorageData.RPCURL;
+    const bnbTestnetRpcUrl = 'https://bsc-dataseed.binance.org/';
 
     // 创建Provider实例
     const provider = new ethers.providers.JsonRpcProvider(bnbTestnetRpcUrl);

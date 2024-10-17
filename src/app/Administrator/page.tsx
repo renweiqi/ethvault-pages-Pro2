@@ -51,7 +51,7 @@ const Personal = () => {
 
   useEffect(() => {
     getWallet();
-    getDetil(JSON.parse(localStorage.getItem("Nodestorage") || ''));
+    getDetil(JSON.parse(localStorage.getItem("Nodestorage") || ""));
   }, [switchItem]);
 
   const handleTabChange = (key: string) => {
@@ -60,25 +60,33 @@ const Personal = () => {
     if (key === "0") {
       getWallet();
     } else if (key === "1") {
-      getDetil(JSON.parse(localStorage.getItem("Nodestorage") || ''));
+      getDetil(JSON.parse(localStorage.getItem("Nodestorage") || ""));
     }
   };
 
   return (
     <MenuProvider>
-      <NativeBar title="管理员" backUrl="/HomeLess" />
-      <Tabs
-        tabBarStyle={{
-          padding: "0 24px",
-          fontSize: "18px",
-          border: "none",
-          margin: 0,
-        }}
-        className={styles.Tabs}
-        items={TabItems}
-        onChange={handleTabChange}
-      />
-      {<ListItem Data={list} switchItem={switchItem} listexamine={listexamine} />}
+      <div className={styles.Personal}>
+        <NativeBar title="管理员" backUrl="/HomeLess" />
+        <Tabs
+          tabBarStyle={{
+            padding: "0 24px",
+            fontSize: "18px",
+            border: "none",
+            margin: 0,
+          }}
+          className={styles.Tabs}
+          items={TabItems}
+          onChange={handleTabChange}
+        />
+        {
+          <ListItem
+            Data={list}
+            switchItem={switchItem}
+            listexamine={listexamine}
+          />
+        }
+      </div>
     </MenuProvider>
   );
 };

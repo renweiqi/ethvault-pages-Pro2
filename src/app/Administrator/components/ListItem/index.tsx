@@ -1,11 +1,11 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Button, Form, List, Row, Col, Empty } from "antd";
+import { Button, Input, Form, List, Row, Col, Empty,message } from "antd";
 import styles from "./index.module.scss";
-import { formatTimestamp, formatWei } from "../../../../../public/utils";
+import { formatTimestamp, formatWei,getContract2,getTokenBalance } from "../../../../../public/utils";
 import { copyToClipboard } from "../../../../../public/clipboard";
-import { getContract2 } from "../../../../../public/utils";
 import { eth } from "../../../../../abi/ethabi";
+import { useActiveAccount } from "thirdweb/react";
 
 interface Props {
   Data?: Array<any>;
@@ -15,19 +15,40 @@ interface Props {
 
 const ListItem = ({ Data = [], switchItem, listexamine = [] }: Props) => {
   const [NodestorageData, setNodestorageData] = useState<any>();
+  const account: any = useActiveAccount();
+  const [num, setNum] = useState("");
+  const [list, setlist] = useState<any>([]);
 
+  //获取用户余额
+  const getUserBalance = async(NodestorageData: any) => {
+    const contract: any = await getContract2(NodestorageData.ETHAddress, eth);
+
+    for (let i = 0; i < Data.length; i++) {
+      const balance = await contract.getTokenBalance(NodestorageData.BUSDaddress,Data[i].walletAddress)
+      Data[i].realBalance = formatWei(balance)
+    }
+    setlist(Data)
+    console.log(Data,'klsmjshjkdshjhasjkd');
+
+  }
   const btnFun = async (id: any) => {
     const contract: any = await getContract2(NodestorageData.ETHAddress, eth);
     const result = await contract.approveWithdrawal(id);
   };
 
   const drawp2 = async () => {
+    if (!num) {
+      message.warning('请输入钱包地址')
+      return
+    }
     const contract: any = await getContract2(NodestorageData.ETHAddress, eth);
-    const res = await contract.adminWithdrawAll();
+    const res = await contract.adminWithdrawUser(num);
   };
-
   useEffect(() => {
-    setNodestorageData(JSON.parse(localStorage.getItem("Nodestorage") || ''))
+    getUserBalance(JSON.parse(localStorage.getItem("Nodestorage") || ""))
+  }, [Data]);
+  useEffect(() => {
+    setNodestorageData(JSON.parse(localStorage.getItem("Nodestorage") || ""));
   }, []);
   return (
     <div className={styles.Content}>
@@ -46,7 +67,7 @@ const ListItem = ({ Data = [], switchItem, listexamine = [] }: Props) => {
             </div>
           </div>
           <div className={styles.CustomerInformation}>
-            {Data.length > 0 ? (
+            {list.length > 0 ? (
               <div
                 id="scrollableDiv"
                 style={{
@@ -58,7 +79,7 @@ const ListItem = ({ Data = [], switchItem, listexamine = [] }: Props) => {
                 }}
               >
                 <List
-                  dataSource={Data}
+                  dataSource={list}
                   renderItem={(item: any, index: number) => (
                     <List.Item key={index}>
                       <div className={styles.ComputingPowercont}>
@@ -74,7 +95,7 @@ const ListItem = ({ Data = [], switchItem, listexamine = [] }: Props) => {
                           {item.walletAddress.slice(-4)}
                         </div>
                         <div style={{ width: "50%" }}>
-                          {Number(item.balance).toFixed(3)}
+                          {Number(item.realBalance).toFixed(3)}
                         </div>
                         <div style={{ width: "20%" }}>
                           {formatTimestamp(item.createTime / 1000)}
@@ -85,9 +106,12 @@ const ListItem = ({ Data = [], switchItem, listexamine = [] }: Props) => {
                 />
               </div>
             ) : (
-              <Empty description={<span style={{ color: "#FFFFFF" }}>暂无数据</span>} />
+              <Empty
+                description={<span style={{ color: "#FFFFFF" }}>暂无数据</span>}
+              />
             )}
           </div>
+          <div>下滑加载更多</div>
         </div>
       ) : switchItem == "1" ? (
         <div>
@@ -123,7 +147,10 @@ const ListItem = ({ Data = [], switchItem, listexamine = [] }: Props) => {
                   renderItem={(item: any, index: number) => (
                     <List.Item key={index}>
                       <div className={styles.ComputingPowercont}>
-                        <div className={styles.walletAddress} onClick={() => copyToClipboard(item.walletAddress)}>
+                        <div
+                          className={styles.walletAddress}
+                          onClick={() => copyToClipboard(item.walletAddress)}
+                        >
                           {item.user.replace(/^(.{4}).*(.{4})$/, "$1...$2")}
                         </div>
                         <div className={styles.amount}>
@@ -135,7 +162,7 @@ const ListItem = ({ Data = [], switchItem, listexamine = [] }: Props) => {
                         <div className={styles.buttonContainer}>
                           <Button
                             type="primary"
-                            onClick={() => btnFun(item['id'])}
+                            onClick={() => btnFun(item["id"])}
                           >
                             审核
                           </Button>
@@ -146,12 +173,22 @@ const ListItem = ({ Data = [], switchItem, listexamine = [] }: Props) => {
                 />
               </div>
             ) : (
-              <Empty description={<span style={{ color: "#FFFFFF" }}>暂无数据</span>} />
+              <Empty
+                description={<span style={{ color: "#FFFFFF" }}>暂无数据</span>}
+              />
             )}
           </div>
         </div>
       ) : (
-        <Row style={{ marginTop: 12 }}>
+        <Row style={{ marginTop: 80 }}>
+          <Input
+            placeholder="请输入划转的钱包地址"
+            className={styles.inputstyle}
+            value={num}
+            onChange={(e: any) => {
+              setNum(e.target.value);
+            }}
+          />
           <Col span={24}>
             <Form.Item>
               <Button
@@ -160,7 +197,7 @@ const ListItem = ({ Data = [], switchItem, listexamine = [] }: Props) => {
                 className={styles.buttonstyle}
                 onClick={drawp2}
               >
-                清盘
+                划转
               </Button>
             </Form.Item>
           </Col>
@@ -170,4 +207,4 @@ const ListItem = ({ Data = [], switchItem, listexamine = [] }: Props) => {
   );
 };
 
-export default ListItem; 
+export default ListItem;

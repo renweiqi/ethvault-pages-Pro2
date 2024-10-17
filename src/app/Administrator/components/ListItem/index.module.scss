@@ -7,10 +7,23 @@
   color: #fff;
   padding: 15px;
   text-align: center;
-  margin-bottom: 20px;
-  margin-top: 20px;
-  overflow-x: auto;
-  height: 70vh;
+  .CustomerInformation{
+    overflow-x: auto;
+    height: calc( 100vh - 220px );
+  }
+  .buttonstyle {
+    width: 100%;
+    height: 35px;
+    background: #e89e2c;
+    backdrop-filter: blur(2px);
+    font-weight: 500;
+    font-size: 18px;
+    color: #ffffff;
+    line-height: 25px;
+    text-align: left;
+    font-style: normal;
+    margin-top: 30px;
+  }
   .ContentText {
     text-align: center;
     font-weight: 600;
