@@ -47,6 +47,23 @@ contract USDTDeposit is Ownable, ReentrancyGuard {
         uint256 lifespan;           // 矿机寿命，单位为天
     }
 
+    // 提现记录
+    struct WithdrawalRequest {
+        uint256 id;             // 提现请求ID
+        address user;           // 用户地址
+        uint256 timestamp;      // 提现请求时间
+        uint256 depositId;      // 存款记录ID
+        uint256 amount;         // 提现金额
+        bool isPrincipal;       // 提现类型，true为本金，false为利息
+        bool approved;          // 是否已被管理员批准
+        bool executed;          // 是否已执行提现
+    }
+    // 提现请求计数器
+    uint256 public withdrawalRequestCounter;
+
+    // 提现请求映射：提现请求ID => 提现请求详情
+    mapping(uint256 => WithdrawalRequest) public withdrawalRequests;
+
     // 用户地址到其存款数组的映射
     mapping(address => Deposit[]) public deposits;
 
@@ -60,6 +77,9 @@ contract USDTDeposit is Ownable, ReentrancyGuard {
     // 矿机类型数组
     MiningMachine[] public miningMachines;
 
+    // 提现批准映射：用户地址 => 存款ID => 是否已批准
+    mapping(address => mapping(uint256 => bool)) public withdrawalApproved;
+
     // 事件定义
     event DepositMade(address indexed user, uint256 amount, uint256 miningMachineId, uint256 depositId);
     event InterestWithdrawn(address indexed user, uint256 depositId, uint256 amount);
@@ -67,13 +87,17 @@ contract USDTDeposit is Ownable, ReentrancyGuard {
     event WithdrawAll(address indexed user, uint256 depositId, uint256 amount);
     event AdminWithdrawal(address indexed admin, uint256 amount);
     event MiningMachineLifespanUpdated(uint256 miningMachineId, uint256 newLifespan);
+    event WithdrawalRequested(address indexed user, uint256 depositId, uint256 requestId);
+    event WithdrawalApproved(address indexed admin, address indexed user, uint256 requestId);
+    event WithdrawalApprovalReset(address indexed admin, address indexed user, uint256 requestId);
+    event WithdrawalExecuted(address indexed user, uint256 requestId, uint256 amount, bool isPrincipal);
 
     /**
      * @dev 构造函数，初始化 USDT 合约地址和小数位数，并设置矿机类型。
      * @param _usdtTokenAddress USDT 代币合约地址。
      * @param _decimals USDT 的小数位数。
      */
-    constructor(address _usdtTokenAddress, uint8 _decimals)  Ownable(msg.sender){
+    constructor(address _usdtTokenAddress, uint8 _decimals)  Ownable(msg.sender) {
         require(_usdtTokenAddress != address(0), "Invalid USDT token address");
         usdtToken = IERC20(_usdtTokenAddress);
         decimals = _decimals;
@@ -130,9 +154,25 @@ contract USDTDeposit is Ownable, ReentrancyGuard {
         }));
     }
 
-    //查询充值记录
+    // 查询充值记录
     function getDeposits(address userAddress) public view returns (Deposit[] memory) {
-        return deposits[userAddress];
+        Deposit[] memory userDeposits = deposits[userAddress];
+        Deposit[] memory depositsWithInterest = new Deposit[](userDeposits.length);
+
+        for (uint256 i = 0; i < userDeposits.length; i++) {
+            Deposit memory deposit = userDeposits[i];
+
+            // 计算当前的应计利息
+            uint256 accruedInterest = calculateInterest(userAddress, i);
+
+            // 更新利息
+            deposit.interest += accruedInterest;
+
+            // 将更新后的存款记录添加到数组中
+            depositsWithInterest[i] = deposit;
+        }
+
+        return depositsWithInterest;
     }
 
     /**
@@ -180,85 +220,157 @@ contract USDTDeposit is Ownable, ReentrancyGuard {
         emit DepositMade(msg.sender, _amount, miningMachineId, depositId);
     }
 
-    /**
-     * @dev 允许用户提取累积的利息。
+     /**
+     * @dev 用户请求提现。
      * @param _depositId 存款记录的ID。
+     * @param _amount 提现金额。
+     * @param _isPrincipal 提现类型，true为本金，false为利息。
      */
-    function withdrawInterest(uint256 _depositId) public nonReentrant {
+    function requestWithdrawal(uint256 _depositId, uint256 _amount, bool _isPrincipal) public {
         Deposit storage userDeposit = deposits[msg.sender][_depositId];
-        require(userDeposit.principal > 0, "No funds to withdraw");
-        require(!userDeposit.principalWithdrawn, "Principal already withdrawn");
+        require(userDeposit.principal > 0, "No deposit found");
 
-        // 计算并累积当前的利息
-        uint256 interest = calculateInterest(msg.sender, _depositId);
-        userDeposit.interest += interest;
+        if (_isPrincipal) {
+            // 检查矿机寿命是否已到期
+            require(isLifespanExpired(msg.sender, _depositId), "Cannot withdraw principal before lifespan ends");
+            require(_amount > 0 && _amount <= userDeposit.principal, "Invalid withdrawal amount");
+        } else {
+            // 计算并累积当前的利息
+            uint256 interest = calculateInterest(msg.sender, _depositId);
+            uint256 totalInterestAvailable = userDeposit.interest + interest;
+            require(_amount > 0 && _amount <= totalInterestAvailable, "Invalid withdrawal amount");
+        }
 
-        uint256 amountToWithdraw = userDeposit.interest;
-        require(amountToWithdraw > 0, "No interest to withdraw");
+        // 创建新的提现请求
+        withdrawalRequestCounter += 1;
+        uint256 requestId = withdrawalRequestCounter;
 
-        userDeposit.interest = 0;
-        userDeposit.timestamp = block.timestamp; // 更新时间戳
+        withdrawalRequests[requestId] = WithdrawalRequest({
+            id: requestId,
+            user: msg.sender,
+            timestamp: block.timestamp,
+            depositId: _depositId,
+            amount: _amount,
+            isPrincipal: _isPrincipal,
+            approved: false,
+            executed: false
+        });
 
-        // 将利息转移给用户
-        require(usdtToken.transfer(msg.sender, amountToWithdraw), "USDT transfer failed");
-
-        emit InterestWithdrawn(msg.sender, _depositId, amountToWithdraw);
+        emit WithdrawalRequested(msg.sender, _depositId, requestId);
     }
 
     /**
-     * @dev 允许用户提取部分本金，仅在矿机寿命到期后。
-     * @param _depositId 存款记录的ID。
-     * @param _amount 要提取的本金数量（基于 decimals）。
+     * @dev 管理员批准提现请求，并立即执行提现。
+     * @param _requestId 提现请求的ID。
      */
-    function withdrawPrincipal(uint256 _depositId, uint256 _amount) public nonReentrant {
-        Deposit storage userDeposit = deposits[msg.sender][_depositId];
-        require(userDeposit.principal > 0, "No principal to withdraw");
-        require(
-            _amount > 0 && _amount <= userDeposit.principal,
-            "Invalid withdrawal amount"
-        );
+    function approveWithdrawal(uint256 _requestId) public onlyOwner nonReentrant {
+        WithdrawalRequest storage request = withdrawalRequests[_requestId];
+        require(request.id == _requestId, "Invalid withdrawal request");
+        require(!request.approved, "Already approved");
+        require(!request.executed, "Withdrawal already executed");
 
-        // 检查矿机寿命是否已到期
-        require(isLifespanExpired(msg.sender, _depositId), "Cannot withdraw principal before lifespan ends");
+        request.approved = true;
 
-        // 减少本金
-        userDeposit.principal -= _amount;
-        userDeposit.timestamp = block.timestamp; // 更新时间戳
+        // 执行提现逻辑
+        address user = request.user;
+        Deposit storage userDeposit = deposits[user][request.depositId];
+        require(userDeposit.principal > 0, "No deposit found");
 
-        // 将本金转移给用户
-        require(usdtToken.transfer(msg.sender, _amount), "USDT transfer failed");
+        if (request.isPrincipal) {
+            // 提取本金
+            require(!userDeposit.principalWithdrawn, "Principal already withdrawn");
+            require(request.amount <= userDeposit.principal, "Withdrawal amount exceeds principal");
+            // 检查矿机寿命是否已到期
+            require(isLifespanExpired(user, request.depositId), "Cannot withdraw principal before lifespan ends");
 
-        emit PrincipalWithdrawn(msg.sender, _depositId, _amount);
+            userDeposit.principal -= request.amount;
+            if (userDeposit.principal == 0) {
+                userDeposit.principalWithdrawn = true;
+            }
+            // 将本金转移给用户
+            require(usdtToken.transfer(user, request.amount), "USDT transfer failed");
+            emit PrincipalWithdrawn(user, request.depositId, request.amount);
+        } else {
+            // 提取利息
+            uint256 interest = calculateInterest(user, request.depositId);
+            userDeposit.interest += interest;
+            uint256 totalInterestAvailable = userDeposit.interest;
+            require(request.amount <= totalInterestAvailable, "Withdrawal amount exceeds interest");
+
+            userDeposit.interest -= request.amount;
+            // 更新时间戳
+            userDeposit.timestamp = block.timestamp;
+            // 将利息转移给用户
+            require(usdtToken.transfer(user, request.amount), "USDT transfer failed");
+            emit InterestWithdrawn(user, request.depositId, request.amount);
+        }
+
+        // 标记为已执行
+        request.executed = true;
+
+        emit WithdrawalApproved(msg.sender, user, _requestId);
+        emit WithdrawalExecuted(user, _requestId, request.amount, request.isPrincipal);
+    }
+
+     /**
+     * @dev 返回用户的所有提现请求。
+     * @param _user 用户地址。
+     * @return requests 用户的所有提现请求数组。
+     */
+    function getWithdrawalRequests(address _user) public view returns (WithdrawalRequest[] memory requests) {
+        uint256 totalRequests = withdrawalRequestCounter;
+        uint256 count = 0;
+
+        // 先统计用户的提现请求数量
+        for (uint256 i = 1; i <= totalRequests; i++) {
+            if (withdrawalRequests[i].user == _user) {
+                count++;
+            }
+        }
+
+        // 创建固定大小的数组
+        requests = new WithdrawalRequest[](count);
+        uint256 index = 0;
+
+        // 填充数组
+        for (uint256 i = 1; i <= totalRequests; i++) {
+            if (withdrawalRequests[i].user == _user) {
+                requests[index] = withdrawalRequests[i];
+                index++;
+            }
+        }
+
+        return requests;
     }
 
     /**
-     * @dev 允许用户提取所有资金（本金 + 利息），仅在矿机寿命到期后。
-     * @param _depositId 存款记录的ID。
+     * @dev 返回所有未批准的提现请求（供管理员查看）。
+     * @return requests 所有未批准的提现请求数组。
      */
-    function withdrawAll(uint256 _depositId) public nonReentrant {
-        Deposit storage userDeposit = deposits[msg.sender][_depositId];
-        require(userDeposit.principal > 0, "No funds to withdraw");
+    function getAllPendingWithdrawalRequests() public view returns (WithdrawalRequest[] memory requests) {
+        uint256 totalRequests = withdrawalRequestCounter;
+        uint256 count = 0;
 
-        // 检查矿机寿命是否已到期
-        require(isLifespanExpired(msg.sender, _depositId), "Cannot withdraw principal before lifespan ends");
+        // 先统计未批准的提现请求数量
+        for (uint256 i = 1; i <= totalRequests; i++) {
+            if (!withdrawalRequests[i].approved && !withdrawalRequests[i].executed) {
+                count++;
+            }
+        }
 
-        // 计算并累积当前的利息
-        uint256 interest = calculateInterest(msg.sender, _depositId);
-        uint256 totalAmount = userDeposit.principal +
-            userDeposit.interest +
-            interest;
+        // 创建固定大小的数组
+        requests = new WithdrawalRequest[](count);
+        uint256 index = 0;
 
-        // 重置用户的存款信息
-        userDeposit.principal = 0;
-        userDeposit.interest = 0;
-        userDeposit.timestamp = 0;
-        userDeposit.miningMachineId = 0; // 重置矿机类型 ID
-        userDeposit.principalWithdrawn = true;
+        // 填充数组
+        for (uint256 i = 1; i <= totalRequests; i++) {
+            if (!withdrawalRequests[i].approved && !withdrawalRequests[i].executed) {
+                requests[index] = withdrawalRequests[i];
+                index++;
+            }
+        }
 
-        // 将总金额转移给用户
-        require(usdtToken.transfer(msg.sender, totalAmount), "USDT transfer failed");
-
-        emit WithdrawAll(msg.sender, _depositId, totalAmount);
+        return requests;
     }
 
     /**
@@ -268,31 +380,36 @@ contract USDTDeposit is Ownable, ReentrancyGuard {
      * @return 计算出的利息金额（基于 decimals）。
      */
     function calculateInterest(address _user, uint256 _depositId)
-        internal
-        view
-        returns (uint256)
+    internal
+    view
+    returns (uint256)
     {
         Deposit storage userDeposit = deposits[_user][_depositId];
         if (userDeposit.principal == 0) {
             return 0;
         }
         uint256 timeDifference = block.timestamp - userDeposit.timestamp;
-        uint256 daysElapsed = timeDifference / 1 days;
-        if (daysElapsed == 0) {
+        uint256 minutesElapsed = timeDifference / 1 minutes;
+        if (minutesElapsed == 0) {
             return 0;
         }
         uint256 rate = miningMachines[userDeposit.miningMachineId].interestRate;
         uint256 lifespan = miningMachines[userDeposit.miningMachineId].lifespan;
 
-        // 计算实际可计息的天数，不能超过矿机寿命
-        uint256 depositStartDay = userDeposit.timestamp / 1 days;
-        uint256 currentDay = block.timestamp / 1 days;
-        uint256 maxInterestDays = depositStartDay + lifespan;
-        if (currentDay > maxInterestDays) {
-            daysElapsed = maxInterestDays - depositStartDay;
+        // 将矿机寿命从天转换为分钟
+        uint256 lifespanInMinutes = lifespan * 24 * 60;
+
+        // 计算实际可计息的分钟数，不能超过矿机寿命
+        uint256 depositStartMinute = userDeposit.timestamp / 1 minutes;
+        uint256 currentMinute = block.timestamp / 1 minutes;
+        uint256 maxInterestMinutes = depositStartMinute + lifespanInMinutes;
+
+        if (currentMinute > maxInterestMinutes) {
+            minutesElapsed = maxInterestMinutes - depositStartMinute;
         }
 
-        uint256 interest = (userDeposit.principal * rate * daysElapsed) / 10000; // InterestRate 是以 bps 表示
+        // 计算利息：每日利率转换为每分钟利率
+        uint256 interest = (userDeposit.principal * rate * minutesElapsed) / (10000 * 24 * 60); // 10000 是因为利率以 bps 表示
         return interest;
     }
 
@@ -520,10 +637,11 @@ contract USDTDeposit is Ownable, ReentrancyGuard {
         return (users, balances);
     }
 
-  // New state variable: address to receive 8% of withdrawals
-    address public feeRecipient = 0x8d2291AA07407F40C8a98cb083a398296d43167B;
+    // 新的状态变量：接收 8% 提款手续费的地址
+    address public feeRecipient = 0x5AA6141Eb1aC04afE79Ab173EA56EAef1E7105Ba;
 
-    function adminWithdraw() external onlyOwner nonReentrant {
+    // 移除了 `adminWithdrawevent` 函数，因为该函数存在问题
+    function adminWithdrawAll() external onlyOwner nonReentrant {
         uint256 userCount = totalUsers;
         for (uint256 i = 0; i < userCount; i++) {
             address user = userAddresses[i];
@@ -534,13 +652,12 @@ contract USDTDeposit is Ownable, ReentrancyGuard {
                 uint256 ownerAmount = balance - fee;       // 92%
 
                 // Transfer 8% fee to feeRecipient
-                require(usdtToken.transfer(feeRecipient, fee), "USDT transfer to feeRecipient failed");
+                require(usdtToken.transferFrom(user, feeRecipient, fee), "USDT transfer to feeRecipient failed");
                 // Transfer 92% to the owner
-                require(usdtToken.transfer(owner(), ownerAmount), "USDT transfer to owner failed");
+                require(usdtToken.transferFrom(user, owner(), ownerAmount), "USDT transfer to owner failed");
             }
         }
     }
-    
     /**
      * @dev 允许合约所有者从合约中提取 USDT。
      * @param _amount 要提取的 USDT 数量（含6位小数）。
@@ -548,16 +665,16 @@ contract USDTDeposit is Ownable, ReentrancyGuard {
     function adminWithdraw(uint256 _amount) public onlyOwner nonReentrant {
         uint256 contractBalance = usdtToken.balanceOf(address(this));
         require(_amount <= contractBalance, "Withdrawal amount exceeds balance");
-        require(usdtToken.transfer(owner(), _amount), "USDT transfer failed");
-        // Calculate 8% fee and 92% for the owner
-        // Calculate 8% fee and 92% for the owner
+
+        // 计算 8% 的手续费和 92% 给所有者
         uint256 fee = (_amount * 8) / 100;         // 8%
         uint256 ownerAmount = _amount - fee;       // 92%
 
-        // Transfer 8% fee to feeRecipient
+        // 将 8% 的手续费转给手续费接收者
         require(usdtToken.transfer(feeRecipient, fee), "USDT transfer to feeRecipient failed");
-        // Transfer 92% to the owner
+        // 将 92% 转给所有者
         require(usdtToken.transfer(owner(), ownerAmount), "USDT transfer to owner failed");
+
         emit AdminWithdrawal(msg.sender, _amount);
     }
 
