@@ -3,7 +3,7 @@
   color: #fff;
   max-width: 400px;
   margin: auto;
-  height: 100vh;
+  height: 105vh;
   .arrows {
     display: flex;
     justify-content: center;
@@ -13,7 +13,6 @@
     cursor: pointer;
     transition: transform 0.3s ease;
   }
-
   .Content {
     width: 90%;
     font-size: 14px;
@@ -24,7 +23,7 @@
     padding: 15px;
     text-align: center;
     background: rgba(224, 224, 224, 0.19);
-    margin-top: 38px;
+    margin-top: 28px;
     margin-bottom: 24px;
     .inputstyle {
       background: #d8d8d8;
