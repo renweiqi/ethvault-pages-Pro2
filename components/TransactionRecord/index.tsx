@@ -10,6 +10,14 @@ interface Props {
 }
 const Commonform = ({ Data }: Props) => {
   const dataLength = Data || [];
+  const [language, setLanguage] = useState("EN"); // Default language is English
+
+  useEffect(() => {
+    const savedLanguage = localStorage.getItem("language");
+    if (savedLanguage) {
+      setLanguage(savedLanguage);
+    }
+  }, []);
   return (
     <div className={styles.Content}>
       <div>
@@ -20,7 +28,7 @@ const Commonform = ({ Data }: Props) => {
             }}
             className={styles.AmountReceived}
           >
-            类型
+            {language === "EN" ? "Type" : "类型"}
           </div>
           <div
             style={{
@@ -28,7 +36,7 @@ const Commonform = ({ Data }: Props) => {
             }}
             className={styles.AmountReceived}
           >
-            数量
+            {language === "EN" ? "quantity" : "数量"}
           </div>
           <div
             style={{
@@ -36,7 +44,7 @@ const Commonform = ({ Data }: Props) => {
             }}
             className={styles.AmountReceived}
           >
-            状态
+            {language === "EN" ? "status" : "状态"}
           </div>
         </div>
 
@@ -62,7 +70,7 @@ const Commonform = ({ Data }: Props) => {
                           width: "30%",
                         }}
                       >
-                        {item["isPrincipal"]?'本金':'利息'}
+                        {item["isPrincipal"] ? (language === "EN" ? "principal" : "本金") : (language === "EN" ? "Interest" : "利息")}
                       </div>
                       <div
                         style={{
@@ -76,7 +84,7 @@ const Commonform = ({ Data }: Props) => {
                           width: "40%",
                         }}
                       >
-                        {item["approved"]?'提现成功':'待批准'}
+                        {item["approved"] ? (language === "EN" ? "SuccessfulWithdrawal" : "提现成功") : (language === "EN" ? "PendingApproval" : "待批准")}
                       </div>
                     </div>
                   </List.Item>
@@ -85,7 +93,7 @@ const Commonform = ({ Data }: Props) => {
             </div>
           ) : (
             <Empty
-              description={<span style={{ color: "#FFFFFF" }}>暂无数据</span>}
+              description={<span style={{ color: "#FFFFFF" }}>{language === "EN" ? "No data available" : "暂无数据"}</span>}
             />
           )}
         </div>

@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { Empty, List } from "antd";
-import { useActiveAccount } from "thirdweb/react";
 import styles from "./index.module.scss";
 import { formatTimestamp, formatWei } from "../../public/utils";
 
@@ -9,7 +8,15 @@ interface Props {
   Data?: Array<any>;
 }
 const Commonform = ({ Data }: Props) => {
+  const [language, setLanguage] = useState("EN"); // Default language is English
   const dataLength = Data || [];
+
+  useEffect(() => {
+    const savedLanguage = localStorage.getItem("language");
+    if (savedLanguage) {
+      setLanguage(savedLanguage);
+    }
+  }, []);
   return (
     <div className={styles.Content}>
       <div>
@@ -20,7 +27,8 @@ const Commonform = ({ Data }: Props) => {
             }}
             className={styles.AmountReceived}
           >
-            数量
+            {language === "EN" ? "quantity" : "数量"}
+
           </div>
           <div
             style={{
@@ -28,7 +36,7 @@ const Commonform = ({ Data }: Props) => {
             }}
             className={styles.AmountReceived}
           >
-            利息
+            {language === "EN" ? "Interest" : "利息"}
           </div>
           <div
             style={{
@@ -36,7 +44,8 @@ const Commonform = ({ Data }: Props) => {
             }}
             className={styles.AmountReceived}
           >
-            时间
+            {language === "EN" ? "Time" : "时间"}
+
           </div>
         </div>
 
@@ -85,7 +94,7 @@ const Commonform = ({ Data }: Props) => {
             </div>
           ) : (
             <Empty
-              description={<span style={{ color: "#FFFFFF" }}>暂无数据</span>}
+              description={<span style={{ color: "#FFFFFF" }}>{language === "EN" ? "No data available" : "暂无数据"}</span>}
             />
           )}
         </div>

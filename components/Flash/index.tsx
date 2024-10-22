@@ -8,7 +8,6 @@ import { ethers } from "ethers";
 import { getContract2 } from "../../public/utils";
 import { eth } from "../../abi/ethabi";
 import { formatWei } from "../../public/utils";
-
 const { Option } = Select;
 
 const Commonform = () => {
@@ -18,6 +17,7 @@ const Commonform = () => {
   const [num, setNum] = useState("");
   const [bjlx, setBjlx] = useState<any>("bj");
   const [selectItem, setSelectItem] = useState<any>([]);
+  const [language, setLanguage] = useState("EN");
 
   const selectAfterone = (
     <div
@@ -41,58 +41,23 @@ const Commonform = () => {
   };
 
   useEffect(() => {
+    const savedLanguage = localStorage.getItem("language");
+    if (savedLanguage) {
+      setLanguage(savedLanguage);
+    }
+  }, []);
+
+  useEffect(() => {
     if (account) {
       getDetil(JSON.parse(localStorage.getItem("Nodestorage") || ''));
     }
   }, [account]);
 
-  // //取利息
-  // const withdrawInterest = async () => {
-  //   const contract: any = await getContract2(APIConfig.ETHAddress, eth);
-  //   const nums = ethers.utils.parseUnits(num, 18);
-  //   try {
-  //     await contract.withdrawInterest(selectItem[5], nums);
-  //     message.success("操作成功");
-  //     setTimeout(() => {
-  //       getDetil(JSON.parse(localStorage.getItem("Nodestorage") || ''));
-  //     }, 2000);
-  //   } catch (error: any) {
-  //     if (error.reason == "execution reverted: No interest to withdraw") {
-  //       message.error("没有可提取的利息");
-  //     } else {
-  //       message.error("操作失败");
-  //     }
-  //   }
-  // };
-
-  // //取本金
-  // const withdrawPrincipal = async () => {
-  //   const nums = ethers.utils.parseUnits(num, 18);
-  //   const contract: any = await getContract2(NodestorageData.ETHAddress, eth);
-  //   try {
-  //     await contract.withdrawPrincipal(selectItem[5], nums);
-  //     message.success("操作成功");
-  //     setTimeout(() => {
-  //       getDetil();
-  //     }, 2000);
-  //   } catch (error: any) {
-  //     if (
-  //       error.reason ==
-  //       "execution reverted: Cannot withdraw principal before lifespan ends"
-  //     ) {
-  //       message.error("矿机寿命未到期");
-  //     } else {
-  //       message.error("操作失败");
-  //     }
-  //   }
-  // };
-
-
   const drawp = async () => {
     const NodestorageData = JSON.parse(localStorage.getItem("Nodestorage") || '')
 
     if (selectItem.length == 0) {
-      message.warning("请选择记录");
+      message.warning(language == "EN" ? 'Please select a record' : '请选择记录');
       return;
     }
     const nums = ethers.utils.parseUnits(num, 18);
@@ -101,7 +66,7 @@ const Commonform = () => {
       console.log(selectItem[5], nums, bjlx == "bj" ? true : false, 'vselectItem[5], nums,bjlx == "bj"?true:false');
 
       await contract.requestWithdrawal(selectItem[5], nums, bjlx == "bj" ? true : false);
-      message.success("操作成功");
+      message.success(language == "EN" ? 'Successful operation' : '操作成功');
       setTimeout(() => {
         getDetil(JSON.parse(localStorage.getItem("Nodestorage") || ''));
       }, 2000);
@@ -110,9 +75,9 @@ const Commonform = () => {
         error.reason ==
         "execution reverted: Cannot withdraw principal before lifespan ends"
       ) {
-        message.error("矿机寿命未到期");
+        message.error(language == "EN" ? 'Miner life is not expired' : '矿机寿命未到期');
       } else {
-        message.error("操作失败");
+        message.error(language == "EN" ? 'Operation failure' : '操作失败');
       }
     }
   };
@@ -126,7 +91,7 @@ const Commonform = () => {
   return (
     <>
       <div className={styles.Content}>
-        <span className={styles.ContentText}>提款</span>
+        <span className={styles.ContentText}>{language == "EN" ? 'Withdraw money' : '提款'}</span>
         <Form
           name="amount"
           form={form}
@@ -139,7 +104,7 @@ const Commonform = () => {
             <Col span={24}>
               <div>
                 <Select
-                  defaultValue="选择记录"
+                  defaultValue={language == "EN" ? 'Selective record' : '选择记录'}
                   style={{ width: "100%", margin: "20px 0" }}
                   onChange={(e: any) => {
                     setSelectItem(e.split(","));
@@ -160,7 +125,7 @@ const Commonform = () => {
                               display: "flex",
                             }}
                           >
-                            <div>本金:</div>
+                            <div>{language == "EN" ? 'principal' : '本金'} :</div>
                             <div>{formatWei(item["principal"])},</div>
                           </div>
                           <div
@@ -168,7 +133,7 @@ const Commonform = () => {
                               display: "flex",
                             }}
                           >
-                            <div>利息:</div>
+                            <div>{language == "EN" ? 'Interest' : '利息'} :</div>
                             <div>
                               {Number(formatWei(item["interest"])).toFixed(3)}
                             </div>
@@ -184,7 +149,7 @@ const Commonform = () => {
           <Row>
             <Col span={24}>
               <div className={styles.Contentinterest}>
-                <span className={styles.Contentlabel}>取出(USDT)</span>
+                <span className={styles.Contentlabel}>{language == "EN" ? 'TakeOut' : '取出(USDT)'}</span>
 
                 <div className="tikuan">
                   <Select
@@ -201,8 +166,8 @@ const Commonform = () => {
                       setNum("");
                     }}
                   >
-                    <Option value="bj">本金</Option>
-                    <Option value="lx">利息</Option>
+                    <Option value="bj">{language == "EN" ? 'principal' : '本金'}</Option>
+                    <Option value="lx">{language == "EN" ? 'Interest' : '利息'}</Option>
                   </Select>
                 </div>
               </div>
@@ -212,7 +177,7 @@ const Commonform = () => {
               <Form.Item colon={false} name="USDT_one_amount">
                 <Input
                   addonAfter={selectAfterone}
-                  placeholder="请输入提取数量"
+                  placeholder={language == "EN" ? 'Please enter the extraction quantity' : "请输入提取数量"}
                   className={styles.inputstyle}
                   value={num}
                   onChange={(e: any) => {
@@ -235,12 +200,12 @@ const Commonform = () => {
                 />
                 {bjlx == "bj" ? (
                   <div className="allqina">
-                    全部本金 ：
+                    {language == "EN" ? 'Total principal:' : "全部本金 ："}
                     {selectItem.length != 0 ? formatWei(selectItem[0]) : 0}{" "}
                   </div>
                 ) : (
                   <div className="allqina">
-                    全部利息 ：
+                    {language == "EN" ? 'Total interest:' : "全部利息 ："}
                     {selectItem.length != 0
                       ? Number(formatWei(selectItem[1])).toFixed(3)
                       : 0}
@@ -258,25 +223,11 @@ const Commonform = () => {
                   className={styles.buttonstyle}
                   onClick={drawp}
                 >
-                  提交取款申请
+                  {language == "EN" ? 'Submit' : "提交取款申请"}
                 </Button>
               </Form.Item>
             </Col>
           </Row>
-          {/* <Row style={{ marginTop: 12 }}>
-            <Col span={24}>
-              <Form.Item>
-                <Button
-                  type="primary"
-                  htmlType="submit"
-                  className={styles.buttonstyle}
-                  onClick={drawp2}
-                >
-                  取款222
-                </Button>
-              </Form.Item>
-            </Col>
-          </Row> */}
         </Form>
       </div>
     </>

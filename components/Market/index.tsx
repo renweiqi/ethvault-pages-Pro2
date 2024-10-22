@@ -25,6 +25,14 @@ const ZSDSwap = getContract({
 const Market = () => {
   const [currencies, setCurrencies] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [language, setLanguage] = useState("EN"); // 默认语言为英文
+
+  useEffect(() => {
+    const savedLanguage = localStorage.getItem("language");
+    if (savedLanguage) {
+      setLanguage(savedLanguage);
+    }
+  }, []);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -67,22 +75,22 @@ const Market = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.marketstyle}>行        情</div>
+      <div className={styles.marketstyle}>{language === "EN" ? "Market" : "行        情"}</div>
 
       <div className={styles.titleContent}>
         <div className={styles.marketInfo}>
-          <span>市值</span>
+          <span>{language === "EN" ? 'MarketCap' : '市值'}</span>
         </div>
 
         <div className={styles.priceInfo}>
-          <span className={styles.newtext}>最近价</span>
+          <span className={styles.newtext}>{language === "EN" ? 'Last price' : '最近价'}</span>
         </div>
         <div className={styles.fluctuateInfo}>
-          <span className={styles.newtext}>24H波动</span>
+          <span className={styles.newtext}>{language === "EN" ? '24H change' : '24H波动'}</span>
         </div>
       </div>
       <Spin spinning={loading} tip="请稍等，数据实时刷新中...">
-        {currencies.slice(0, 8).map((currency: any, index: any) => (
+        {currencies.slice(0, 6).map((currency: any, index: any) => (
           <div key={index} className={styles.currencyItem}>
             <div className={styles.currencyInfo}>
               <Image

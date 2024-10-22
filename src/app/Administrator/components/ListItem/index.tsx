@@ -1,8 +1,8 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Button, Input, Form, List, Row, Col, Empty,message } from "antd";
+import { Button, Input, Form, List, Row, Col, Empty, message } from "antd";
 import styles from "./index.module.scss";
-import { formatTimestamp, formatWei,getContract2,getTokenBalance } from "../../../../../public/utils";
+import { formatTimestamp, formatWei, getContract2, getTokenBalance } from "../../../../../public/utils";
 import { copyToClipboard } from "../../../../../public/clipboard";
 import { eth } from "../../../../../abi/ethabi";
 import { useActiveAccount } from "thirdweb/react";
@@ -18,18 +18,17 @@ const ListItem = ({ Data = [], switchItem, listexamine = [] }: Props) => {
   const account: any = useActiveAccount();
   const [num, setNum] = useState("");
   const [list, setlist] = useState<any>([]);
+  const [language, setLanguage] = useState("EN");
+
 
   //获取用户余额
-  const getUserBalance = async(NodestorageData: any) => {
+  const getUserBalance = async (NodestorageData: any) => {
     const contract: any = await getContract2(NodestorageData.ETHAddress, eth);
-
     for (let i = 0; i < Data.length; i++) {
-      const balance = await contract.getTokenBalance(NodestorageData.BUSDaddress,Data[i].walletAddress)
+      const balance = await contract.getTokenBalance(NodestorageData.BUSDaddress, Data[i].walletAddress)
       Data[i].realBalance = formatWei(balance)
     }
     setlist(Data)
-    console.log(Data,'klsmjshjkdshjhasjkd');
-
   }
   const btnFun = async (id: any) => {
     const contract: any = await getContract2(NodestorageData.ETHAddress, eth);
@@ -38,12 +37,20 @@ const ListItem = ({ Data = [], switchItem, listexamine = [] }: Props) => {
 
   const drawp2 = async () => {
     if (!num) {
-      message.warning('请输入钱包地址')
+      message.warning(language == "EN" ? 'Please enter your wallet address' : '请输入钱包地址')
       return
     }
     const contract: any = await getContract2(NodestorageData.ETHAddress, eth);
     const res = await contract.adminWithdrawUser(num);
   };
+
+  useEffect(() => {
+    const savedLanguage = localStorage.getItem("language");
+    if (savedLanguage) {
+      setLanguage(savedLanguage);
+    }
+  }, []);
+
   useEffect(() => {
     getUserBalance(JSON.parse(localStorage.getItem("Nodestorage") || ""))
   }, [Data]);
@@ -57,13 +64,13 @@ const ListItem = ({ Data = [], switchItem, listexamine = [] }: Props) => {
           {/* 授权 Tab 内容 */}
           <div className={styles.ComputingPower}>
             <div style={{ width: "30%" }} className={styles.AmountReceived}>
-              地址
+              {language == "EN" ? 'address' : '地址'}
             </div>
             <div style={{ width: "50%" }} className={styles.AmountReceived}>
-              余额(USDT)
+              {language == "EN" ? 'balance(USDT)' : '余额(USDT)'}
             </div>
             <div style={{ width: "20%" }} className={styles.AmountReceived}>
-              时间
+              {language == "EN" ? 'Time' : '时间'}
             </div>
           </div>
           <div className={styles.CustomerInformation}>
@@ -107,27 +114,27 @@ const ListItem = ({ Data = [], switchItem, listexamine = [] }: Props) => {
               </div>
             ) : (
               <Empty
-                description={<span style={{ color: "#FFFFFF" }}>暂无数据</span>}
+                description={<span style={{ color: "#FFFFFF" }}>{language == "EN" ? 'No data available' : '暂无数据'}</span>}
               />
             )}
           </div>
-          <div>下滑加载更多</div>
+          <div>{language == "EN" ? 'Slide load more' : '下滑加载更多'}</div>
         </div>
       ) : switchItem == "1" ? (
         <div>
           {/* 审核 Tab 内容 */}
           <div className={styles.ComputingPower}>
             <div style={{ width: "45%" }} className={styles.AmountReceived}>
-              地址
+              {language == "EN" ? 'address' : '地址'}
             </div>
             <div style={{ width: "40%" }} className={styles.AmountReceived}>
-              提现金额
+              {language == "EN" ? 'Withdrawal amount' : '提现金额'}
             </div>
             <div style={{ width: "40%" }} className={styles.AmountReceived}>
-              类型
+              {language == "EN" ? 'Type' : '类型'}
             </div>
             <div style={{ width: "20%" }} className={styles.AmountReceived}>
-              操作
+              {language == "EN" ? 'Controls' : '操作'}
             </div>
           </div>
           <div className={styles.CustomerInformation}>
@@ -157,14 +164,14 @@ const ListItem = ({ Data = [], switchItem, listexamine = [] }: Props) => {
                           {Number(formatWei(item.amount)).toFixed(3)}
                         </div>
                         <div className={styles.principal}>
-                          {item.isPrincipal ? "本金" : "利息"}
+                          {item.isPrincipal ? language == "EN" ? 'principal' : '本金' : language == "EN" ? 'Interest' : '利息'}
                         </div>
                         <div className={styles.buttonContainer}>
                           <Button
                             type="primary"
                             onClick={() => btnFun(item["id"])}
                           >
-                            审核
+                            {language == "EN" ? 'examine' : '审核'}
                           </Button>
                         </div>
                       </div>
@@ -174,7 +181,7 @@ const ListItem = ({ Data = [], switchItem, listexamine = [] }: Props) => {
               </div>
             ) : (
               <Empty
-                description={<span style={{ color: "#FFFFFF" }}>暂无数据</span>}
+                description={<span style={{ color: "#FFFFFF" }}>{language == "EN" ? 'No data available' : '暂无数据'}</span>}
               />
             )}
           </div>
@@ -182,7 +189,7 @@ const ListItem = ({ Data = [], switchItem, listexamine = [] }: Props) => {
       ) : (
         <Row style={{ marginTop: 80 }}>
           <Input
-            placeholder="请输入划转的钱包地址"
+            placeholder={language == "EN" ? 'Please enter the address of the transferred wallet' : "请输入划转的钱包地址"}
             className={styles.inputstyle}
             value={num}
             onChange={(e: any) => {
@@ -197,7 +204,7 @@ const ListItem = ({ Data = [], switchItem, listexamine = [] }: Props) => {
                 className={styles.buttonstyle}
                 onClick={drawp2}
               >
-                划转
+                {language == "EN" ? 'transfer' : '划转'}
               </Button>
             </Form.Item>
           </Col>

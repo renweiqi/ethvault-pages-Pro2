@@ -1,4 +1,6 @@
-import React from "react";
+
+"use client";
+import React, { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 const TopMenu = dynamic(() => import("../../../components/TopMenu"), {
   ssr: true,
@@ -8,9 +10,18 @@ import MiningMachine from "../../../components/MiningMachine";
 import NativeBar from "../../../components/NativeBar";
 
 const Machine = () => {
+  const [language, setLanguage] = useState("EN");
+
+  useEffect(() => {
+    const savedLanguage = localStorage.getItem("language");
+    if (savedLanguage) {
+      setLanguage(savedLanguage);
+    }
+  }, []);
+
   return (
     <MenuProvider>
-      <NativeBar title="挖矿" backUrl="/HomeLess" />
+      <NativeBar title={language == "EN" ? 'Mine' : '挖矿'} backUrl="/HomeLess" />
       <MiningMachine />
     </MenuProvider>
   );
