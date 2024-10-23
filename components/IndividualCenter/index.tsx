@@ -20,8 +20,8 @@ const Commonform = () => {
     let totalInterest = 0; // 利息
 
     for (let i = 0; i < result.length; i++) {
-      totalPrincipal += Number(formatWei(result[i]["principal"]));
-      totalInterest += Number(formatWei(result[i]["interest"]));
+      totalPrincipal += Number(formatWei(result[i]["principal"])) - Number(formatWei(result[i]["frozenPrincipal"]));
+      totalInterest += Number(formatWei(result[i]["interest"])) - Number(formatWei(result[i]["frozenInterest"]));
     }
     setUSDTBalance(totalPrincipal);
     setZSDBalance(Number(totalInterest).toFixed(3));

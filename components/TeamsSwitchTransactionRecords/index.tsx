@@ -20,8 +20,6 @@ const TeamsSwitchTransactionRecords = () => {
   const getDetil = async (NodestorageData: any) => {
     const contract: any = await getContract2(NodestorageData.ETHAddress, eth);
     const result = await contract.getDeposits(account.address);
-    console.log(result,'fsdfsdfsdfdsfds');
-    
     setDepList(result);
   };
 

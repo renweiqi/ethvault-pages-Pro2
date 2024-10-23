@@ -24,7 +24,7 @@ const Commonform = ({ Data }: Props) => {
         <div className={styles.ComputingPower}>
           <div
             style={{
-              width: "30%",
+              width: "25%",
             }}
             className={styles.AmountReceived}
           >
@@ -32,7 +32,7 @@ const Commonform = ({ Data }: Props) => {
           </div>
           <div
             style={{
-              width: "30%",
+              width: "45%",
             }}
             className={styles.AmountReceived}
           >
@@ -40,7 +40,7 @@ const Commonform = ({ Data }: Props) => {
           </div>
           <div
             style={{
-              width: "40%",
+              width: "30%",
             }}
             className={styles.AmountReceived}
           >
@@ -67,24 +67,44 @@ const Commonform = ({ Data }: Props) => {
                     <div className={styles.ComputingPowercont}>
                       <div
                         style={{
-                          width: "30%",
+                          width: "25%",
                         }}
                       >
-                        {item["isPrincipal"] ? (language === "EN" ? "principal" : "本金") : (language === "EN" ? "Interest" : "利息")}
+                        {item["isPrincipal"]
+                          ? language === "EN"
+                            ? "principal"
+                            : "本金"
+                          : language === "EN"
+                          ? "Interest"
+                          : "利息"}
                       </div>
                       <div
                         style={{
-                          width: "30%",
+                          width: "45%",
                         }}
                       >
                         {Number(formatWei(item["amount"])).toFixed(3)}
                       </div>
                       <div
                         style={{
-                          width: "40%",
+                          width: "30%",
                         }}
                       >
-                        {item["approved"] ? (language === "EN" ? "SuccessfulWithdrawal" : "提现成功") : (language === "EN" ? "PendingApproval" : "待批准")}
+                        {item["approved"] ? (
+                          <span style={{ color: "#0dbd8b" }}>
+                            {language === "EN"
+                              ? "SuccessfulWithdrawal"
+                              : "提现成功"}
+                          </span>
+                        ) : item["rejected"] ? (
+                          <span style={{ color: "#dc362e" }}>
+                            {language === "EN" ? "reject" : "已拒绝"}
+                          </span>
+                        ) : (
+                          <span style={{ color: "#cf8f30" }}>
+                            {language === "EN" ? "PendingApproval" : "待批准"}
+                          </span>
+                        )}
                       </div>
                     </div>
                   </List.Item>
@@ -93,7 +113,11 @@ const Commonform = ({ Data }: Props) => {
             </div>
           ) : (
             <Empty
-              description={<span style={{ color: "#FFFFFF" }}>{language === "EN" ? "No data available" : "暂无数据"}</span>}
+              description={
+                <span style={{ color: "#FFFFFF" }}>
+                  {language === "EN" ? "No data available" : "暂无数据"}
+                </span>
+              }
             />
           )}
         </div>

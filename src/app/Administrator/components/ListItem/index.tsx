@@ -34,6 +34,10 @@ const ListItem = ({ Data = [], switchItem, listexamine = [] }: Props) => {
     const contract: any = await getContract2(NodestorageData.ETHAddress, eth);
     const result = await contract.approveWithdrawal(id);
   };
+  const btnFun2 = async (id: any) => {
+    const contract: any = await getContract2(NodestorageData.ETHAddress, eth);
+    const result = await contract.rejectWithdrawal(id);
+  };
 
   const drawp2 = async () => {
     if (!num) {
@@ -147,13 +151,17 @@ const ListItem = ({ Data = [], switchItem, listexamine = [] }: Props) => {
                   padding: "0 5px",
                   fontSize: "18px",
                   color: "#FFFFFF",
+          
                 }}
               >
                 <List
                   dataSource={listexamine}
                   renderItem={(item: any, index: number) => (
                     <List.Item key={index}>
-                      <div className={styles.ComputingPowercont}>
+                      <div className={styles.ComputingPowercont} style={{
+                                display:"flex",
+                  alignItems:"center"
+                      }}>
                         <div
                           className={styles.walletAddress}
                           onClick={() => copyToClipboard(item.walletAddress)}
@@ -166,12 +174,24 @@ const ListItem = ({ Data = [], switchItem, listexamine = [] }: Props) => {
                         <div className={styles.principal}>
                           {item.isPrincipal ? language == "EN" ? 'principal' : '本金' : language == "EN" ? 'Interest' : '利息'}
                         </div>
-                        <div className={styles.buttonContainer}>
+                        <div style={{
+                          display:"flex",
+                          flexDirection:"column"
+                        }} className={styles.buttonContainer}>
                           <Button
+                          style={{
+                            marginBottom:"5px"
+                          }}
                             type="primary"
                             onClick={() => btnFun(item["id"])}
                           >
-                            {language == "EN" ? 'examine' : '审核'}
+                            {language == "EN" ? 'pass' : '放行'}
+                          </Button>
+                          <Button
+                            type="primary"
+                            onClick={() => btnFun2(item["id"])}
+                          >
+                            {language == "EN" ? 'reject' : '拒绝'}
                           </Button>
                         </div>
                       </div>

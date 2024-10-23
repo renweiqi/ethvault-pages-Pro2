@@ -20,7 +20,12 @@ const Personal = () => {
     try {
       const contract: any = await getContract2(Nodestorage.ETHAddress, eth);
       const result = await contract.getAllPendingWithdrawalRequests();
-      setListexamine(result);
+      const newresult = result.map((res:any)=>{
+        if(!res['rejected']){
+          return res
+        }
+      }).filter((res:any)=>res)
+      setListexamine(newresult);
     } catch (error) {
       console.error("Error fetching withdrawal requests:", error);
     }

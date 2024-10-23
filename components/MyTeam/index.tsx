@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Empty, List } from "antd";
+import { Empty, List, Statistic } from "antd";
 import styles from "./index.module.scss";
 import { formatTimestamp, formatWei } from "../../public/utils";
 
@@ -10,6 +10,7 @@ interface Props {
 const Commonform = ({ Data }: Props) => {
   const [language, setLanguage] = useState("EN"); // Default language is English
   const dataLength = Data || [];
+  const { Countdown } = Statistic;
 
   useEffect(() => {
     const savedLanguage = localStorage.getItem("language");
@@ -23,7 +24,7 @@ const Commonform = ({ Data }: Props) => {
         <div className={styles.ComputingPower}>
           <div
             style={{
-              width: "30%",
+              width: "40%",
             }}
             className={styles.AmountReceived}
           >
@@ -32,7 +33,7 @@ const Commonform = ({ Data }: Props) => {
           </div>
           <div
             style={{
-              width: "30%",
+              width: "35%",
             }}
             className={styles.AmountReceived}
           >
@@ -40,11 +41,11 @@ const Commonform = ({ Data }: Props) => {
           </div>
           <div
             style={{
-              width: "40%",
+              width: "25%",
             }}
             className={styles.AmountReceived}
           >
-            {language === "EN" ? "Time" : "时间"}
+            {language === "EN" ? "unlock Time" : "解锁时间"}
 
           </div>
         </div>
@@ -68,24 +69,24 @@ const Commonform = ({ Data }: Props) => {
                     <div className={styles.ComputingPowercont}>
                       <div
                         style={{
-                          width: "30%",
+                          width: "40%",
                         }}
                       >
                         {formatWei(item["principal"])}
                       </div>
                       <div
                         style={{
-                          width: "30%",
+                          width: "35%",
                         }}
                       >
-                        {Number(formatWei(item["interest"])).toFixed(3)}
+                        {(Number(formatWei(item["interest"])) - Number(formatWei(item["frozenInterest"]))).toFixed(3) }
                       </div>
                       <div
                         style={{
-                          width: "40%",
+                          width: "25%",
                         }}
                       >
-                        {formatTimestamp(item["timestamp"])}
+                        <Countdown value={item["timestamp"].toString() * 1000 + 2592000000} />
                       </div>
                     </div>
                   </List.Item>
