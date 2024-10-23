@@ -3,26 +3,39 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import styles from "./index.module.scss";
 import { useRouter } from "next/navigation";
-import { copyToClipboard } from "../../public/clipboard";
 import Administrator from "../../public/images/Administrator.png";
+import selectorSwitch from "../../public/images/selectorSwitch.png";
 import { useActiveAccount } from "thirdweb/react";
 
 const RightMenu: React.FC = () => {
   const account: any = useActiveAccount();
   const [isAdmin, setIsAdmin] = useState(false);
+  const [language, setLanguage] = useState("EN"); // 新增语言状态
   const router = useRouter();
-  const handleCopyClick = () => {
-    const textToCopy = "这里是你想要复制的文本";
-    copyToClipboard(textToCopy);
+
+  // 切换语言并存储到 localStorage
+  const ToggleLanguage = () => {
+    const newLanguage = language === "EN" ? "CN" : "EN";
+    setLanguage(newLanguage);
+    localStorage.setItem("language", newLanguage); // 存储到 localStorage
+    window.location.reload(); // 刷新页面
   };
+
   useEffect(() => {
     if (account) {
       setIsAdmin(
         account.address.toLowerCase() ==
-          "0xf12C64a1A345ddE2AB90e22F7dc4279A32265A1F".toLowerCase()
+        "0xf12C64a1A345ddE2AB90e22F7dc4279A32265A1F".toLowerCase()
       );
     }
+
+    // 从 localStorage 中获取存储的语言偏好
+    const savedLanguage = localStorage.getItem("language");
+    if (savedLanguage) {
+      setLanguage(savedLanguage);
+    }
   }, [account]);
+
   return (
     <div className={styles.rightMenu} data-id="RightMenu">
       <div
@@ -39,9 +52,10 @@ const RightMenu: React.FC = () => {
           height={50}
         />
         <div data-id="RightMenu" className={styles.text}>
-          首页
+          {language === "EN" ? "Home" : "首页"} {/* 根据语言渲染 */}
         </div>
       </div>
+
       <div
         data-id="RightMenu"
         className={styles.row}
@@ -56,7 +70,7 @@ const RightMenu: React.FC = () => {
           height={50}
         />
         <div data-id="RightMenu" className={styles.text}>
-          矿机
+          {language === "EN" ? "Mining" : "矿机"}
         </div>
       </div>
       <div
@@ -73,26 +87,10 @@ const RightMenu: React.FC = () => {
           height={50}
         />
         <div data-id="RightMenu" className={styles.text}>
-          提款
+          {language === "EN" ? "Withdraw" : "提款"}
         </div>
       </div>
-      {/* <div
-        data-id="RightMenu"
-        className={styles.row}
-        onClick={() => router.push("/Community")}
-      >
-        <Image
-          data-id="RightMenu"
-          className={styles.img}
-          src="https://white-key-landfowl-741.mypinata.cloud/ipfs/QmWrNfknnSDJXPS5pdDx4wqeoaci1iei1ZL6npC9jxk3Dm/community.png"
-          alt="coin"
-          width={50}
-          height={50}
-        />
-        <div data-id="RightMenu" className={styles.text}>
-          联系我们
-        </div>
-      </div> */}
+
       <div
         data-id="RightMenu"
         className={styles.row}
@@ -107,10 +105,11 @@ const RightMenu: React.FC = () => {
           height={50}
         />
         <div data-id="RightMenu" className={styles.text}>
-          个人中心
+          {language === "EN" ? "Personal" : "个人中心"}
         </div>
       </div>
-      {isAdmin ? (
+
+      {isAdmin && (
         <div
           data-id="RightMenu"
           className={styles.row}
@@ -125,12 +124,24 @@ const RightMenu: React.FC = () => {
             height={50}
           />
           <div data-id="RightMenu" className={styles.text}>
-            管理员
+            {language === "EN" ? "Admin" : "管理员"}
           </div>
         </div>
-      ) : (
-        ""
       )}
+
+      <div data-id="RightMenu" className={styles.row} onClick={ToggleLanguage}>
+        <Image
+          data-id="RightMenu"
+          className={styles.img}
+          src={selectorSwitch}
+          alt="coin"
+          width={50}
+          height={50}
+        />
+        <div data-id="RightMenu" className={styles.text}>
+          {language === "EN" ? "EN" : "CN"} {/* 显示当前语言 */}
+        </div>
+      </div>
     </div>
   );
 };

@@ -20,8 +20,6 @@ const MiningMachine = () => {
   const router = useRouter();
   const account: any = useActiveAccount();
   const [uSDTBalance, setUSDTBalance] = useState<any>();
-  const [NodestorageData, setNodestorageData] = useState<any>();
-
 
   const goRoute = (link: any, minerData: any) => {
     const serializedData = encodeURIComponent(

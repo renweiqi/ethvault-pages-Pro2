@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useContext, useRef } from "react";
+import React, { useEffect, useContext, useRef, useState } from "react";
 import { useActiveAccount } from "thirdweb/react";
 import Image from "next/image";
 import styles from "./index.module.scss";
@@ -10,57 +10,83 @@ import { MenuContext } from "../MenuContext";
 import { copyToClipboard } from "../../public/clipboard";
 import bgGif from "../../public/images/beijing.png";
 
-const imageArray = [
-  {
-    link: `/Machine`,
-    url: "../../images/MININGMACHINE.png",
-    name: "矿机",
-    en: "MINING MACHINE",
-  },
-  {
-    link: "/Personal",
-    url: "../../images/PERSONALCENTER.png",
-    name: "个人中心",
-    en: "PERSONAL CENTER",
-  },
-  // {
-  //   link: "/Community",
-  //   url: "../../images/ContactUs.png",
-  //   name: "联系我们",
-  //   en: "Contact Us",
-  // },
-  {
-    link: "/HomeLess",
-    url: "../../images/homepage.png",
-    name: "首 页",
-    en: "home page",
-  },
-  {
-    link: "/Flash",
-    url: "../../images/WithdrawMoney.png",
-    name: "取 款",
-    en: "withdraw money",
-  },
-];
-
 const ClientMenu: React.FC = () => {
   const router = useRouter();
   const account: any = useActiveAccount();
+  const [language, setLanguage] = useState("EN"); // Default language is English
+
+  const imageArrayEN = [
+    {
+      link: `/Machine`,
+      url: "../../images/MININGMACHINE.png",
+      name: 'Mining machine',
+      en: "MINING MACHINE",
+    },
+    {
+      link: "/Personal",
+      url: "../../images/PERSONALCENTER.png",
+      name: "PERSONAL CENTER",
+      en: "PERSONAL CENTER",
+    },
+    {
+      link: "/HomeLess",
+      url: "../../images/homepage.png",
+      name: "Home page",
+      en: "home page",
+    },
+    {
+      link: "/Flash",
+      url: "../../images/WithdrawMoney.png",
+      name: "withdraw money",
+      en: "withdraw money",
+    },
+  ];
+
+  const imageArrayZh = [
+    {
+      link: `/Machine`,
+      url: "../../images/MININGMACHINE.png",
+      name: '矿机',
+      en: "MINING MACHINE",
+    },
+    {
+      link: "/Personal",
+      url: "../../images/PERSONALCENTER.png",
+      name: "个人中心",
+      en: "PERSONAL CENTER",
+    },
+    {
+      link: "/HomeLess",
+      url: "../../images/homepage.png",
+      name: "首 页",
+      en: "home page",
+    },
+    {
+      link: "/Flash",
+      url: "../../images/WithdrawMoney.png",
+      name: "取 款",
+      en: "withdraw money",
+    },
+  ];
 
   const goRoute = (url: any) => {
     router.push(url.link);
   };
 
   const handleCopyClick = () => {
-    const textToCopy = `https://m.zsdcoin.com?ref=${
-      account ? account.address : ""
-    }`;
+    const textToCopy = `https://m.zsdcoin.com?ref=${account ? account.address : ""}`;
     copyToClipboard(textToCopy);
   };
 
-  const { isRightMenuVisible, toggleRightMenu, hideRightMenu } =
-    useContext(MenuContext);
+  const { isRightMenuVisible, toggleRightMenu, hideRightMenu } = useContext(MenuContext);
   const containerRef = useRef(null);
+
+  useEffect(() => {
+    const savedLanguage = localStorage.getItem("language");
+    if (savedLanguage) {
+      setLanguage(savedLanguage);
+    }
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: any) => {
@@ -74,10 +100,10 @@ const ClientMenu: React.FC = () => {
     };
   }, [hideRightMenu]);
 
+  const selectedImageArray = language === "EN" ? imageArrayEN : imageArrayZh;
+
   return (
     <>
-      {/* 公告 */}
-      {/* <Announcement /> */}
       <div className={styles.pageMenu}>
         {isRightMenuVisible && <RightMenu />}
         <Top onToggleRightMenu={toggleRightMenu} />
@@ -87,44 +113,23 @@ const ClientMenu: React.FC = () => {
         </div>
 
         <div className={styles.top} ref={containerRef}>
-          {imageArray.map((v, i) => {
-            if (v.link === "/InCode") {
-              return (
-                <div
-                  className={`${styles["menyBtn" + i]} ${styles.menyBtn}`}
-                  key={i}
-                  onClick={handleCopyClick}
-                >
-                  <Image
-                    className={`${styles["img" + i]}`}
-                    src={v.url}
-                    alt={v.name}
-                    width={50}
-                    height={50}
-                  />
-                  <div className={styles["menyBtn-n"]}>{v.name}</div>
-                  <div className={styles["menyBtn-e"]}>{v.en}</div>
-                </div>
-              );
-            }
-            return (
-              <div
-                className={`${styles["menyBtn" + i]} ${styles.menyBtn}`}
-                key={i}
-                onClick={() => goRoute(v)}
-              >
-                <Image
-                  className={`${styles["img" + i]}`}
-                  src={v.url}
-                  alt={v.name}
-                  width={50}
-                  height={50}
-                />
-                <div className={styles["menyBtn-n"]}>{v.name}</div>
-                <div className={styles["menyBtn-e"]}>{v.en}</div>
-              </div>
-            );
-          })}
+          {selectedImageArray.map((v, i) => (
+            <div
+              className={`${styles["menyBtn" + i]} ${styles.menyBtn}`}
+              key={v.link}
+              onClick={v.link === "/InCode" ? handleCopyClick : () => goRoute(v)}
+            >
+              <Image
+                className={`${styles["img" + i]}`}
+                src={v.url}
+                alt={v.name}
+                width={50}
+                height={50}
+              />
+              <div className={styles["menyBtn-n"]}>{v.name}</div>
+              <div className={styles["menyBtn-e"]}>{v.en}</div>
+            </div>
+          ))}
         </div>
       </div>
     </>

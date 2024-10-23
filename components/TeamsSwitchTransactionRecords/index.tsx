@@ -14,6 +14,8 @@ const TeamsSwitchTransactionRecords = () => {
   const [depList, setDepList] = useState<any>([]);
   const [depList2, setDepList2] = useState<any>([]);
   const account: any = useActiveAccount();
+  const [language, setLanguage] = useState("EN"); // Default language is English
+
 
   const getDetil = async (NodestorageData: any) => {
     const contract: any = await getContract2(NodestorageData.ETHAddress, eth);
@@ -42,6 +44,11 @@ const TeamsSwitchTransactionRecords = () => {
   };
 
   useEffect(() => {
+    const savedLanguage = localStorage.getItem("language");
+    if (savedLanguage) {
+      setLanguage(savedLanguage);
+    }
+
     if (account) {
       getDetil(JSON.parse(localStorage.getItem("Nodestorage") || ''));
     }
@@ -60,7 +67,7 @@ const TeamsSwitchTransactionRecords = () => {
             }}
             onClick={() => handleTabClick("team")}
           >
-            充值记录
+            {language === "EN" ? "Recharge" : "充值记录"}
           </span>
           <span
             className={styles.ContentText}
@@ -71,7 +78,7 @@ const TeamsSwitchTransactionRecords = () => {
             }}
             onClick={() => handleTabClick("transaction")}
           >
-            提现记录
+            {language === "EN" ? "Withdrawal" : "提现记录"}
           </span>
         </div>
       </div>

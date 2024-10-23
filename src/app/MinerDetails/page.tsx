@@ -15,7 +15,7 @@ import { ethers } from "ethers";
 
 const { Option } = Select;
 
-const initialHeight = "400px";
+const initialHeight = "700px";
 const minimizedHeight = "300px";
 
 const MinerDetails = () => {
@@ -32,6 +32,7 @@ const MinerDetailsContent = () => {
   const searchParams = useSearchParams();
   const minerData = searchParams?.get("MinerData") || null;
   const [NodestorageData, setNodestorageData] = useState<any>();
+  const [language, setLanguage] = useState("EN");
 
   let miner;
   try {
@@ -77,18 +78,18 @@ const MinerDetailsContent = () => {
   // 验证输入值是否在限制范围内
   const validateInput = (rule: any, value: any) => {
     if (value === undefined || value === null || value === "") {
-      return Promise.reject("请输入充值数量");
+      return Promise.reject(language == "EN" ? 'Please enter the amount of recharge' : '请输入充值数量');
     }
 
     const numValue = Number(value);
     if (isNaN(numValue) || numValue <= 0) {
-      return Promise.reject("请输入有效的矿机充值数量");
+      return Promise.reject(language == "EN" ? 'Please enter a valid miner recharge quantity' : '请输入有效的矿机充值数量');
     }
 
     const { min, max } = getMinMax();
 
     if (numValue < min || numValue > max) {
-      return Promise.reject(`该矿机充值数量应在 ${min} 与 ${max} 之间`);
+      return Promise.reject(`${language == "EN" ? 'The miner recharge quantity should be in' : '请输入有效的矿机充值数量'} ${min} ${language == "EN" ? 'with' : '与'}  ${max} ${language == "EN" ? 'among' : '之间'}`);
     }
     return Promise.resolve();
   };
@@ -98,28 +99,28 @@ const MinerDetailsContent = () => {
       const num = ethers.utils.parseUnits(values.USDTnum.toString(), 18);
       const contract: any = await getContract2(NodestorageData.ETHAddress, eth);
       const result = await contract.deposit(num);
-      message.success("充值成功！");
+      message.success(language == "EN" ? 'Recharge successfully!' : '充值成功！');
       form.resetFields();
     } catch (error) {
-      message.error("充值失败，请稍后再试");
+      message.error(language == "EN" ? "Recharge failed, please try again later" : "充值失败，请稍后再试");
     }
   };
 
   const specifications = [
-    { title: "额定算力", value: "180TH/s, -9%~+9%" },
-    { title: "能效比", value: "23.5J/TH, -7%~+7%" },
-    { title: "功耗", value: "3259W, -10%~+10%" },
-    { title: "连接方式", value: "RJ45 1G Ethernet" },
-    { title: "风扇", value: "4 x 12050 FAN" },
-    { title: "风量，CFM", value: "420 MAX" },
-    { title: "运行温度", value: "-7°C ~ 39°C" },
-    { title: "裸机尺寸", value: "L271mm x W198mm x H290mm" },
-    { title: "外箱尺寸", value: "L420mm x W325mm x H430mm" },
-    { title: "净重", value: "14.5 kg" },
-    { title: "毛重", value: "14.6 kg" },
-    { title: "交流电压输入范围，Volt", value: "200 ~ 300 V" },
-    { title: "交流电源输入频率范围，Hz", value: "50 ~ 70 Hz" },
-    { title: "交流电流输入范围，Amp", value: "16 A" },
+    { title: language == "EN" ? 'Rated computing power' : "额定算力", value: "180TH/s, -9%~+9%" },
+    { title: language == "EN" ? 'Energy efficiency ratio' : "能效比", value: "23.5J/TH, -7%~+7%" },
+    { title: language == "EN" ? 'Power dissipation' : "功耗", value: "3259W, -10%~+10%" },
+    { title: language == "EN" ? 'Connection mode' : "连接方式", value: "RJ45 1G Ethernet" },
+    { title: language == "EN" ? 'fan' : "风扇", value: "4 x 12050 FAN" },
+    { title: language == "EN" ? 'Air volume, CFM' : "风量，CFM", value: "420 MAX" },
+    { title: language == "EN" ? 'Operating temperature' : "运行温度", value: "-7°C ~ 39°C" },
+    { title: language == "EN" ? 'Bare machine size' : "裸机尺寸", value: "L271mm x W198mm x H290mm" },
+    { title: language == "EN" ? 'Carton size' : "外箱尺寸", value: "L420mm x W325mm x H430mm" },
+    { title: language == "EN" ? 'Net weight' : "净重", value: "14.5 kg" },
+    { title: language == "EN" ? 'Gross weight' : "毛重", value: "14.6 kg" },
+    { title: language == "EN" ? 'Ac voltage input range, Volt' : "交流电压输入范围，Volt", value: "200 ~ 300 V" },
+    { title: language == "EN" ? 'Ac power input frequency range: Hz' : "交流电源输入频率范围，Hz", value: "50 ~ 70 Hz" },
+    { title: language == "EN" ? 'Ac current input range, Amp' : "交流电流输入范围，Amp", value: "16 A" },
   ];
 
   const handleChange = (value: string) => {
@@ -134,7 +135,7 @@ const MinerDetailsContent = () => {
       const ETHAddress = "0x75101A8aC197E3Ea3A9eAeA92Bb98aa17Da3aa41";
       const BUSDaddress = "0xaB1a4d4f1D656d2450692D237fdD6C7f9146e814";
       const Nodestorage = {
-        ETHAddress, 
+        ETHAddress,
         BUSDaddress,
         RPCURL,
         id,
@@ -190,11 +191,18 @@ const MinerDetailsContent = () => {
   };
 
   useEffect(() => {
+    const savedLanguage = localStorage.getItem("language");
+    if (savedLanguage) {
+      setLanguage(savedLanguage);
+    }
+  }, []);
+
+  useEffect(() => {
     setNodestorageData(JSON.parse(localStorage.getItem("Nodestorage") || ''))
   }, []);
   return (
     <div className={styles.rewardcontainer}>
-      <NativeBar title="充值与奖励" backUrl="/Machine" />
+      <NativeBar title={language == "EN" ? 'Top up and reward' : "充值与奖励"} backUrl="/Machine" />
       <div className={styles.conter}>
         <div
           style={{
@@ -204,11 +212,12 @@ const MinerDetailsContent = () => {
         >
           <div className={styles.contertitle}>{miner?.name}</div>
           <div className={styles.topup}>
-            <span>充值</span>
+            <span>{language == "EN" ? 'top up' : '充值'}</span>
             <span>{miner?.topupNum}</span>
           </div>
           <div className={styles.topup}>
-            <span>利息</span>
+            <span>{language == "EN" ? 'Interest' : '利息'}</span>
+
             <span>{miner?.interestname}</span>
           </div>
           <div>
@@ -245,7 +254,7 @@ const MinerDetailsContent = () => {
           <Row>
             <Col span={24}>
               <div className={styles.Contentinterest}>
-                <span className={styles.Contentlabel}>充值(USDT)</span>
+                <span className={styles.Contentlabel}>{language == "EN" ? 'top up(USDT)' : '充值(USDT)'}</span>
                 <div className="tikuan">
                   <Select
                     defaultValue="BEP20USDT"
@@ -271,12 +280,12 @@ const MinerDetailsContent = () => {
                 colon={false}
                 name="USDTnum"
                 rules={[
-                  { required: true, message: "请输入数量" },
+                  { required: true, message: language == "EN" ? 'Please enter quantity' : "请输入数量" },
                   { validator: validateInput },
                 ]}
               >
                 <InputNumber
-                  placeholder="请输入数量"
+                  placeholder={language == "EN" ? 'Please enter quantity' : "请输入数量"}
                   className={styles.inputstyle}
                   style={{ width: "100%" }}
                   step={1}
@@ -295,7 +304,7 @@ const MinerDetailsContent = () => {
                   htmlType="submit"
                   className={styles.buttonstyle}
                 >
-                  充值
+                  {language == "EN" ? 'Top Up' : "充值"}
                 </Button>
               </Form.Item>
             </Col>

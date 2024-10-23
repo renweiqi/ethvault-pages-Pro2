@@ -13,6 +13,8 @@ const Personal = () => {
   const [switchItem, setSwitch] = useState("0");
   const [list, setList] = useState([]);
   const [listexamine, setListexamine] = useState([]);
+  const [language, setLanguage] = useState("EN");
+
 
   const getDetil = async (Nodestorage: any) => {
     try {
@@ -36,18 +38,25 @@ const Personal = () => {
 
   const TabItems = [
     {
-      label: "授权",
+      label: language == "EN" ? 'Accredit' : '授权',
       key: "0",
     },
     {
-      label: "审核",
+      label: language == "EN" ? 'Examine' : '审核',
       key: "1",
     },
     {
-      label: "提取",
+      label: language == "EN" ? 'Withdraw' : '提取',
       key: "2",
     },
   ];
+
+  useEffect(() => {
+    const savedLanguage = localStorage.getItem("language");
+    if (savedLanguage) {
+      setLanguage(savedLanguage);
+    }
+  }, []);
 
   useEffect(() => {
     getWallet();
@@ -67,7 +76,7 @@ const Personal = () => {
   return (
     <MenuProvider>
       <div className={styles.Personal}>
-        <NativeBar title="管理员" backUrl="/HomeLess" />
+        <NativeBar title={language == "EN" ? 'Administrator' : '管理员'} backUrl="/HomeLess" />
         <Tabs
           tabBarStyle={{
             padding: "0 24px",
