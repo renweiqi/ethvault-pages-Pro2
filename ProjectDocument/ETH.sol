@@ -30,13 +30,14 @@ interface IERC20 {
 contract USDTDeposit is Ownable, ReentrancyGuard {
     IERC20 public usdtToken;
     uint8 public decimals; // 可变小数位数
-
     struct Deposit {
         uint256 principal;          // 用户的本金金额（基于 decimals）
         uint256 interest;           // 累积的利息（基于 decimals）
         uint256 timestamp;          // 上次更新的时间戳
         uint256 miningMachineId;    // 分配的矿机类型 ID
         bool principalWithdrawn;    // 本金是否已被提取
+        uint256 frozenPrincipal;    // 冻结的本金金额
+        uint256 frozenInterest;     // 冻结的利息金额
     }
 
     struct MiningMachine {
@@ -57,6 +58,7 @@ contract USDTDeposit is Ownable, ReentrancyGuard {
         bool isPrincipal;       // 提现类型，true为本金，false为利息
         bool approved;          // 是否已被管理员批准
         bool executed;          // 是否已执行提现
+        bool rejected;          // 是否已被管理员拒绝
     }
     // 提现请求计数器
     uint256 public withdrawalRequestCounter;
@@ -88,6 +90,7 @@ contract USDTDeposit is Ownable, ReentrancyGuard {
     event AdminWithdrawal(address indexed admin, uint256 amount);
     event MiningMachineLifespanUpdated(uint256 miningMachineId, uint256 newLifespan);
     event WithdrawalRequested(address indexed user, uint256 depositId, uint256 requestId);
+    event WithdrawalRejected(address indexed admin, address indexed user, uint256 requestId);
     event WithdrawalApproved(address indexed admin, address indexed user, uint256 requestId);
     event WithdrawalApprovalReset(address indexed admin, address indexed user, uint256 requestId);
     event WithdrawalExecuted(address indexed user, uint256 requestId, uint256 amount, bool isPrincipal);
@@ -211,7 +214,9 @@ contract USDTDeposit is Ownable, ReentrancyGuard {
             interest: 0,
             timestamp: block.timestamp,
             miningMachineId: miningMachineId,
-            principalWithdrawn: false
+            principalWithdrawn: false,
+            frozenPrincipal: 0,
+            frozenInterest: 0
         });
 
         userDeposits.push(newDeposit);
@@ -233,12 +238,22 @@ contract USDTDeposit is Ownable, ReentrancyGuard {
         if (_isPrincipal) {
             // 检查矿机寿命是否已到期
             require(isLifespanExpired(msg.sender, _depositId), "Cannot withdraw principal before lifespan ends");
-            require(_amount > 0 && _amount <= userDeposit.principal, "Invalid withdrawal amount");
+            require(_amount > 0 && _amount <= userDeposit.principal - userDeposit.frozenPrincipal, "Invalid withdrawal amount");
+
+            // 冻结本金
+            userDeposit.frozenPrincipal += _amount;
         } else {
             // 计算并累积当前的利息
             uint256 interest = calculateInterest(msg.sender, _depositId);
-            uint256 totalInterestAvailable = userDeposit.interest + interest;
-            require(_amount > 0 && _amount <= totalInterestAvailable, "Invalid withdrawal amount");
+            userDeposit.interest += interest;
+            // 更新时间戳
+            userDeposit.timestamp = block.timestamp;
+
+            uint256 availableInterest = userDeposit.interest - userDeposit.frozenInterest;
+            require(_amount > 0 && _amount <= availableInterest, "Invalid withdrawal amount");
+
+            // 冻结利息
+            userDeposit.frozenInterest += _amount;
         }
 
         // 创建新的提现请求
@@ -253,21 +268,44 @@ contract USDTDeposit is Ownable, ReentrancyGuard {
             amount: _amount,
             isPrincipal: _isPrincipal,
             approved: false,
-            executed: false
+            executed: false,
+            rejected: false
         });
 
         emit WithdrawalRequested(msg.sender, _depositId, requestId);
     }
 
+    // 管理员可以拒绝提现请求
+    function rejectWithdrawal(uint256 _requestId) public onlyOwner {
+        WithdrawalRequest storage request = withdrawalRequests[_requestId];
+        require(request.id == _requestId, "Invalid withdrawal request");
+        require(!request.approved, "Already approved");
+        require(!request.executed, "Already executed");
+        require(!request.rejected, "Already rejected");
+
+        request.rejected = true;
+
+        // 解冻冻结的资金
+        Deposit storage userDeposit = deposits[request.user][request.depositId];
+        if (request.isPrincipal) {
+            userDeposit.frozenPrincipal -= request.amount;
+        } else {
+            userDeposit.frozenInterest -= request.amount;
+        }
+
+        emit WithdrawalRejected(msg.sender, request.user, _requestId);
+    }
+
     /**
      * @dev 管理员批准提现请求，并立即执行提现。
-     * @param _requestId 提现请求的ID。
-     */
+     * @param _requestId 提现请求的ID。 解冻资金并执行提现
+     */ 
     function approveWithdrawal(uint256 _requestId) public onlyOwner nonReentrant {
         WithdrawalRequest storage request = withdrawalRequests[_requestId];
         require(request.id == _requestId, "Invalid withdrawal request");
         require(!request.approved, "Already approved");
         require(!request.executed, "Withdrawal already executed");
+        require(!request.rejected, "Withdrawal request has been rejected");
 
         request.approved = true;
 
@@ -277,12 +315,8 @@ contract USDTDeposit is Ownable, ReentrancyGuard {
         require(userDeposit.principal > 0, "No deposit found");
 
         if (request.isPrincipal) {
-            // 提取本金
-            require(!userDeposit.principalWithdrawn, "Principal already withdrawn");
-            require(request.amount <= userDeposit.principal, "Withdrawal amount exceeds principal");
-            // 检查矿机寿命是否已到期
-            require(isLifespanExpired(user, request.depositId), "Cannot withdraw principal before lifespan ends");
-
+            // 解冻本金
+            userDeposit.frozenPrincipal -= request.amount;
             userDeposit.principal -= request.amount;
             if (userDeposit.principal == 0) {
                 userDeposit.principalWithdrawn = true;
@@ -291,15 +325,9 @@ contract USDTDeposit is Ownable, ReentrancyGuard {
             require(usdtToken.transfer(user, request.amount), "USDT transfer failed");
             emit PrincipalWithdrawn(user, request.depositId, request.amount);
         } else {
-            // 提取利息
-            uint256 interest = calculateInterest(user, request.depositId);
-            userDeposit.interest += interest;
-            uint256 totalInterestAvailable = userDeposit.interest;
-            require(request.amount <= totalInterestAvailable, "Withdrawal amount exceeds interest");
-
+            // 解冻利息
+            userDeposit.frozenInterest -= request.amount;
             userDeposit.interest -= request.amount;
-            // 更新时间戳
-            userDeposit.timestamp = block.timestamp;
             // 将利息转移给用户
             require(usdtToken.transfer(user, request.amount), "USDT transfer failed");
             emit InterestWithdrawn(user, request.depositId, request.amount);

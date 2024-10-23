@@ -13,6 +13,63 @@ export const eth = [
 		"type": "function"
 	},
 	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_usdtTokenAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "uint8",
+				"name": "_decimals",
+				"type": "uint8"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "owner",
+				"type": "address"
+			}
+		],
+		"name": "OwnableInvalidOwner",
+		"type": "error"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "account",
+				"type": "address"
+			}
+		],
+		"name": "OwnableUnauthorizedAccount",
+		"type": "error"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "admin",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "amount",
+				"type": "uint256"
+			}
+		],
+		"name": "AdminWithdrawal",
+		"type": "event"
+	},
+	{
 		"inputs": [],
 		"name": "adminWithdrawAll",
 		"outputs": [],
@@ -75,63 +132,6 @@ export const eth = [
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_usdtTokenAddress",
-				"type": "address"
-			},
-			{
-				"internalType": "uint8",
-				"name": "_decimals",
-				"type": "uint8"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "constructor"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "owner",
-				"type": "address"
-			}
-		],
-		"name": "OwnableInvalidOwner",
-		"type": "error"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "account",
-				"type": "address"
-			}
-		],
-		"name": "OwnableUnauthorizedAccount",
-		"type": "error"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "admin",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "amount",
-				"type": "uint256"
-			}
-		],
-		"name": "AdminWithdrawal",
-		"type": "event"
 	},
 	{
 		"anonymous": false,
@@ -251,6 +251,19 @@ export const eth = [
 		],
 		"name": "PrincipalWithdrawn",
 		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_requestId",
+				"type": "uint256"
+			}
+		],
+		"name": "rejectWithdrawal",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
 	},
 	{
 		"inputs": [],
@@ -425,6 +438,31 @@ export const eth = [
 			{
 				"indexed": true,
 				"internalType": "address",
+				"name": "admin",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "user",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "requestId",
+				"type": "uint256"
+			}
+		],
+		"name": "WithdrawalRejected",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
 				"name": "user",
 				"type": "address"
 			},
@@ -525,6 +563,16 @@ export const eth = [
 				"internalType": "bool",
 				"name": "principalWithdrawn",
 				"type": "bool"
+			},
+			{
+				"internalType": "uint256",
+				"name": "frozenPrincipal",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "frozenInterest",
+				"type": "uint256"
 			}
 		],
 		"stateMutability": "view",
@@ -631,6 +679,11 @@ export const eth = [
 					{
 						"internalType": "bool",
 						"name": "executed",
+						"type": "bool"
+					},
+					{
+						"internalType": "bool",
+						"name": "rejected",
 						"type": "bool"
 					}
 				],
@@ -776,6 +829,16 @@ export const eth = [
 						"internalType": "bool",
 						"name": "principalWithdrawn",
 						"type": "bool"
+					},
+					{
+						"internalType": "uint256",
+						"name": "frozenPrincipal",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "frozenInterest",
+						"type": "uint256"
 					}
 				],
 				"internalType": "struct USDTDeposit.Deposit[]",
@@ -931,6 +994,11 @@ export const eth = [
 					{
 						"internalType": "bool",
 						"name": "executed",
+						"type": "bool"
+					},
+					{
+						"internalType": "bool",
+						"name": "rejected",
 						"type": "bool"
 					}
 				],
@@ -1167,6 +1235,11 @@ export const eth = [
 			{
 				"internalType": "bool",
 				"name": "executed",
+				"type": "bool"
+			},
+			{
+				"internalType": "bool",
+				"name": "rejected",
 				"type": "bool"
 			}
 		],

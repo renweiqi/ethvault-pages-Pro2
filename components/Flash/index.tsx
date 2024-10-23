@@ -98,9 +98,9 @@ const Commonform = () => {
     const nums = ethers.utils.parseUnits(num, 18);
     const contract: any = await getContract2(NodestorageData.ETHAddress, eth);
     try {
-      console.log(selectItem[5], nums, bjlx == "bj" ? true : false, 'vselectItem[5], nums,bjlx == "bj"?true:false');
+      console.log(selectItem[7], nums, bjlx == "bj" ? true : false, 'vselectItem[7], nums,bjlx == "bj"?true:false',selectItem);
 
-      await contract.requestWithdrawal(selectItem[5], nums, bjlx == "bj" ? true : false);
+      await contract.requestWithdrawal(selectItem[7], nums, bjlx == "bj" ? true : false);
       message.success("操作成功");
       setTimeout(() => {
         getDetil(JSON.parse(localStorage.getItem("Nodestorage") || ''));
