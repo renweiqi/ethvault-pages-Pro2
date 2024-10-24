@@ -47,18 +47,6 @@ const Commonform = () => {
     setDepList(result);
   };
 
-  useEffect(() => {
-    const savedLanguage = localStorage.getItem("language");
-    if (savedLanguage) {
-      setLanguage(savedLanguage);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (account) {
-      getDetil(JSON.parse(localStorage.getItem("Nodestorage") || ""));
-    }
-  }, [account]);
 
   const drawp = async () => {
     const NodestorageData = JSON.parse(
@@ -112,9 +100,15 @@ const Commonform = () => {
     }
   };
 
+
   useEffect(() => {
     if (account) {
       getDetil(JSON.parse(localStorage.getItem("Nodestorage") || ""));
+
+      const savedLanguage = localStorage.getItem("language");
+      if (savedLanguage) {
+        setLanguage(savedLanguage);
+      }
     }
   }, [account]);
 

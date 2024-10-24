@@ -135,7 +135,7 @@ const MiningMachine = () => {
   }, [account]);
   return (
     <div className={styles.Content}>
-      <div className={styles.MiningMachinestyle}>矿机</div>
+      <div className={styles.MiningMachinestyle}>{language == 'EN' ? "Mining machine" : "矿机"}</div>
       <Row gutter={[16, 16]} className={styles.Cardstyle}>
         {imageArray.map((v, i) => (
           <Col
