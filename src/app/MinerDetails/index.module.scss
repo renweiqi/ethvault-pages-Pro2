@@ -3,7 +3,7 @@
   color: #fff;
   max-width: 400px;
   margin: auto;
-  height: 105vh;
+  height: 170vh;
   .arrows {
     display: flex;
     justify-content: center;
@@ -63,7 +63,6 @@
       background: rgba(49, 47, 47, 0);
       line-height: 25px;
       border-radius: 4px;
-      // opacity: 0.8;
       backdrop-filter: blur(2px);
     }
     .ContentText {
@@ -116,7 +115,6 @@
     }
     .labelLeft {
       margin-right: auto;
-
       font-weight: 500;
       font-size: 16px;
       color: #ffffff;
@@ -126,7 +124,6 @@
     }
     .labelRight {
       margin-left: auto;
-
       font-weight: 400;
       font-size: 14px;
       color: #999999;
@@ -198,7 +195,7 @@
     font-weight: 400;
     font-size: 16px;
     color: #ffffff;
-    line-height: 22px;
+    line-height: 28px;
     font-style: normal;
     margin-top: 10px;
   }

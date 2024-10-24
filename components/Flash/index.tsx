@@ -27,13 +27,13 @@ const Commonform = () => {
         setNum(
           bjlx == "bj"
             ? (
-                Number(formatWei(selectItem[0])) -
-                Number(formatWei(selectItem[5]))
-              ).toFixed(3)
+              Number(formatWei(selectItem[0])) -
+              Number(formatWei(selectItem[5]))
+            ).toFixed(3)
             : (
-                Number(formatWei(selectItem[1])) -
-                Number(formatWei(selectItem[6]))
-              ).toFixed(3)
+              Number(formatWei(selectItem[1])) -
+              Number(formatWei(selectItem[6]))
+            ).toFixed(3)
         );
       }}
     >
@@ -241,12 +241,12 @@ const Commonform = () => {
                       bjlx == "bj"
                         ? selectItem.length != 0
                           ? Number(formatWei(selectItem[0])) -
-                            Number(formatWei(selectItem[5]))
+                          Number(formatWei(selectItem[5]))
                           : 0
                         : selectItem.length != 0
-                        ? Number(formatWei(selectItem[1])) -
+                          ? Number(formatWei(selectItem[1])) -
                           Number(formatWei(selectItem[6]))
-                        : 0
+                          : 0
                     ).toFixed(3);
                     if (Number(total) < Number(value)) {
                       value = total;
@@ -260,7 +260,7 @@ const Commonform = () => {
                     {language == "EN" ? "Total principal:" : "全部本金 ："}
                     {selectItem.length != 0
                       ? Number(formatWei(selectItem[0])) -
-                        Number(formatWei(selectItem[5]))
+                      Number(formatWei(selectItem[5]))
                       : 0}{" "}
                   </div>
                 ) : (
@@ -268,9 +268,9 @@ const Commonform = () => {
                     {language == "EN" ? "Total interest:" : "全部利息 ："}
                     {selectItem.length != 0
                       ? (
-                          Number(formatWei(selectItem[1])) -
-                          Number(formatWei(selectItem[6]))
-                        ).toFixed(3)
+                        Number(formatWei(selectItem[1])) -
+                        Number(formatWei(selectItem[6]))
+                      ).toFixed(3)
                       : 0}
                   </div>
                 )}

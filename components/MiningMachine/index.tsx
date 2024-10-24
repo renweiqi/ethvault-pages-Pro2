@@ -20,6 +20,8 @@ const MiningMachine = () => {
   const router = useRouter();
   const account: any = useActiveAccount();
   const [uSDTBalance, setUSDTBalance] = useState<any>();
+  const [language, setLanguage] = useState("EN");
+
 
   const goRoute = (link: any, minerData: any) => {
     const serializedData = encodeURIComponent(
@@ -52,72 +54,79 @@ const MiningMachine = () => {
       link: `/MinerDetails`,
       src: A1066Pro,
       name: "A1066Pro",
-      topup: "充值",
+      topup: language == 'EN' ? "TopUp" : "充值",
       topupNum: "0-999USDT",
-      interest: "利息",
-      interestname: "0.5%/天",
+      interest: language == 'EN' ? "Interest" : "利息",
+      interestname: language == 'EN' ? "0.5%/day" : "0.5%/天"
     },
     {
       id: 2,
       link: "/MinerDetails",
       src: A1266,
       name: "A1166Pro-S-75T",
-      topup: "充值",
+      topup: language == 'EN' ? "TopUp" : "充值",
       topupNum: "1000-5999USDT",
-      interest: "利息",
-      interestname: "1%/天",
+      interest: language == 'EN' ? "Interest" : "利息",
+      interestname: language == 'EN' ? "1%/day" : "1%/天"
     },
     {
       id: 3,
       link: "/MinerDetails",
       src: A1366130T,
       name: "A1266",
-      topup: "充值",
+      topup: language == 'EN' ? "TopUp" : "充值",
       topupNum: "6000-14999USDT",
-      interest: "利息",
-      interestname: "3%/天",
+      interest: language == 'EN' ? "Interest" : "利息",
+      interestname: language == 'EN' ? "3%/day" : "3%/天"
     },
     {
       id: 4,
       link: "/MinerDetails",
       src: A1466150T,
       name: "A1366-130T",
-      topup: "充值",
+      topup: language == 'EN' ? "TopUp" : "充值",
       topupNum: "15000-29999USDT",
-      interest: "利息",
-      interestname: "5%/天",
+      interest: language == 'EN' ? "Interest" : "利息",
+      interestname: language == 'EN' ? "5%/day" : "5%/天"
     },
     {
       id: 5,
       link: "/MinerDetails",
       src: A1566Pro180T,
       name: "A1466-150T",
-      topup: "充值",
+      topup: language == 'EN' ? "TopUp" : "充值",
       topupNum: "30000-59999USDT",
-      interest: "利息",
-      interestname: "8%/天",
+      interest: language == 'EN' ? "Interest" : "利息",
+      interestname: language == 'EN' ? "8%/day" : "8%/天"
     },
     {
       id: 6,
       link: "/MinerDetails",
       src: A1676Pro367T,
       name: "A1566Pro180T",
-      topup: "充值",
+      topup: language == 'EN' ? "TopUp" : "充值",
       topupNum: "60000-99999USDT",
-      interest: "利息",
-      interestname: "12%/天",
+      interest: language == 'EN' ? "Interest" : "利息",
+      interestname: language == 'EN' ? "12%/day" : "12%/天"
     },
     {
       id: 7,
       link: "/MinerDetails",
       src: A1166ProS75T,
       name: "A1676Pro367T",
-      topup: "充值",
-      topupNum: "100000以上USDT",
-      interest: "利息",
-      interestname: "上不封顶%/天",
+      topup: language == 'EN' ? "TopUp" : "充值",
+      topupNum: language == 'EN' ? "Uncapped %/ day" : "100000以上USDT",
+      interest: language == 'EN' ? "Interest" : "利息",
+      interestname: language == 'EN' ? "Uncapped %/ day" : "上不封顶%/天"
     },
   ];
+
+  useEffect(() => {
+    const savedLanguage = localStorage.getItem("language");
+    if (savedLanguage) {
+      setLanguage(savedLanguage);
+    }
+  }, []);
 
   useEffect(() => {
     if (account) {
@@ -147,10 +156,12 @@ const MiningMachine = () => {
               </div>
               <div className={styles.BGconter}>
                 <div className={styles.CardTitle}>{v.name}</div>
+
                 <div className={styles.Cardcenter}>
                   <div>{v.topup}</div>
                   <div>{v.topupNum}</div>
                 </div>
+
                 <div className={styles.Cardcenter}>
                   <div>{v.interest}</div>
                   <div>{v.interestname}</div>

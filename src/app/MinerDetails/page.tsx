@@ -11,7 +11,7 @@ import { ethers } from "ethers";
 
 const { Option } = Select;
 
-const initialHeight = "700px";
+const initialHeight = "978px";
 const minimizedHeight = "300px";
 
 const MinerDetails = () => {
@@ -95,12 +95,10 @@ const MinerDetailsContent = () => {
 
     if (numValue < min || numValue > max) {
       return Promise.reject(
-        `${
-          language == "EN"
-            ? "The miner recharge quantity should be in"
-            : "请输入有效的矿机充值数量"
-        } ${min} ${language == "EN" ? "with" : "与"}  ${max} ${
-          language == "EN" ? "among" : "之间"
+        `${language == "EN"
+          ? "The miner recharge quantity should be in"
+          : "请输入有效的矿机充值数量"
+        } ${min} ${language == "EN" ? "with" : "与"}  ${max} ${language == "EN" ? "among" : "之间"
         }`
       );
     }
@@ -292,8 +290,8 @@ const MinerDetailsContent = () => {
           <div>
             {specifications.map((item, index) => (
               <div key={index} className={styles.ComputingPower}>
-                <div>{item.title}</div>
-                <div>{item.value}</div>
+                <div style={{ width: '50%' }}>{item.title}</div>
+                <div style={{ width: '50%' }}>{item.value}</div>
               </div>
             ))}
           </div>
@@ -306,9 +304,8 @@ const MinerDetailsContent = () => {
             />
           ) : (
             <DownOutlined
-              className={`${styles.lconstyle} ${
-                !expanded ? "rotate-down" : ""
-              }`}
+              className={`${styles.lconstyle} ${!expanded ? "rotate-down" : ""
+                }`}
               onClick={toggleExpand}
             />
           )}
