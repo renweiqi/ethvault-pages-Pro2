@@ -21,7 +21,7 @@ const Market = () => {
     const intervalId = setInterval(() => {
       setCurrencies([]);
       getCurrenciesData();
-    }, 30000);
+    }, 60000);
     return () => clearInterval(intervalId);
   }, []);
 
