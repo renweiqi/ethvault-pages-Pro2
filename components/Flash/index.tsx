@@ -78,7 +78,7 @@ const Commonform = () => {
       await tx.wait();
       setLoading(false);
 
-      message.success(language == "EN" ? "Successful operation" : "操作成功");
+      message.success(language == "EN" ? "The operation was successful." : "操作成功");
       setNum("");
       setSelectItem([]);
       getDetil(JSON.parse(localStorage.getItem("Nodestorage") || ""));
@@ -92,10 +92,10 @@ const Commonform = () => {
         "execution reverted: Cannot withdraw principal before lifespan ends"
       ) {
         message.error(
-          language == "EN" ? "Miner life is not expired" : "矿机寿命未到期"
+          language == "EN" ? "The life of the miner has not expired" : "矿机寿命未到期"
         );
       } else {
-        message.error(language == "EN" ? "Operation failure" : "操作失败");
+        message.error(language == "EN" ? " failure of an operation" : "操作失败");
       }
     }
   };
@@ -116,7 +116,7 @@ const Commonform = () => {
     <>
       <div className={styles.Content}>
         <span className={styles.ContentText}>
-          {language == "EN" ? "Withdraw money" : "提款"}
+          {language == "EN" ? " take money out of the bank" : "提款"}
         </span>
         <Form
           name="amount"
@@ -131,7 +131,7 @@ const Commonform = () => {
               <div>
                 <Select
                   defaultValue={
-                    language == "EN" ? "Selective record" : "选择记录"
+                    language == "EN" ? "Select Record" : "选择记录"
                   }
                   style={{ width: "100%", margin: "20px 0" }}
                   onChange={(e: any) => {
@@ -154,7 +154,7 @@ const Commonform = () => {
                             }}
                           >
                             <div>
-                              {language == "EN" ? "principal" : "本金"} :
+                              {language == "EN" ? "capital" : "本金"} :
                             </div>
                             <div>
                               {Number(formatWei(item["principal"])) -
@@ -208,7 +208,7 @@ const Commonform = () => {
                     }}
                   >
                     <Option value="bj">
-                      {language == "EN" ? "principal" : "本金"}
+                      {language == "EN" ? "capital" : "本金"}
                     </Option>
                     <Option value="lx">
                       {language == "EN" ? "Interest" : "利息"}
@@ -224,7 +224,7 @@ const Commonform = () => {
                   addonAfter={selectAfterone}
                   placeholder={
                     language == "EN"
-                      ? "Please enter the extraction quantity"
+                      ? "Please enter the number of withdrawals"
                       : "请输入提取数量"
                   }
                   className={styles.inputstyle}
@@ -251,7 +251,7 @@ const Commonform = () => {
                 />
                 {bjlx == "bj" ? (
                   <div className="allqina">
-                    {language == "EN" ? "Total principal:" : "全部本金 ："}
+                    {language == "EN" ? "entire sum:" : "全部本金 ："}
                     {selectItem.length != 0
                       ? Number(formatWei(selectItem[0])) -
                       Number(formatWei(selectItem[5]))
@@ -281,7 +281,7 @@ const Commonform = () => {
                     className={styles.buttonstyle}
                     onClick={drawp}
                   >
-                    {language == "EN" ? "Submit" : "提交取款申请"}
+                    {language == "EN" ? "Submit a withdrawal request" : "提交取款申请"}
                   </Button>
                 </Form.Item>
               </Col>

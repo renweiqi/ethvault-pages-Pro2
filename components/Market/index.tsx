@@ -55,21 +55,21 @@ const Market = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.marketstyle}>{language === "EN" ? "Market" : "行情"}</div>
+      <div className={styles.marketstyle}>{language === "EN" ? "the current market situation" : "行情"}</div>
 
       <div className={styles.titleContent}>
         <div className={styles.marketInfo}>
-          <span>{language === "EN" ? 'MarketCap' : '市值'}</span>
+          <span>{language === "EN" ? ' market value' : '市值'}</span>
         </div>
 
         <div className={styles.priceInfo}>
-          <span className={styles.newtext}>{language === "EN" ? 'Last price' : '最近价'}</span>
+          <span className={styles.newtext}>{language === "EN" ? 'latest price' : '最近价'}</span>
         </div>
         <div className={styles.fluctuateInfo}>
-          <span className={styles.newtext}>{language === "EN" ? '24H change' : '24H波动'}</span>
+          <span className={styles.newtext}>{language === "EN" ? ' 24H fluctuation' : '24H波动'}</span>
         </div>
       </div>
-      <Spin spinning={loading} tip={language === "EN" ? "Please wait, the data is being refreshed..." : "请稍等，数据实时刷新中..."} >
+      <Spin spinning={loading} tip={language === "EN" ? "Please wait, the data is being refreshed in real time..." : "请稍等，数据实时刷新中..."} >
         {currencies.map((currency: any, index: any) => (
           <div key={index} className={styles.currencyItem}>
             <div className={styles.currencyInfo}>

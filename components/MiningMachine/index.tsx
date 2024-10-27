@@ -54,7 +54,7 @@ const MiningMachine = () => {
       link: `/MinerDetails`,
       src: A1066Pro,
       name: "A1066Pro",
-      topup: language == 'EN' ? "TopUp" : "充值",
+      topup: language == 'EN' ? "recharge" : "充值",
       topupNum: "0-999USDT",
       interest: language == 'EN' ? "Interest" : "利息",
       interestname: language == 'EN' ? "0.5%/day" : "0.5%/天"
@@ -64,7 +64,7 @@ const MiningMachine = () => {
       link: "/MinerDetails",
       src: A1266,
       name: "A1166Pro-S-75T",
-      topup: language == 'EN' ? "TopUp" : "充值",
+      topup: language == 'EN' ? "recharge" : "充值",
       topupNum: "1000-5999USDT",
       interest: language == 'EN' ? "Interest" : "利息",
       interestname: language == 'EN' ? "1%/day" : "1%/天"
@@ -74,7 +74,7 @@ const MiningMachine = () => {
       link: "/MinerDetails",
       src: A1366130T,
       name: "A1266",
-      topup: language == 'EN' ? "TopUp" : "充值",
+      topup: language == 'EN' ? "recharge" : "充值",
       topupNum: "6000-14999USDT",
       interest: language == 'EN' ? "Interest" : "利息",
       interestname: language == 'EN' ? "3%/day" : "3%/天"
@@ -84,7 +84,7 @@ const MiningMachine = () => {
       link: "/MinerDetails",
       src: A1466150T,
       name: "A1366-130T",
-      topup: language == 'EN' ? "TopUp" : "充值",
+      topup: language == 'EN' ? "recharge" : "充值",
       topupNum: "15000-29999USDT",
       interest: language == 'EN' ? "Interest" : "利息",
       interestname: language == 'EN' ? "5%/day" : "5%/天"
@@ -94,7 +94,7 @@ const MiningMachine = () => {
       link: "/MinerDetails",
       src: A1566Pro180T,
       name: "A1466-150T",
-      topup: language == 'EN' ? "TopUp" : "充值",
+      topup: language == 'EN' ? "recharge" : "充值",
       topupNum: "30000-59999USDT",
       interest: language == 'EN' ? "Interest" : "利息",
       interestname: language == 'EN' ? "8%/day" : "8%/天"
@@ -104,7 +104,7 @@ const MiningMachine = () => {
       link: "/MinerDetails",
       src: A1676Pro367T,
       name: "A1566Pro180T",
-      topup: language == 'EN' ? "TopUp" : "充值",
+      topup: language == 'EN' ? "recharge" : "充值",
       topupNum: "60000-99999USDT",
       interest: language == 'EN' ? "Interest" : "利息",
       interestname: language == 'EN' ? "12%/day" : "12%/天"
@@ -114,7 +114,7 @@ const MiningMachine = () => {
       link: "/MinerDetails",
       src: A1166ProS75T,
       name: "A1676Pro367T",
-      topup: language == 'EN' ? "TopUp" : "充值",
+      topup: language == 'EN' ? "recharge" : "充值",
       topupNum: language == 'EN' ? "Uncapped %/ day" : "100000以上USDT",
       interest: language == 'EN' ? "Interest" : "利息",
       interestname: language == 'EN' ? "Uncapped %/ day" : "上不封顶%/天"
@@ -135,7 +135,7 @@ const MiningMachine = () => {
   }, [account]);
   return (
     <div className={styles.Content}>
-      <div className={styles.MiningMachinestyle}>{language == 'EN' ? "Mining machine" : "矿机"}</div>
+      <div className={styles.MiningMachinestyle}>{language == 'EN' ? "Miners" : "矿机"}</div>
       <Row gutter={[16, 16]} className={styles.Cardstyle}>
         {imageArray.map((v, i) => (
           <Col

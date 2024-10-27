@@ -21,7 +21,7 @@ const Machine = () => {
 
   return (
     <MenuProvider>
-      <NativeBar title={language == "EN" ? 'Mine' : '挖矿'} backUrl="/HomeLess" />
+      <NativeBar title={language == "EN" ? 'dig for coal or minerals' : '挖矿'} backUrl="/HomeLess" />
       <MiningMachine />
     </MenuProvider>
   );

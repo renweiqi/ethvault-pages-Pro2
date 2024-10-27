@@ -77,7 +77,7 @@ const MinerDetailsContent = () => {
     if (value === undefined || value === null || value === "") {
       return Promise.reject(
         language == "EN"
-          ? "Please enter the amount of recharge"
+          ? "Please enter the number of recharge"
           : "请输入充值数量"
       );
     }
@@ -86,7 +86,7 @@ const MinerDetailsContent = () => {
     if (isNaN(numValue) || numValue <= 0) {
       return Promise.reject(
         language == "EN"
-          ? "Please enter a valid miner recharge quantity"
+          ? "Please enter the number of valid miner reloads"
           : "请输入有效的矿机充值数量"
       );
     }
@@ -96,7 +96,7 @@ const MinerDetailsContent = () => {
     if (numValue < min || numValue > max) {
       return Promise.reject(
         `${language == "EN"
-          ? "The miner recharge quantity should be in"
+          ? "Please enter the number of valid miner reloads"
           : "请输入有效的矿机充值数量"
         } ${min} ${language == "EN" ? "with" : "与"}  ${max} ${language == "EN" ? "among" : "之间"
         }`
@@ -130,58 +130,58 @@ const MinerDetailsContent = () => {
 
   const specifications = [
     {
-      title: language == "EN" ? "Rated computing power" : "额定算力",
+      title: language == "EN" ? "numerical power" : "额定算力",
       value: "180TH/s, -9%~+9%",
     },
     {
-      title: language == "EN" ? "Energy efficiency ratio" : "能效比",
+      title: language == "EN" ? "efficiency ratio" : "能效比",
       value: "23.5J/TH, -7%~+7%",
     },
     {
-      title: language == "EN" ? "Power dissipation" : "功耗",
+      title: language == "EN" ? "power wastage" : "功耗",
       value: "3259W, -10%~+10%",
     },
     {
-      title: language == "EN" ? "Connection mode" : "连接方式",
+      title: language == "EN" ? "connection method" : "连接方式",
       value: "RJ45 1G Ethernet",
     },
     { title: language == "EN" ? "fan" : "风扇", value: "4 x 12050 FAN" },
     {
-      title: language == "EN" ? "Air volume, CFM" : "风量，CFM",
+      title: language == "EN" ? "air volume, CFM" : "风量，CFM",
       value: "420 MAX",
     },
     {
-      title: language == "EN" ? "Operating temperature" : "运行温度",
+      title: language == "EN" ? "operating temperature" : "运行温度",
       value: "-7°C ~ 39°C",
     },
     {
-      title: language == "EN" ? "Bare machine size" : "裸机尺寸",
+      title: language == "EN" ? "Bare metal size" : "裸机尺寸",
       value: "L271mm x W198mm x H290mm",
     },
     {
-      title: language == "EN" ? "Carton size" : "外箱尺寸",
+      title: language == "EN" ? "Outer box size" : "外箱尺寸",
       value: "L420mm x W325mm x H430mm",
     },
-    { title: language == "EN" ? "Net weight" : "净重", value: "14.5 kg" },
-    { title: language == "EN" ? "Gross weight" : "毛重", value: "14.6 kg" },
+    { title: language == "EN" ? "net weight" : "净重", value: "14.5 kg" },
+    { title: language == "EN" ? "gross weight" : "毛重", value: "14.6 kg" },
     {
       title:
         language == "EN"
-          ? "Ac voltage input range, Volt"
+          ? "AC Voltage Input Range"
           : "交流电压输入范围，Volt",
       value: "200 ~ 300 V",
     },
     {
       title:
         language == "EN"
-          ? "Ac power input frequency range: Hz"
+          ? "AC Power Input Frequency Range"
           : "交流电源输入频率范围，Hz",
       value: "50 ~ 70 Hz",
     },
     {
       title:
         language == "EN"
-          ? "Ac current input range, Amp"
+          ? "AC current input range"
           : "交流电流输入范围，Amp",
       value: "16 A",
     },
@@ -267,7 +267,7 @@ const MinerDetailsContent = () => {
   return (
     <div className={styles.rewardcontainer}>
       <NativeBar
-        title={language == "EN" ? "Top up and reward" : "充值与奖励"}
+        title={language == "EN" ? " Recharge & Rewards" : "充值与奖励"}
         backUrl="/Machine"
       />
       <div className={styles.conter}>
@@ -279,7 +279,7 @@ const MinerDetailsContent = () => {
         >
           <div className={styles.contertitle}>{miner?.name}</div>
           <div className={styles.topup}>
-            <span>{language == "EN" ? "top up" : "充值"}</span>
+            <span>{language == "EN" ? "recharge" : "充值"}</span>
             <span>{miner?.topupNum}</span>
           </div>
           <div className={styles.topup}>
@@ -323,7 +323,7 @@ const MinerDetailsContent = () => {
             <Col span={24}>
               <div className={styles.Contentinterest}>
                 <span className={styles.Contentlabel}>
-                  {language == "EN" ? "top up(USDT)" : "充值(USDT)"}
+                  {language == "EN" ? "recharge(USDT)" : "充值(USDT)"}
                 </span>
                 <div className="tikuan">
                   <Select
@@ -353,14 +353,14 @@ const MinerDetailsContent = () => {
                   {
                     required: true,
                     message:
-                      language == "EN" ? "Please enter quantity" : "请输入数量",
+                      language == "EN" ? "Please enter the quantity" : "请输入数量",
                   },
                   { validator: validateInput },
                 ]}
               >
                 <InputNumber
                   placeholder={
-                    language == "EN" ? "Please enter quantity" : "请输入数量"
+                    language == "EN" ? "Please enter the quantity" : "请输入数量"
                   }
                   className={styles.inputstyle}
                   style={{ width: "100%" }}
@@ -381,7 +381,7 @@ const MinerDetailsContent = () => {
                     htmlType="submit"
                     className={styles.buttonstyle}
                   >
-                    {language == "EN" ? "Top Up" : "充值"}
+                    {language == "EN" ? "recharge" : "充值"}
                   </Button>
                 </Form.Item>
               </Col>

@@ -28,7 +28,7 @@ const Commonform = ({ Data }: Props) => {
             }}
             className={styles.AmountReceived}
           >
-            {language === "EN" ? "quantity" : "数量"}
+            {language === "EN" ? "quantities" : "数量"}
 
           </div>
           <div
@@ -45,7 +45,7 @@ const Commonform = ({ Data }: Props) => {
             }}
             className={styles.AmountReceived}
           >
-            {language === "EN" ? "unlock Time" : "解锁时间"}
+            {language === "EN" ? "Unlocking time" : "解锁时间"}
 
           </div>
         </div>

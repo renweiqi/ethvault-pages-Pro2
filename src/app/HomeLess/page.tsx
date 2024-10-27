@@ -13,13 +13,12 @@ import Market from "../../../components/Market";
 
 const contentText: any = {
   EN: {
-    title: "ETHVault Pool",
+    title: " ETHVault Mining Pool",
     description: `
-      ETHVault Pool is a staking mining platform based on the Ethereum network, 
-      designed to help miners achieve stable and global profits by staking funds. 
-      Participants can join the pool by staking funds and share in the profits generated from the staked assets. 
-      Our platform distributes rewards through transparent rules and automated smart contract mechanisms, 
-      ensuring that miners receive fair returns.
+       ETHVault Pool is an ethereum network-based pledge mining platform designed to help miners earn stable and global profits by pledging funds. 
+      Participant pools can participate in the mining pool by pledging funds and distributing the profits generated based on the pledged funds. 
+      Our platform distributes through transparent rules and automated smart contract mechanisms to ensure that miners enjoy fair returns.
+
     `,
   },
   CN: {

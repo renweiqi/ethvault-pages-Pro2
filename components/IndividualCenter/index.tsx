@@ -41,11 +41,11 @@ const Commonform = () => {
   return (
     <>
       <div className={styles.Content}>
-        <span className={styles.ContentText}>{language === "EN" ? "My account" : "我的账户"}</span>
+        <span className={styles.ContentText}>{language === "EN" ? " My Account" : "我的账户"}</span>
         <div className={styles.currencycontainer}>
           <div className={styles.currencyrow}>
             <div className={styles.USDTnuber}>{uSDTBalance}</div>
-            <div className={styles.USDTstyle}>{language === "EN" ? "Principal（USDT）" : "本金（USDT）"}</div>
+            <div className={styles.USDTstyle}>{language === "EN" ? "capital（USDT）" : "本金（USDT）"}</div>
           </div>
           <div className={styles.currencyrow}>
             <div className={styles.USDTnuber}>{zSDBalance}</div>

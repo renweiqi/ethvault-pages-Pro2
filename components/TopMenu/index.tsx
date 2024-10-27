@@ -19,14 +19,14 @@ const ClientMenu: React.FC = () => {
     {
       link: `/Machine`,
       url: "../../images/MININGMACHINE.png",
-      name: 'Mining machine',
-      en: "MINING MACHINE",
+      name: 'Miners',
+      en: "Miners",
     },
     {
       link: "/Personal",
       url: "../../images/PERSONALCENTER.png",
       name: "PERSONAL CENTER",
-      en: "PERSONAL CENTER",
+      en: "personal center",
     },
     {
       link: "/HomeLess",
@@ -37,8 +37,8 @@ const ClientMenu: React.FC = () => {
     {
       link: "/Flash",
       url: "../../images/WithdrawMoney.png",
-      name: "withdraw money",
-      en: "withdraw money",
+      name: "Withdrawal",
+      en: "Withdrawal",
     },
   ];
 
@@ -47,13 +47,13 @@ const ClientMenu: React.FC = () => {
       link: `/Machine`,
       url: "../../images/MININGMACHINE.png",
       name: '矿机',
-      en: "MINING MACHINE",
+      en: "Miners",
     },
     {
       link: "/Personal",
       url: "../../images/PERSONALCENTER.png",
       name: "个人中心",
-      en: "PERSONAL CENTER",
+      en: "personal center",
     },
     {
       link: "/HomeLess",
@@ -65,7 +65,7 @@ const ClientMenu: React.FC = () => {
       link: "/Flash",
       url: "../../images/WithdrawMoney.png",
       name: "取 款",
-      en: "withdraw money",
+      en: " Withdrawal",
     },
   ];
 

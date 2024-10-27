@@ -65,7 +65,7 @@ const TeamsSwitchTransactionRecords = () => {
             }}
             onClick={() => handleTabClick("team")}
           >
-            {language === "EN" ? "Recharge" : "充值记录"}
+            {language === "EN" ? "Recharge Record" : "充值记录"}
           </span>
           <span
             className={styles.ContentText}

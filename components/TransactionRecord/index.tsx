@@ -28,15 +28,15 @@ const Commonform = ({ Data }: Props) => {
             }}
             className={styles.AmountReceived}
           >
-            {language === "EN" ? "Type" : "类型"}
+            {language === "EN" ? "typology" : "类型"}
           </div>
           <div
             style={{
-              width: "45%",
+              width: "30%",
             }}
             className={styles.AmountReceived}
           >
-            {language === "EN" ? "quantity" : "数量"}
+            {language === "EN" ? "quantities" : "数量"}
           </div>
           <div
             style={{
@@ -72,7 +72,7 @@ const Commonform = ({ Data }: Props) => {
                       >
                         {item["isPrincipal"]
                           ? language === "EN"
-                            ? "principal"
+                            ? "capital"
                             : "本金"
                           : language === "EN"
                           ? "Interest"
@@ -80,7 +80,7 @@ const Commonform = ({ Data }: Props) => {
                       </div>
                       <div
                         style={{
-                          width: "45%",
+                          width: "30%",
                         }}
                       >
                         {Number(formatWei(item["amount"])).toFixed(3)}
@@ -93,16 +93,16 @@ const Commonform = ({ Data }: Props) => {
                         {item["approved"] ? (
                           <span style={{ color: "#0dbd8b" }}>
                             {language === "EN"
-                              ? "SuccessfulWithdrawal"
+                              ? "Withdrawal Successful"
                               : "提现成功"}
                           </span>
                         ) : item["rejected"] ? (
                           <span style={{ color: "#dc362e" }}>
-                            {language === "EN" ? "reject" : "已拒绝"}
+                            {language === "EN" ? " Rejected" : "已拒绝"}
                           </span>
                         ) : (
                           <span style={{ color: "#cf8f30" }}>
-                            {language === "EN" ? "PendingApproval" : "待批准"}
+                            {language === "EN" ? "Pending approval" : "待批准"}
                           </span>
                         )}
                       </div>
