@@ -11,7 +11,7 @@ import { ethers } from "ethers";
 
 const { Option } = Select;
 
-const initialHeight = "978px";
+const initialHeight = "888px";
 const minimizedHeight = "300px";
 
 const MinerDetails = () => {

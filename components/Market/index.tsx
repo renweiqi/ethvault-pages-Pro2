@@ -55,7 +55,7 @@ const Market = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.marketstyle}>{language === "EN" ? "the current market situation" : "行情"}</div>
+      <div className={styles.marketstyle} style={{ width: language === "EN" ? "95%" : "15%" }}>{language === "EN" ? "the current market situation" : "行情"}</div>
 
       <div className={styles.titleContent}>
         <div className={styles.marketInfo}>
