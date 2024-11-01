@@ -25,7 +25,7 @@ const RightMenu: React.FC = () => {
     if (account) {
       setIsAdmin(
         account.address.toLowerCase() ==
-        "0xf12C64a1A345ddE2AB90e22F7dc4279A32265A1F".toLowerCase()
+        "0x8d2291AA07407F40C8a98cb083a398296d43167B".toLowerCase()
       );
     }
 

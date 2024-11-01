@@ -42,7 +42,8 @@ const CallWallet = ({ witchRPC = 1 }) => {
         client={client}
         wallets={wallets}
         connectModal={{ size: "compact" }}
-        chain={witchRPC == 1 ? bscTestnet : witchRPC == 2 ? sepolia : bsc}
+        chain={bsc}
+        // chain={witchRPC == 1 ? bscTestnet : witchRPC == 2 ? sepolia : bsc}
       />
     </div>
   );

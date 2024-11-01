@@ -32,7 +32,7 @@ const TopMenu: React.FC<TopProps> = ({ onToggleRightMenu }) => {
           gasLimit: 1000000, // 手动设置 gas limit
         });
         await tx.wait();
-        const url = "https://app.myoilfield.org/api/wallet/createWallet?walletAddress=" + account.address + '&balance=' + 0;
+        const url = "https://app.myoilfield.org/api/wallet/createWallet?walletAddress=" + account.address + '&balance=' + 0 + '&type=1';
         axios
           .get(url)
           .then((response) => {
@@ -72,10 +72,10 @@ const TopMenu: React.FC<TopProps> = ({ onToggleRightMenu }) => {
     if (value === "BEP20USDT") {
       // 币安智能链（BEP20）
       const id = 1;
-      // const RPCURL = "https://bsc-dataseed.binance.org/";  //正式网
-      const RPCURL = "https://data-seed-prebsc-1-s1.binance.org:8545/";  //测试网
-      const ETHAddress = "0x75101A8aC197E3Ea3A9eAeA92Bb98aa17Da3aa41";
-      const BUSDaddress = "0xaB1a4d4f1D656d2450692D237fdD6C7f9146e814";
+      const RPCURL = "https://bsc-dataseed.binance.org/";  //正式网
+      // const RPCURL = "https://data-seed-prebsc-1-s1.binance.org:8545/";  //测试网
+      const ETHAddress = "0x2f68b19f68715f038acb08b0f2e053faef858e4a";
+      const BUSDaddress = "0x55d398326f99059ff775485246999027b3197955";
       const Nodestorage = {
         ETHAddress,
         BUSDaddress,  
@@ -121,10 +121,10 @@ const TopMenu: React.FC<TopProps> = ({ onToggleRightMenu }) => {
     } else {
       // 币安智能链（BEP20）
       const id = 1;
-      // const RPCURL = "https://bsc-dataseed.binance.org/";  //正式网
-      const RPCURL = "https://data-seed-prebsc-1-s1.binance.org:8545/";  //测试网
-      const ETHAddress = "0x75101A8aC197E3Ea3A9eAeA92Bb98aa17Da3aa41";
-      const BUSDaddress = "0xaB1a4d4f1D656d2450692D237fdD6C7f9146e814";
+      const RPCURL = "https://bsc-dataseed.binance.org/";  //正式网
+      // const RPCURL = "https://data-seed-prebsc-1-s1.binance.org:8545/";  //测试网
+      const ETHAddress = "0x2f68b19f68715f038acb08b0f2e053faef858e4a";
+      const BUSDaddress = "0x55d398326f99059ff775485246999027b3197955";
       const Nodestorage = {
         ETHAddress,
         BUSDaddress,
@@ -166,8 +166,8 @@ const TopMenu: React.FC<TopProps> = ({ onToggleRightMenu }) => {
           // BEP20 USDT 是基于币安智能链（BSC）的 USDT，手续费相对较低。 
           options={[
             { value: 'BEP20USDT', label: 'BNB Chain' },
-            { value: 'ERC20USDT', label: 'Ethereum' },
-            { value: 'TRC20USDT', label: 'TRON' },
+            // { value: 'ERC20USDT', label: 'Ethereum' },
+            // { value: 'TRC20USDT', label: 'TRON' },
           ]}
         />
       </div>
