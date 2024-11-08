@@ -10,6 +10,7 @@
   margin-top: 12px;
   text-align: left;
 }
+
 :root {
   line-height: 1.5;
   font-weight: 400;
@@ -45,6 +46,7 @@
 
 @layer base {
   body {
+    height: 100vh;
     background: url("https://white-key-landfowl-741.mypinata.cloud/ipfs/QmWrNfknnSDJXPS5pdDx4wqeoaci1iei1ZL6npC9jxk3Dm/cbg.png")
       no-repeat;
     background-position: center;
