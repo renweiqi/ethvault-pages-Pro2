@@ -9,6 +9,7 @@ import RightMenu from "../RightMenu";
 import { MenuContext } from "../MenuContext";
 import { copyToClipboard } from "../../public/clipboard";
 import bgGif from "../../public/images/beijing.png";
+import sq from "../../static/home/sq.png";
 
 const ClientMenu: React.FC = () => {
   const router = useRouter();
@@ -40,6 +41,12 @@ const ClientMenu: React.FC = () => {
       name: "Withdrawal",
       en: "Withdrawal",
     },
+    {
+      link: "/ContactUs",
+      url: "../../images/ContactUs.png",
+      name: "ContactUs",
+      en: "ContactUs",
+    },
   ];
 
   const imageArrayZh = [
@@ -55,6 +62,7 @@ const ClientMenu: React.FC = () => {
       name: "个人中心",
       en: "personal center",
     },
+    
     {
       link: "/HomeLess",
       url: "../../images/homepage.png",
@@ -66,6 +74,12 @@ const ClientMenu: React.FC = () => {
       url: "../../images/WithdrawMoney.png",
       name: "取 款",
       en: " Withdrawal",
+    },
+    {
+      link: "/ContactUs",
+      url: "../../images/ContactUs.png",
+      name: "联系我们",
+      en: "ContactUs",
     },
   ];
 

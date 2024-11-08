@@ -22,7 +22,7 @@ const HomeLess: React.FC = () => {
   };
   const contentText: any = {
     EN: {
-      title: " ETHVault Mining Pool",
+      title: " CryptoHarvest Mining Pool",
       description: <div>
       <div className={styles.t1}>
         CryptoHarvest: Unlock Your USDT Investment Potential for Exceptional Returns!
@@ -86,12 +86,7 @@ const HomeLess: React.FC = () => {
     
     },
     CN: {
-      title: "ETHVault矿池",
-      // description: `
-      //   ETHVault Pool是一个基于以太坊网络的质押挖矿平台，旨在通过质押资金帮助矿工获得稳定而全球的利润。
-      //   参与者池可以通过质押资金参与矿池，并根据质押资金而产生的利润分配。
-      //   我们的平台通过透明的规则和自动化的智能合约机制分配，确保矿工享受公平的收益。
-      // `,
+      title: "CryptoHarvest矿池",
       description: (
         <div>
           <div className={styles.t1}>
