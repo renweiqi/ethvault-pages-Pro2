@@ -43,9 +43,9 @@ const ClientMenu: React.FC = () => {
     },
     {
       link: "/ContactUs",
-      url: "../../images/ContactUs.png",
-      name: "ContactUs",
-      en: "ContactUs",
+      url: "../../images/tlgrm.png",
+      name: "",
+      en: "telegram",
     },
   ];
 
@@ -77,14 +77,18 @@ const ClientMenu: React.FC = () => {
     },
     {
       link: "/ContactUs",
-      url: "../../images/ContactUs.png",
-      name: "联系我们",
-      en: "ContactUs",
+      url: "../../images/tlgrm.png",
+      name: "",
+      en: "telegram",
     },
   ];
 
   const goRoute = (url: any) => {
-    router.push(url.link);
+    if (url.link == '/ContactUs') {
+      window.open('https://t.me/+uglMHc3MjRQ3MjU0')
+    }else{
+      router.push(url.link);
+    }
   };
 
   const handleCopyClick = () => {
